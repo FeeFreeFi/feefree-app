@@ -1,0 +1,10 @@
+// body {
+//   overscroll-behavior: auto none;
+// }
+
+.n-scrollbar > .n-scrollbar-rail.n-scrollbar-rail--vertical,
+.n-scrollbar + .n-scrollbar-rail.n-scrollbar-rail--vertical {
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+}

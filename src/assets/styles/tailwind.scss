@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .primary-btn {
+    @apply h-12 sm:h-14 rounded text-base sm:text-lg font-bold;
+    color: white !important;
+  }
+}
