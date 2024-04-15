@@ -1,0 +1,77 @@
+/* =================== main begin =================== */
+$primary-color: #7720e9;
+$info-color: #70c0e8;
+$success-color: #32d583;
+$warning-color: #fbc96c;
+$error-color: #fb6cb3;
+
+$text-color-base: #fff;
+$text-color-1: #ffffffe6;
+$text-color-2: #ffffffd1;
+$text-color-3: #ffffff85;
+$text-color-bright: #ffffffd1;
+
+$grey-color-1: #141414;
+$grey-color-2: #1f1f1f;
+$grey-color-3: #262626;
+$grey-color-4: #434343;
+$grey-color-5: #595959;
+$grey-color-6: #8c8c8c;
+
+$box-shadow-1: 0 1px 2px -2px rgba(0, 0, 0, .24), 0 3px 6px 0 rgba(0, 0, 0, .18), 0 5px 12px 4px rgba(0, 0, 0, .12);
+$box-shadow-2: 0 3px 6px -4px rgba(0, 0, 0, .24), 0 6px 12px 0 rgba(0, 0, 0, .16), 0 9px 18px 8px rgba(0, 0, 0, .10);
+/* =================== main end ===================== */
+
+/* =================== background begin =================== */
+$bg-color-1: #101014;
+$bg-color-2: #18181c;
+$bg-color-3: #303033;
+$bg-color-4: #48484d;
+$bg-color-5: #1e1e2a33;
+/* =================== background end ===================== */
+
+/* =================== component begin ==================== */
+$body-color: #171721;
+$main-color: #1c1c28;
+$background-color: #1e1e2a33;
+$block-color: #1c1c28;
+$divider-color: #ffffff17;
+$pressed-color: #ffffff14;
+/* =================== component begin ==================== */
+
+.dark:root {
+  --x-primary-color: #{$primary-color};
+  --x-info-color: #{$info-color};
+  --x-success-color: #{$success-color};
+  --x-warning-color: #{$warning-color};
+  --x-error-color: #{$error-color};
+
+  --x-grey-color-1: #{$grey-color-1};
+  --x-grey-color-2: #{$grey-color-2};
+  --x-grey-color-3: #{$grey-color-3};
+  --x-grey-color-4: #{$grey-color-4};
+  --x-grey-color-5: #{$grey-color-5};
+  --x-grey-color-6: #{$grey-color-6};
+
+  --x-box-shadow-1: #{$box-shadow-1};
+  --x-box-shadow-2: #{$box-shadow-2};
+
+  --x-bg-color-1: #{$bg-color-1};
+  --x-bg-color-2: #{$bg-color-2};
+  --x-bg-color-3: #{$bg-color-3};
+  --x-bg-color-4: #{$bg-color-4};
+  --x-bg-color-5: #{$bg-color-5};
+
+  --x-body-color: #{$body-color};
+  --x-main-color: #{$main-color};
+  --x-background-color: #{$background-color};
+  --x-block-color: #{$block-color};
+  --x-divider-color: #{$divider-color};
+  --x-pressed-color: #{$pressed-color};
+
+  --x-text-color-base: #{$text-color-base};
+  --x-text-color-1: #{$text-color-1};
+  --x-text-color-2: #{$text-color-2};
+  --x-text-color-3: #{$text-color-3};
+  --x-text-color-bright: #{$text-color-bright};
+}

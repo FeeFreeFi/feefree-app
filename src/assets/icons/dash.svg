@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 110" stroke="currentColor">
+  <rect fill="none" x="2" y="2" width="106" height="106" rx="36" stroke-linecap="round" stroke-width="4" stroke-dasharray="116 245">
+    <animate attributeName="stroke-dashoffset" dur="1s" repeatCount="indefinite" values="360;0" />
+  </rect>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 122 124">
+  <mask id="a" width="122" height="124" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+    <path fill="#1D1D1B" d="M121.787 34.833 69.387.477v19.209l33.615 21.843-3.955 12.513h-29.66v15.916h29.66l3.955 12.513-33.614 21.843v19.209l52.399-34.246-8.569-27.222 8.569-27.222ZM23.8 69.958h29.55V54.042H23.69l-3.845-12.513 33.504-21.844V.478L.95 34.833l8.57 27.222L.95 89.277l52.51 34.246v-19.209L19.844 82.471l3.954-12.513Z"/>
+  </mask>
+  <g mask="url(#a)">
+    <path fill="#fff" d="M121.787 34.833 69.387.477v19.209l33.615 21.843-3.955 12.513h-29.66v15.916h29.66l3.955 12.513-33.614 21.843v19.209l52.399-34.246-8.569-27.222 8.569-27.222ZM23.8 69.958h29.55V54.042H23.69l-3.845-12.513 33.504-21.844V.478L.95 34.833l8.57 27.222L.95 89.277l52.51 34.246v-19.209L19.844 82.471l3.954-12.513Z"/>
+    <path fill="url(#b)" d="M1.106.477H134.85v136.085H1.106z"/>
+    <ellipse cx="8.432" cy="27.46" fill="url(#c)" rx="117.639" ry="127.545" transform="rotate(-33.93 8.432 27.46)"/>
+  </g>
+  <defs>
+    <radialGradient id="c" cx="0" cy="0" r="1" gradientTransform="matrix(29.40962 91.90712 -86.15104 27.56772 8.432 27.46)" gradientUnits="userSpaceOnUse">
+      <stop offset=".12" stop-color="#8952FF" stop-opacity=".87"/>
+      <stop offset="1" stop-color="#DABDFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="b" x1="105.084" x2="69.844" y1="132.594" y2="-12.277" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B46F9"/>
+      <stop offset="1" stop-color="#BBFBE0"/>
+    </linearGradient>
+  </defs>
+</svg>
