@@ -6,6 +6,7 @@ import {
   PAGE_POOL_DETAIL,
   PAGE_EXCHANGE,
   PAGE_NFT_HOME,
+  PAGE_FAUCET,
   PAGE_NOT_FOUND,
 } from "@/config"
 import { isValidPool } from "@/hooks/useSwap"
@@ -51,6 +52,12 @@ const routes = [
         path: "nft",
         name: PAGE_NFT_HOME,
         component: () => import('@/pages/nft/home/index.vue'),
+        meta: { title: APP_PRODUCT_NAME },
+      },
+      {
+        path: "faucet",
+        name: PAGE_FAUCET,
+        component: () => import('@/pages/faucet/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {

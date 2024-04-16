@@ -20,6 +20,11 @@
         <n-text class="font-medium text-base" :class="{'text-color-3': !isExactActive}">NFT</n-text>
       </n-button>
     </router-link>
+    <router-link :to="{ name: PAGE_FAUCET }" #="{ isExactActive }">
+      <n-button class="h-9 rounded-xl px-4" quaternary :focusable="false" aria-label="faucet">
+        <n-text class="font-medium text-base" :class="{'text-color-3': !isExactActive}">Faucet</n-text>
+      </n-button>
+    </router-link>
     <NavMenu />
   </div>
 </template>
@@ -29,7 +34,8 @@ import {
   PAGE_HOME,
   PAGE_POOL_HOME,
   PAGE_EXCHANGE,
-  PAGE_NFT_HOME
+  PAGE_NFT_HOME,
+PAGE_FAUCET
 } from "@/config"
 import NavMenu from "./NavMenu.vue"
 </script>
