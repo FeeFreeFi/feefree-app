@@ -18,38 +18,27 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { useNotification } from "naive-ui"
 import { getTokens, send, getFaucetAddress } from "@/hooks/useFaucet"
-import { account, getWalletClient, switchChain, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { account, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { waitTx } from "@/hooks/useWaitTx"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import ZSectionView from '@/components/ZSectionView.vue'
-import { getChainName } from "@/hooks/useChains"
+import { doSwitchNetwork } from "@/hooks/useInteraction"
 
 const notification = useNotification()
 
 const loading = ref(false)
-const switching = ref(false)
 const tokens = computed(() => getTokens(selectedChainId.value))
+const switching = ref(false)
+/**
+ * @param {number} chainId
+ */
+ const onSwitchNetwork = chainId => doSwitchNetwork(notification, switching, chainId)
 
 const reset = () => {
   loading.value = false
   switching.value = false
-}
-
-const onSwitchNetwork = async id => {
-  try {
-    switching.value = true
-    await switchChain(id)
-    switching.value = false
-  } catch (err) {
-    switching.value = false
-    notification.error({
-      title: `Switch to ${getChainName(id)} fail`,
-      content: err.shortMessage || err.details || err.message,
-      duration: 5000,
-    })
-  }
 }
 
 const onSend = async token => {

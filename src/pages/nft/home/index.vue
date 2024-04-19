@@ -40,18 +40,20 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { useNotification } from "naive-ui"
 import { getNftList, mint } from "@/hooks/useNft"
-import { account, getWalletClient, switchChain, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { account, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { waitTx } from "@/hooks/useWaitTx"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import { getChainName, getNativeCurrency } from "@/hooks/useChains"
+import { getNativeCurrency } from "@/hooks/useChains"
 import NftImage from "@/components/NftImage.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import { getPrice, startUpdate as startUpdatePrices, stopUpdate as stopUpdatePrices } from "@/hooks/usePrices"
+import { createPriceState, getPrice } from "@/hooks/usePrices"
 import { fromValue } from "@/utils/bn"
+import { doSwitchNetwork } from "@/hooks/useInteraction"
 
 const notification = useNotification()
+createPriceState()
 
 const nfts = computed(() => getNftList(selectedChainId.value))
 const feeToken = computed(() => getNativeCurrency(selectedChainId.value))
@@ -63,29 +65,19 @@ const getFeeValue = value => {
   return fromValue(getPrice(feeToken.value.symbol)).times(value).div(1e18).dp(4).toNumber()
 }
 
-const minting = ref(false)
 const switching = ref(false)
+/**
+ * @param {number} chainId
+ */
+const onSwitchNetwork = chainId => doSwitchNetwork(notification, switching, chainId)
+
+const minting = ref(false)
 const operatingIndex = ref(-1)
 
 const reset = () => {
   minting.value = false
   switching.value = false
   operatingIndex.value = -1
-}
-
-const onSwitchNetwork = async id => {
-  try {
-    switching.value = true
-    await switchChain(id)
-    switching.value = false
-  } catch (err) {
-    switching.value = false
-    notification.error({
-      title: `Switch to ${getChainName(id)} fail`,
-      content: err.shortMessage || err.details || err.message,
-      duration: 5000,
-    })
-  }
 }
 
 const onMint = async (index, { address, label, chainId, price }) => {
@@ -131,13 +123,5 @@ onMounted(() => {
   })
 
   onBeforeUnmount(stopWatch)
-})
-
-onMounted(() => {
-  startUpdatePrices()
-
-  onBeforeUnmount(() => {
-    stopUpdatePrices()
-  })
 })
 </script>

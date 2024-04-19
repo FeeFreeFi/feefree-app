@@ -168,18 +168,19 @@ import { useNotification } from "naive-ui"
 import debounce from "lodash-es/debounce"
 import { fromValue, parseAmount, toAmount } from "@/utils/bn"
 import shortString from "@/utils/shortString"
-import { account, chainId, getWalletClient, switchChain, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
-import { getBalance, resetBalances, updateBalances } from "@/hooks/useBalances"
-import { getChainName, getNativeCurrency } from "@/hooks/useChains"
+import { account, chainId, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { createBalanceStates2 } from "@/hooks/useBalances"
+import { getNativeCurrency } from "@/hooks/useChains"
 import { getPublicClient } from "@/hooks/useClient"
-import { getPrice, startUpdate as startUpdatePrices, stopUpdate as stopUpdatePrices } from "@/hooks/usePrices"
-import { allowance, approve, isSame } from "@/hooks/useCurrency"
+import { getPrice, createPriceState } from "@/hooks/usePrices"
+import { isSame } from "@/hooks/useCurrency"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { waitTx } from "@/hooks/useWaitTx"
 import { createInterval } from "@/hooks/useTimer"
 import { swap, getChainTokens, findPaths, quoteSwap } from "@/hooks/useSwap"
 import { getFee, getRouterAddress } from "@/hooks/useRouter"
+import { doApproval, doCheckAllowance, doCheckApproval, doSwitchNetwork } from "@/hooks/useInteraction"
 import TokenSelector from "@/components/TokenSelector/index.vue"
 import AddRecipient from "@/components/AddRecipient/index.vue"
 import ZToken from "@/components/ZToken.vue"
@@ -187,6 +188,7 @@ import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import ZSectionView from "@/components/ZSectionView.vue"
 import ZSelectToken from "@/components/ZSelectToken.vue"
 
+createPriceState()
 const notification = useNotification()
 
 const TAB_SWAP = "exchange"
@@ -203,8 +205,12 @@ const isForInput = ref(true)
 const currentToken = computed(() => isForInput.value ? inputToken.value : outputToken.value)
 
 const canSelectToken = computed(() => allTokens.value.length > 0)
-const inputBalance = ref(0n)
-const outputBalance = ref(0n)
+// const inputBalance = ref(0n)
+// const outputBalance = ref(0n)
+const focusTokens = computed(() => [inputToken.value, outputToken.value])
+const { states: balanceStates, update: updateTokenBalances } = createBalanceStates2(account, focusTokens)
+const inputBalance = computed(() => balanceStates.value[0])
+const outputBalance = computed(() => balanceStates.value[1])
 
 const inputAmount = ref("")
 const outputAmount = ref("")
@@ -219,55 +225,57 @@ const feeValue = computed(() => gasToken.value ? fromValue(getPrice(gasToken.val
  */
 const quoteData = ref(null)
 
-const requireSwitchChain = computed(() => chainId.value !== inputToken.value.chainId)
-
 const showTokenSelector = ref(false)
 const showAddRecipient = ref(false)
 const recipient = ref('')
 
+const requireSwitchChain = computed(() => chainId.value !== inputToken.value.chainId)
+const switching = ref(false)
+const onSwitchNetwork = () => doSwitchNetwork(notification, switching, inputToken.value.chainId)
+
 const approved = ref(false)
 const approvalChecking = ref(false)
 const approving = ref(false)
+const checkAllowance = () => doCheckAllowance(approved, inputToken.value, account.value, getRouterAddress(inputToken.value.chainId), amountIn.value)
+const onCheckApproval = () => doCheckApproval(approvalChecking, checkAllowance)
+const onApproval = async () => {
+  const spender = getRouterAddress(inputToken.value.chainId)
+  const success = await doApproval(notification, approving, inputToken.value, spender, inputBalance.value)
+  if (success) {
+    checkAllowance()
+    updateNativeBalance()
+  }
+}
+
 const swaping = ref(false)
 const signing = ref(false)
-const switching = ref(false)
 
-const setInputOutputBalances = () => {
-  if (inputToken.value) {
-    inputBalance.value = getBalance(account.value, inputToken.value)
-  }
-  if (outputToken.value) {
-    outputBalance.value = getBalance(account.value, outputToken.value)
-  }
-}
+// const setInputOutputBalances = () => {
+//   if (inputToken.value) {
+//     inputBalance.value = getBalance(account.value, inputToken.value)
+//   }
+//   if (outputToken.value) {
+//     outputBalance.value = getBalance(account.value, outputToken.value)
+//   }
+// }
 
-const updateTokenBalances = async () => {
-  if (!account.value) {
-    inputBalance.value = 0n
-    outputBalance.value = 0n
-    return
-  }
+// const updateTokenBalances = async () => {
+//   if (!account.value) {
+//     inputBalance.value = 0n
+//     outputBalance.value = 0n
+//     return
+//   }
 
-  const tokens = [inputToken.value, outputToken.value].filter(Boolean)
-  if (tokens.length === 0) {
-    return
-  }
+//   const tokens = [inputToken.value, outputToken.value].filter(Boolean)
+//   if (tokens.length === 0) {
+//     return
+//   }
 
-  setInputOutputBalances()
-  await updateBalances(account.value, tokens)
-  setInputOutputBalances()
-}
-const debounceUpdateTokenBalances = debounce(updateTokenBalances, 100, { leading: false, trailing: true })
-
-const checkAllowance = async () => {
-  const id = inputToken.value.chainId
-  const publicClient = getPublicClient(id)
-  const spender = getRouterAddress(id)
-  const val = await allowance(publicClient, inputToken.value.address, account.value, spender).catch(() => 0n)
-  const allow = val >= amountIn.value
-
-  approved.value = allow
-}
+//   setInputOutputBalances()
+//   await updateBalances(account.value, tokens)
+//   setInputOutputBalances()
+// }
+// const debounceUpdateTokenBalances = debounce(updateTokenBalances, 100, { leading: false, trailing: true })
 
 const reset = () => {
   tab.value = TAB_SWAP
@@ -363,7 +371,7 @@ const onSelectToken = async token => {
   inputAmount.value = ""
   outputAmount.value = ""
   quoteData.value = null
-  updateTokenBalances()
+  updateTokenBalances(true)
 }
 
 const onSelectInputToken = () => {
@@ -396,12 +404,6 @@ const onMax = () => {
   onInputAmountBlur()
 }
 
-const onCheckApproval = async () => {
-  approvalChecking.value = true
-  await checkAllowance()
-  approvalChecking.value = false
-}
-
 const onReviewTransaction = () => {
   tab.value = TAB_REVIEW
   onCheckApproval()
@@ -411,54 +413,6 @@ const onReviewTransaction = () => {
 const onBack = () => {
   tab.value = TAB_SWAP
   approved.value = false
-}
-
-const onSwitchNetwork = async () => {
-  const id = inputToken.value.chainId
-  try {
-    switching.value = true
-    await switchChain(id)
-    switching.value = false
-  } catch (err) {
-    switching.value = false
-    notification.error({
-      title: `Switch to ${getChainName(id)} fail`,
-      content: err.shortMessage || err.details || err.message,
-      duration: 5000,
-    })
-  }
-}
-
-const onApproval = async () => {
-  const { symbol, address, chainId:id } = inputToken.value
-  const spender = getRouterAddress(id)
-
-  approving.value = true
-  signing.value = true
-
-  try {
-    const publicClient = getPublicClient(id)
-    const walletClient = getWalletClient()
-    const tx = await approve(
-      { publicClient, walletClient },
-      address,
-      spender,
-      inputBalance.value,
-    )
-    signing.value = false
-    await waitTx(notification, tx, 'Success', `Unlock ${symbol}`)
-    approving.value = false
-    checkAllowance()
-    updateNativeBalance()
-  } catch (err) {
-    approving.value = false
-    signing.value = false
-    notification.error({
-      title: `Unlock ${symbol} fail`,
-      content: err.shortMessage || err.details || err.message,
-      duration: 5000,
-    })
-  }
 }
 
 const onSwap = async () => {
@@ -491,7 +445,7 @@ const onSwap = async () => {
     await waitTx(notification, tx, 'Success', content)
     swaping.value = false
     reset()
-    updateTokenBalances()
+    updateTokenBalances(true)
     updateNativeBalance()
   } catch (err) {
     console.log(err)
@@ -505,19 +459,19 @@ const onSwap = async () => {
   }
 }
 
-onMounted(() => {
-  const stopWatch = watch(account, () => {
-    reset()
+// onMounted(() => {
+//   const stopWatch = watch(account, () => {
+//     reset()
 
-    if (account.value) {
-      debounceUpdateTokenBalances()
-    } else {
-      resetBalances()
-    }
-  })
+//     if (account.value) {
+//       debounceUpdateTokenBalances()
+//     } else {
+//       resetBalances()
+//     }
+//   })
 
-  onBeforeUnmount(stopWatch)
-})
+//   onBeforeUnmount(stopWatch)
+// })
 
 onMounted(() => {
   const stopWatch = watch(selectedChainId, () => {
@@ -526,25 +480,23 @@ onMounted(() => {
     inputToken.value = allTokens.value[0] || null
     outputToken.value = allTokens.value[1] || null
 
-    if (account.value) {
-      debounceUpdateTokenBalances()
-    } else {
-      resetBalances()
-    }
+    // if (account.value) {
+    //   debounceUpdateTokenBalances()
+    // } else {
+    //   resetBalances()
+    // }
   })
 
   onBeforeUnmount(stopWatch)
 })
 
 onMounted(() => {
-  startUpdatePrices()
   startUpdateQuoteData()
-  debounceUpdateTokenBalances()
+  // debounceUpdateTokenBalances()
 
   onBeforeUnmount(() => {
-    stopUpdatePrices()
     stopUpdateQuoteData()
-    debounceUpdateTokenBalances.cancel()
+    // debounceUpdateTokenBalances.cancel()
     debounceUpdateQuoteData.cancel()
   })
 })

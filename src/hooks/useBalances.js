@@ -1,7 +1,10 @@
 import pMap from "p-map"
+import debounce from "lodash-es/debounce"
+import { ref, readonly, watch, onMounted, onBeforeUnmount } from "vue"
 import { getPublicClient } from "./useClient"
 import { balanceOf } from "./useCurrency"
 import { createCache } from "./useDataCache"
+import { createInterval } from "./useTimer"
 
 const cache = createCache()
 
@@ -47,4 +50,118 @@ export const updateBalances = async (account, tokens) => {
 
 export const resetBalances = () => {
   cache.reset()
+}
+
+/**
+ * @param {import('vue').Ref<string>} account
+ * @param {{chainId:number, address:string, symbol:string}[]} tokens
+ */
+export const createBalanceStates = (account, tokens) => {
+  const states = ref(tokens.map(() => 0n))
+
+  const doUpdate = async () => {
+    if (!account.value) {
+      return
+    }
+
+    // console.log(`update token balances: ${tokens.map(it => it.symbol).join(",")}`)
+    states.value = getBalances(account.value, tokens)
+    await updateBalances(account.value, tokens)
+    states.value = getBalances(account.value, tokens)
+  }
+  const debounceUpdate = debounce(doUpdate, 100, { leading: false, trailing: true })
+  const { start: startUpdate, stop: stopUpdate } = createInterval(debounceUpdate, 60 * 1000)
+
+  const update = (force = false) => {
+    force ? doUpdate() : debounceUpdate()
+  }
+
+  onMounted(() => {
+    debounceUpdate()
+
+    onBeforeUnmount(() => {
+      debounceUpdate.cancel()
+    })
+  })
+
+  onMounted(() => {
+    const stopWatch = watch(account, () => {
+      states.value = tokens.map(() => 0n)
+
+      debounceUpdate.cancel()
+      if (account.value) {
+        doUpdate()
+      } else {
+        resetBalances()
+      }
+    })
+
+    onBeforeUnmount(stopWatch)
+  })
+
+  return {
+    states: readonly(states),
+    update,
+    startUpdate,
+    stopUpdate,
+  }
+}
+
+/**
+ * @param {import('vue').Ref<string>} account
+ * @param {import('vue').ComputedRef<{chainId:number, address:string, symbol:string}[]>} tokens
+ */
+export const createBalanceStates2 = (account, tokens) => {
+  const initState = tokens.value.map(() => 0n)
+  const states = ref([...initState])
+
+  const doUpdate = async () => {
+    if (!account.value) {
+      return
+    }
+
+    const list = [...tokens.value]
+    const owner = account.value
+    const getValues = () => list.map(token => token ? getBalance(owner, token) : 0n)
+
+    states.value = getValues()
+    await updateBalances(owner, list.filter(Boolean))
+    states.value = getValues()
+  }
+  const debounceUpdate = debounce(doUpdate, 100, { leading: false, trailing: true })
+  const { start: startUpdate, stop: stopUpdate } = createInterval(debounceUpdate, 60 * 1000)
+
+  const update = (force = false) => {
+    force ? doUpdate() : debounceUpdate()
+  }
+
+  onMounted(() => {
+    debounceUpdate()
+
+    onBeforeUnmount(() => {
+      debounceUpdate.cancel()
+    })
+  })
+
+  onMounted(() => {
+    const stopWatch = watch(account, () => {
+      states.value = [...initState]
+
+      debounceUpdate.cancel()
+      if (account.value) {
+        doUpdate()
+      } else {
+        resetBalances()
+      }
+    })
+
+    onBeforeUnmount(stopWatch)
+  })
+
+  return {
+    states: readonly(states),
+    update,
+    startUpdate,
+    stopUpdate,
+  }
 }
