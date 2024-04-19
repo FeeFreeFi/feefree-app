@@ -377,14 +377,14 @@ const onSelectOutputToken = () => {
 }
 
 const onReverse = () => {
-  const swap = (a, b) => {
+  const doSwap = (a, b) => {
     const c = a.value
     a.value = b.value
     b.value = c
   }
 
-  swap(inputToken, outputToken)
-  swap(inputBalance, outputBalance)
+  doSwap(inputToken, outputToken)
+  doSwap(inputBalance, outputBalance)
 
   inputAmount.value = ""
   outputAmount.value = ""

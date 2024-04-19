@@ -248,7 +248,7 @@ export const swap = async ({ publicClient, walletClient }, address, paths, sqrtP
   const account = walletClient.account.address
   let value = fee
   if (isNative(paths[0])) {
-    value -= amountIn
+    value += amountIn
   }
 
   const deadline = getStamp() + DURATION
