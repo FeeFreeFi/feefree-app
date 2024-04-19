@@ -8,6 +8,7 @@
 <script setup>
 import { computed } from 'vue'
 import { isExchangeToken } from '@/hooks/useExchange'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import IconPlus from '@/components/IconPlus.vue'
 
 const props = defineProps({

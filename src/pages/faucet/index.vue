@@ -23,8 +23,8 @@ import { getPublicClient } from "@/hooks/useClient"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { waitTx } from "@/hooks/useWaitTx"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import ZSectionView from '@/components/ZSectionView.vue'
 import { doSwitchNetwork } from "@/hooks/useInteraction"
+import ZSectionView from '@/components/ZSectionView.vue'
 
 const notification = useNotification()
 

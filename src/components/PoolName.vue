@@ -7,6 +7,8 @@
 </template>
 
 <script setup>
+import ZTokenSymbol from './ZTokenSymbol.vue'
+
 defineProps({
   symbol0: {
     type: String,
