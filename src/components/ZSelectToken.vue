@@ -23,7 +23,7 @@
 defineProps({
   token: {
     /**
-     * @type {{symbol:string, address:string, decimals:number, dp:number, chainId:number}}
+     * @type {import('vue').PropType<{symbol:string, address:string, decimals:number, dp:number, chainId:number}>}
      */
     type: Object,
     default: null,

@@ -370,7 +370,7 @@ export const removeLiquidity = async ({ publicClient, walletClient }, address, c
  * @param {bigint} sqrtPriceX96
  * @param {bigint} liquidity
  */
-const getTokenBalances = (sqrtPriceX96, liquidity) => {
+export const getTokenBalances = (sqrtPriceX96, liquidity) => {
   if (sqrtPriceX96 === 0n) {
     return { balance0: 0n, balance1: 0n, price0: 0, price1: 0 }
   }
@@ -397,7 +397,14 @@ export const getPositionData = (id, sqrtPriceX96, liquidity) => {
   const percent0 = tvl.eq(0) ? '50%' : `${tvl0.times(100).div(tvl).toFormat(2)}%`
   const percent1 = tvl.eq(0) ? '50%' : `${tvl1.times(100).div(tvl).toFormat(2)}%`
 
-  return { balance0, balance1, percent0, percent1, tvl: BigInt(tvl.dp(0).toString(10)) }
+  return {
+    balance0,
+    balance1,
+    percent0,
+    percent1,
+    tvl: BigInt(tvl.dp(0).toString(10)),
+    liquidity,
+  }
 }
 
 const getDefaultState = () => ({
@@ -544,3 +551,4 @@ export const getAmount1FromSqrtPrice = (sqrtPriceX96, amount0) => {
   // return amount0 * sqrtPriceX96 * sqrtPriceX96 / FACTOR2
   return (sqrtPriceX96 * sqrtPriceX96 * amount0) >> 192n
 }
+

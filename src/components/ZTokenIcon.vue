@@ -8,7 +8,7 @@ import { computed } from 'vue'
 const props = defineProps({
   token: {
     /**
-     * @type {{chainId:number, symbol:string, address:string}}
+     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
      */
     type: Object,
     required: true,

@@ -11,10 +11,10 @@
 import { toBalance, byDecimals } from "@/utils/bn"
 
 defineProps({
-  /**
-   * @type {{symbol:string, decimals:number, dp:number}}
-   */
   token: {
+    /**
+     * @type {import('vue').PropType<{symbol:string, decimals:number, dp:number}>}
+     */
     type: Object,
     default: null,
   },

@@ -3,7 +3,10 @@ import {
   APP_PRODUCT_NAME,
   PAGE_HOME,
   PAGE_POOL_HOME,
-  PAGE_POOL_DETAIL,
+  PAGE_POOL_OVERVIEW,
+  PAGE_POOL_POSITION,
+  PAGE_POOL_DEPOSIT,
+  PAGE_POOL_WITHDRAW,
   PAGE_EXCHANGE,
   PAGE_NFT_HOME,
   PAGE_FAUCET,
@@ -33,7 +36,6 @@ const routes = [
       },
       {
         path: "pool/:id",
-        name: PAGE_POOL_DETAIL,
         component: () => import('@/pages/pool/detail/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
         beforeEnter: to => {
@@ -41,6 +43,28 @@ const routes = [
             return { name: PAGE_NOT_FOUND }
           }
         },
+        children: [
+          {
+            path: "",
+            name: PAGE_POOL_OVERVIEW,
+            component: import('@/pages/pool/detail/overview/index.vue'),
+          },
+          {
+            path: "position",
+            name: PAGE_POOL_POSITION,
+            component: import('@/pages/pool/detail/position/index.vue'),
+          },
+          {
+            path: "deposit",
+            name: PAGE_POOL_DEPOSIT,
+            component: import('@/pages/pool/detail/deposit/index.vue'),
+          },
+          {
+            path: "withdraw",
+            name: PAGE_POOL_WITHDRAW,
+            component: import('@/pages/pool/detail/withdraw/index.vue'),
+          },
+        ]
       },
       {
         path: "exchange",

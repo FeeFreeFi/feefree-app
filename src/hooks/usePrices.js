@@ -1,4 +1,4 @@
-import { readonly, ref } from "vue"
+import { onBeforeUnmount, onMounted, readonly, ref, watch } from "vue"
 import debounce from "lodash-es/debounce"
 import { PRICE_API_KEY } from "@/config"
 import { getAllSymbols } from "./useCurrency"
@@ -45,4 +45,23 @@ export const stopUpdate = stop
  */
 export const getPrice = symbol => {
   return pricesRef.value[symbol] || 0
+}
+
+/**
+ * @param {() => {}} onPriceChanged
+ */
+export const createPriceState = (onPriceChanged = null) => {
+  onMounted(() => {
+    start()
+
+    if (onPriceChanged) {
+      const stopWatch = watch(priceChangedRef, () => {
+        onPriceChanged()
+      })
+
+      onBeforeUnmount(stopWatch)
+    }
+
+    onBeforeUnmount(stop)
+  })
 }

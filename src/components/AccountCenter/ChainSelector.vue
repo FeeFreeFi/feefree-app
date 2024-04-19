@@ -16,12 +16,13 @@
 </template>
 
 <script setup>
-import { computed, h, watch, onMounted, onBeforeUnmount } from "vue"
+import { ref, computed, h, watch, onMounted, onBeforeUnmount } from "vue"
 import { getChainName, getChains, isSupportChain } from "@/hooks/useChains"
-import { chainId, switchChain, requireSwitchChain } from "@/hooks/useWallet"
+import { chainId, requireSwitchChain } from "@/hooks/useWallet"
 import { selectedChainId, setSelectedChainId } from "@/hooks/useSelectedChain"
 import { useNotification } from "naive-ui"
 import ZChainIcon from "@/components/ZChainIcon.vue"
+import { doSwitchNetwork } from "@/hooks/useInteraction"
 
 const notification = useNotification()
 
@@ -50,17 +51,11 @@ const options = getChains().map(chain => {
 
 const current = computed(() => options.find(it => it.value === selectedChainId.value))
 
-const doSwitch = async id => {
-  try {
-    await switchChain(id)
-  } catch (err) {
-    notification.error({
-      title: `Switch to ${getChainName(id)} fail`,
-      content: err.shortMessage || err.details || err.message,
-      duration: 3000,
-    })
-  }
-}
+const switching = ref(false)
+/**
+ * @param {number} chainId
+ */
+const onSwitchNetwork = chainId => doSwitchNetwork(notification, switching, chainId)
 
 const onSelect = value => {
   setSelectedChainId(value)
@@ -69,7 +64,7 @@ const onSelect = value => {
     return
   }
 
-  doSwitch(value)
+  onSwitchNetwork(value)
 }
 
 const onChainChange = (newChainId, oldChainId) => {

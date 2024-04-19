@@ -10,13 +10,20 @@
 
 <script setup>
 import { ref, computed } from "vue"
+import ZTokenIcon from "@/components/ZTokenIcon.vue"
 
 const props = defineProps({
   currency0: {
+    /**
+     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     */
     type: Object,
     required: true,
   },
   currency1: {
+    /**
+     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     */
     type: Object,
     required: true,
   },
