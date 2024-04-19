@@ -14,7 +14,7 @@
           <n-text class="ml-2">${{ toBalance(totalTVL) }}</n-text>
         </div>
       </div>
-      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:md:grid-cols-4 gap-4">
+      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <div v-for="pool in pools" :key="pool.id" class="p-4 flex flex-col gap-4 shadow rounded-xl relative">
           <div class="flex justify-center relative">
             <span class="p-1 bg-white rounded-full shadow translate-x-[4px] z-[1]"><ZTokenIcon class="size-6" :token="pool.currency0"/></span>

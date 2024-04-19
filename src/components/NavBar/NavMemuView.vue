@@ -5,6 +5,15 @@
       <ThemeButton />
     </div>
     <n-divider class="!my-0" />
+    <div v-if="screen.lt.sm" class="flex flex-col">
+      <n-button class="h-10 rounded flex-col items-stretch" quaternary tag="a" :to="{ name: PAGE_FAUCET }" aria-label="NFTs">
+        <n-text class="w-full flex-y-center justify-between">
+          <span>Faucet</span>
+          <i-mdi-faucet class="size-6" />
+        </n-text>
+      </n-button>
+    </div>
+    <n-divider v-if="screen.lt.sm" class="!my-0" />
     <div class="flex flex-col">
       <n-button class="h-10 rounded flex-col items-stretch" quaternary tag="a" :href="URL_DISCORD" target="_blank" aria-label="discord">
         <n-text class="w-full flex-y-center justify-between">
@@ -29,6 +38,12 @@
 </template>
 
 <script setup>
-import { URL_DISCORD, URL_TWITTER, URL_GITHUB } from "@/config"
+import {
+  URL_DISCORD,
+  URL_TWITTER,
+  URL_GITHUB,
+  PAGE_FAUCET,
+} from "@/config"
 import ThemeButton from "./ThemeButton.vue"
+import { screen } from "@/hooks/useScreen";
 </script>

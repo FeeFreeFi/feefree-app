@@ -69,7 +69,7 @@ export const exchange = async ({ publicClient, walletClient }, address, currency
     abi: ABI_EXCHANGE,
     functionName: 'exchange',
     args: [{ currency, amountSpecified, to }],
-    value: isNative(currency) ? amountSpecified + fee : fee,
+    value: amountSpecified < 0 && isNative(currency) ? -amountSpecified + fee : fee,
   })
   const hash = await walletClient.writeContract(request)
 

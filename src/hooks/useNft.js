@@ -1,18 +1,16 @@
-import pMap from "p-map"
-import { getPublicClient } from "./useClient"
 import { getTxMeta } from "@/utils/getTxMeta"
 import {
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import { getChain } from "./useChains"
-import { createCache } from "./useDataCache"
 
 const CONFIG = [
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     contracts: [
-      { label: "FFGenesisNFT", address: "0xf70cF082332eD4a3f76E0c19D9E1B2D6f93e8dbB", name: "FFGenesisNFT", symbol: "FFG" },
-      { label: "FFWeekNFT(202416)", address: "0x0726b9554e459B862DAC048ff3989901F74F1d66", name: "FFWeekNFT", symbol: "FFW" },
+      { label: "FFGenesisNFT", address: "0x570E588fe0e73A1E38Fade5cCa196030eb0E3c16", name: "FFGenesisNFT", symbol: "FFG", price: 10000000000000000n, free: false, image: "FFGenesisNFT.jpg" },
+      { label: "FFWeekNFT(202416)", address: "0xf2923d8c0E80d1a014681C86D6eEC4b6f09cAfB0", name: "FFWeekNFT", symbol: "FFW", price: 0n, free: true, image: "FFWeekNFT-1.jpg" },
+      { label: "FFWeekNFT(202417)", address: "0x6354f5eBEd382aCbF0EbA6F7C46435D99a352170", name: "FFWeekNFT", symbol: "FFW", price: 0n, free: true, image: "FFWeekNFT-2.jpg" },
     ],
   },
 ]
@@ -23,98 +21,35 @@ const ABI_MINT = [
     name: "mint",
     type: "function",
     stateMutability: "nonpayable",
-    inputs: [],
+    inputs: [
+      {
+        name: "to",
+				type: "address"
+      }
+    ],
     outputs: [],
   },
 ]
 
-const ABI_MINTED = [
-  {
-		name: "minted",
-		type: "function",
-    stateMutability: "view",
-    inputs: [
-			{
-				name: "",
-				type: "address"
-			}
-		],
-		outputs: [
-			{
-				name: "",
-				type: "uint256"
-			}
-		],
-  }
-]
-
-const cache = createCache()
-
-/**
- * @param {{chainId:number, address:string}} token
- */
-const getNftKey = nft => `${nft.chainId}:${nft.address}`
-
-/**
- * @param {string} account
- * @param {{chainId:number, address:string}} nfts
- * @returns {(bigint|false)[]}
- */
-export const getStates = (account, nfts) => {
-  const keys = nfts.map(nft => getNftKey(nft))
-  return cache.getValues(account, keys, false)
-}
-
-/**
- * @param {string} account
- * @param {{chainId:number, address:string}} nfts
- */
-export const updateStates = async (account, nfts) => {
-  const items = await pMap(nfts, async nft => {
-    const tokenId = await minted(getPublicClient(nft.chainId), nft.address, account).catch(() => 0n)
-    const state = tokenId !== 0n ? tokenId : false
-    const key = getNftKey(nft)
-    return [key, state]
-  }, { concurrency: 3 })
-
-  const states = Object.fromEntries(items)
-  cache.setValues(account, states)
-}
-
-export const resetStates = () => {
-  cache.reset()
-}
-
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
  * @param {stirng} address
+ * @param {stirng} to
+ * @param {bigint} price
  */
-export const mint = async ({ publicClient, walletClient }, address) => {
+export const mint = async ({ publicClient, walletClient }, address, to, price) => {
   const account = walletClient.account.address
   const { request } = await publicClient.simulateContract({
     account,
     address,
     abi: ABI_MINT,
     functionName: 'mint',
+    args: [to],
+    value: price,
   })
   const hash = await walletClient.writeContract(request)
 
   return getTxMeta(hash, publicClient.chain)
-}
-
-/**
- * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
- * @param {string} account
- * @returns {bigint}
- */
-export const minted = async (publicClient, address, account) => {
-  return publicClient.readContract({
-    address,
-    abi: ABI_MINTED,
-    functionName: 'minted',
-    args: [account],
-  })
 }
 
 /**

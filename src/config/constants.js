@@ -1,6 +1,6 @@
 export const CHAIN_ID_MAINNET = 1
 export const CHAIN_ID_OPTIMISM = 10
-export const CHAIN_ID_BSC= 56
+export const CHAIN_ID_BSC = 56
 export const CHAIN_ID_POLYGON = 137
 export const CHAIN_ID_ZKSYNC_SEPOLIA = 300
 export const CHAIN_ID_ZKSYNC = 324

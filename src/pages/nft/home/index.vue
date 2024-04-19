@@ -1,75 +1,76 @@
 <template>
-  <div class="flex flex-col py-6 sm:py-10">
-    <div class="mx-auto relative w-full sm:w-[520px] h-[428px] sm:h-[488px]">
-      <ZSectionView>
-        <!-- header -->
-        <div class="h-10 flex-y-center justify-between">
-          <n-text class="text-xl sm:text-2xl font-medium">Week NFTs</n-text>
+  <div class="flex flex-col py-6 sm:py-10 text-sm sm:text-base">
+    <div class="mx-auto relative w-full">
+      <div class="flex justify-between">
+        <div class="flex-center px-3 py-1 rounded-full border-all !border-grey-5 text-sm gap-1">
+          <i-my-nft class="size-6" />
+          <n-text>FeeFree NFTs</n-text>
         </div>
-        <div class="mt-4 flex flex-col gap-4">
-          <div class="text-sm flex justify-between items-center bg-block p-3" v-for="item, index in nfts" :key="index">
-            <!-- <i-my-nft class="size-6" /> -->
-            <WeekNftIcon :chain-id="item.chainId" />
-            <n-text class="text-color-3">{{ item.label }}</n-text>
-            <div class="w-20 text-color-3 text-center">
-              <n-tooltip trigger="hover" v-if="isMinted(index)">
-                <template #trigger>
-                  <n-a class="no-underline hover:underline" :href="`${getNftExplorerUrl(item.chainId, item.address, states[index])}`" target="_blank">{{ states[index].toString(10) }}</n-a>
-                </template>
-                <span class="text-xs sm:text-sm">{{ `${item.label}-${states[index].toString(10)}` }}</span>
-              </n-tooltip>
+      </div>
+      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
+        <div class="flex flex-col items-center gap-2 shadow rounded-xl relative w-[300px]" v-for="item, index in nfts" :key="index">
+          <div>
+            <NftImage class="aspect-square rounded-t-xl" :src="item.image" :label="item.label" />
+          </div>
+          <!-- NFT name -->
+          <div class="flex justify-center">
+            <n-text>{{ item.label }}</n-text>
+          </div>
+          <!-- Price -->
+          <div class="flex justify-center gap-2">
+            <n-text class="text-color-3">Price:</n-text>
+            <div class="flex" v-if="item.free">
+              <span class="font-medium text-color-3 ml-1">Free</span>
             </div>
-            <div class="w-[114px] flex justify-end">
-              <span class="flex-1"></span>
-              <n-button class="!text-white rounded" :disabled="switching || isMinted(index) || loading" :loading="switching || loading && mintingIndex === index" type="primary" strong :aria-label="`${isMinted(index) ? 'Minted' : 'Free Mint'}`" @click="() => onMint(index, item)">{{ !!states[index] ? "Minted" : "Free Mint" }}</n-button>
+            <div class="flex" v-else>
+              <ZTokenBalance :token="feeToken" :balance="item.price" :dp="9" />
+              <span class="font-medium text-color-3 ml-1">(${{ getFeeValue(item.price) }})</span>
             </div>
           </div>
+          <div class="w-full">
+            <n-button class="!text-white rounded w-full" :disabled="switching || minting" :loading="operatingIndex === index" type="primary" strong :aria-label="item.free ? 'Free Mint' : 'Mint'" @click="() => onMint(index, item)">{{ item.free ? "Free Mint" : "Mint" }}</n-button>
+          </div>
         </div>
-      </ZSectionView>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import debounce from "lodash-es/debounce"
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { useNotification } from "naive-ui"
-import { getNftList, getStates, updateStates, mint, getNftExplorerUrl } from "@/hooks/useNft"
+import { getNftList, mint } from "@/hooks/useNft"
 import { account, getWalletClient, switchChain, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { waitTx } from "@/hooks/useWaitTx"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import ZSectionView from '@/components/ZSectionView.vue'
-import WeekNftIcon from '@/components/WeekNftIcon.vue'
-import { getChainName } from "@/hooks/useChains"
+import { getChainName, getNativeCurrency } from "@/hooks/useChains"
+import NftImage from "@/components/NftImage.vue"
+import ZTokenBalance from "@/components/ZTokenBalance.vue"
+import { getPrice, startUpdate as startUpdatePrices, stopUpdate as stopUpdatePrices } from "@/hooks/usePrices"
+import { fromValue } from "@/utils/bn"
 
 const notification = useNotification()
 
 const nfts = computed(() => getNftList(selectedChainId.value))
-const states = ref(getStates(account.value, nfts.value))
-const mintingIndex = ref(-1)
-const isMinted = computed(() => index => !!states.value[index])
+const feeToken = computed(() => getNativeCurrency(selectedChainId.value))
 
-const loading = ref(false)
-const switching = ref(false)
-
-const update = async () => {
-  if (!account.value) {
-    return
-  }
-
-  states.value = getStates(account.value, nfts.value)
-  await updateStates(account.value, nfts.value)
-  states.value = getStates(account.value, nfts.value)
+/**
+ * @param {bigint} value
+ */
+const getFeeValue = value => {
+  return fromValue(getPrice(feeToken.value.symbol)).times(value).div(1e18).dp(4).toNumber()
 }
-const debounceUpdate = debounce(update, 100, { leading: false, trailing: true })
+
+const minting = ref(false)
+const switching = ref(false)
+const operatingIndex = ref(-1)
 
 const reset = () => {
-  states.value = ref(nfts.value.map(() => false))
-  mintingIndex.value = -1
-  loading.value = false
+  minting.value = false
   switching.value = false
+  operatingIndex.value = -1
 }
 
 const onSwitchNetwork = async id => {
@@ -87,7 +88,7 @@ const onSwitchNetwork = async id => {
   }
 }
 
-const onMint = async (index, { address, label, chainId }) => {
+const onMint = async (index, { address, label, chainId, price }) => {
   if (!account.value) {
     openWalletConnector()
     return
@@ -98,21 +99,24 @@ const onMint = async (index, { address, label, chainId }) => {
     return
   }
 
-  loading.value = true
-  mintingIndex.value = index
+  operatingIndex.value = index
+  minting.value = true
   try {
     const publicClient = getPublicClient(chainId)
     const walletClient = getWalletClient()
     const tx = await mint(
       { publicClient, walletClient },
       address,
+      account.value,
+      price,
     )
     await waitTx(notification, tx, 'Success', `Mint ${label}`)
-    loading.value = false
-    debounceUpdate()
+    minting.value = false
+    operatingIndex.value = -1
     updateNativeBalance()
   } catch (err) {
-    loading.value = false
+    minting.value = false
+    operatingIndex.value = -1
     notification.error({
       title: `Mint ${label} fail`,
       content: err.shortMessage || err.details || err.message,
@@ -124,17 +128,16 @@ const onMint = async (index, { address, label, chainId }) => {
 onMounted(() => {
   const stopWatch = watch([account, selectedChainId], () => {
     reset()
-    debounceUpdate()
   })
 
   onBeforeUnmount(stopWatch)
 })
 
 onMounted(() => {
-  debounceUpdate()
+  startUpdatePrices()
 
   onBeforeUnmount(() => {
-    debounceUpdate.cancel()
+    stopUpdatePrices()
   })
 })
 </script>
