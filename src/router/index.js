@@ -47,22 +47,22 @@ const routes = [
           {
             path: "",
             name: PAGE_POOL_OVERVIEW,
-            component: import('@/pages/pool/detail/overview/index.vue'),
+            component: () => import('@/pages/pool/detail/overview/index.vue'),
           },
           {
             path: "position",
             name: PAGE_POOL_POSITION,
-            component: import('@/pages/pool/detail/position/index.vue'),
+            component: () => import('@/pages/pool/detail/position/index.vue'),
           },
           {
             path: "deposit",
             name: PAGE_POOL_DEPOSIT,
-            component: import('@/pages/pool/detail/deposit/index.vue'),
+            component: () => import('@/pages/pool/detail/deposit/index.vue'),
           },
           {
             path: "withdraw",
             name: PAGE_POOL_WITHDRAW,
-            component: import('@/pages/pool/detail/withdraw/index.vue'),
+            component: () => import('@/pages/pool/detail/withdraw/index.vue'),
           },
         ]
       },

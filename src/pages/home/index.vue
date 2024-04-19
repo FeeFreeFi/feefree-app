@@ -187,6 +187,7 @@ import ZToken from "@/components/ZToken.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import ZSectionView from "@/components/ZSectionView.vue"
 import ZSelectToken from "@/components/ZSelectToken.vue"
+import ZTokenIcon from "@/components/ZTokenIcon.vue"
 
 createPriceState()
 const notification = useNotification()

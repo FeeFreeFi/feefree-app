@@ -147,6 +147,7 @@ import { createPriceState } from "@/hooks/usePrices"
 import { createBalanceStates } from "@/hooks/useBalances"
 import ZToken from "@/components/ZToken.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
+import ZTokenIcon from "@/components/ZTokenIcon.vue"
 import ZSectionView from "@/components/ZSectionView.vue"
 import { doApproval, doCheckApproval, doCheckAllowance, doSwitchNetwork } from "@/hooks/useInteraction"
 
