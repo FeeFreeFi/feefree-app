@@ -17,10 +17,10 @@ const CONFIG = [
         currency0: getZoraToken("ETH"),
         currency1: getZoraToken("ETH+"),
       },
-      // {
-      //   currency0: getZoraToken("USDzC"),
-      //   currency1: getZoraToken("USDzC+"),
-      // },
+      {
+        currency0: getZoraToken("USDzC"),
+        currency1: getZoraToken("USDzC+"),
+      },
     ],
   },
   {

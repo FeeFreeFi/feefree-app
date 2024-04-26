@@ -11,7 +11,7 @@
           <n-text class="text-color-3 text-sm">Liquidity</n-text>
           <div class="flex-y-center">
             <ZPoolIcon :currency0="currency0" :currency1="currency1" />
-            <ZTokenBalance content-class="text-sm" :token="currencyLiquidity" :balance="positionData.liquidity" :dp="3" :show-symbol="false" />
+            <ZTokenBalance content-class="text-sm" :token="currencyLiquidity" :balance="positionData.liquidity" :dp="9" :show-symbol="false" />
           </div>
         </div>
         <div class="flex-1 shadow p-4 flex flex-col gap-4 rounded-2xl">
@@ -71,7 +71,10 @@ const { state: poolState, update: updatePoolState } = createPoolState(route.para
 createPriceState(updatePoolState)
 
 const { states: balanceStates } = createBalanceStates(account, [currencyLiquidity])
-const balanceLiquidity = computed(() => balanceStates.value[0])
+const balanceLiquidity = computed(() => {
+  console.log(balanceStates.value[0])
+  return balanceStates.value[0]
+})
 
 const hasPosition = computed(() => balanceLiquidity.value > 0n)
 const positionData = computed(() => hasPosition.value ? getPositionData(pool.id, poolState.value.sqrtPriceX96, balanceLiquidity.value) : null)

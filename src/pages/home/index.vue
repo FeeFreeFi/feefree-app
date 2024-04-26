@@ -428,32 +428,12 @@ const onSwap = async () => {
   }
 }
 
-// onMounted(() => {
-//   const stopWatch = watch(account, () => {
-//     reset()
-
-//     if (account.value) {
-//       debounceUpdateTokenBalances()
-//     } else {
-//       resetBalances()
-//     }
-//   })
-
-//   onBeforeUnmount(stopWatch)
-// })
-
 onMounted(() => {
   const stopWatch = watch(selectedChainId, () => {
     reset()
 
     inputToken.value = allTokens.value[0] || null
     outputToken.value = allTokens.value[1] || null
-
-    // if (account.value) {
-    //   debounceUpdateTokenBalances()
-    // } else {
-    //   resetBalances()
-    // }
   })
 
   onBeforeUnmount(stopWatch)
@@ -461,11 +441,9 @@ onMounted(() => {
 
 onMounted(() => {
   startUpdateQuoteData()
-  // debounceUpdateTokenBalances()
 
   onBeforeUnmount(() => {
     stopUpdateQuoteData()
-    // debounceUpdateTokenBalances.cancel()
     debounceUpdateQuoteData.cancel()
   })
 })

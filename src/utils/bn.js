@@ -6,7 +6,7 @@ BigInt.prototype.toJSON = BigInt.prototype.toJSON || function toJSON() { return 
 /**
  * @param {BigNumber|string|number} value
  */
-export const toBigInt = value => BigInt(value.toString(10))
+const toBigInt = value => BigInt(value.toString(10))
 
 /**
  * @param {BigNumber|string|number|BigInt} value
@@ -29,7 +29,7 @@ export const byDecimals = (value, decimals) => new BigNumber(value.toString(10))
  * @param {BigNumber|string|number|BigInt} value
  * @param {number} decimals
  */
-export const parseAmount = (value, decimals) => toBigInt(fromDecimals(value, decimals))
+export const parseAmount = (value, decimals) => toBigInt(fromDecimals(value, decimals).dp(0))
 
 /**
  * @param {BigNumber|string|number|BigInt} value

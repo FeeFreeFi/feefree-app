@@ -10,7 +10,6 @@ export const createPoolState = id => {
   const state = ref(getPoolState(id))
 
   const doUpdate = async () => {
-    // console.log(`update pool state: ${id}`)
     state.value = getPoolState(id)
     await updatePoolState(id)
     state.value = getPoolState(id)
@@ -44,7 +43,6 @@ export const createPoolStates = ids => {
 
   const doUpdate = async () => {
     const poolIds = ids.value
-    // console.log(`update pool states`)
     states.value = getPoolStates(poolIds)
     await updatePoolStates(poolIds)
     states.value = getPoolStates(poolIds)
