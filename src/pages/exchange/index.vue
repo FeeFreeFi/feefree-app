@@ -298,16 +298,13 @@ const onSelectOutputToken = () => {
 }
 
 const onReverse = () => {
-  const doSwap = (a, b) => {
-    const c = a.value
-    a.value = b.value
-    b.value = c
-  }
-
-  doSwap(inputToken, outputToken)
-  doSwap(inputBalance, outputBalance)
+  const [tokenA, tokenB] = [inputToken.value, outputToken.value]
+  inputToken.value = tokenB
+  outputToken.value = tokenA
 
   inputAmount.value = ""
+
+  updateTokenBalances()
 }
 
 const onMax = () => {

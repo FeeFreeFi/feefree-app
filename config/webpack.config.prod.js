@@ -1,5 +1,3 @@
-import path from 'path'
-import webpack from 'webpack'
 import { merge } from 'webpack-merge'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
@@ -7,7 +5,7 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 
 import baseConfig from './webpack.config.base.js'
-import { getDefinition, dirs } from "./environment.js"
+import { dirs } from "./environment.js"
 
 // https://webpack.js.org/configuration/
 /**
@@ -20,7 +18,7 @@ export default merge(baseConfig, {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.join(dirs.root, 'public'),
+          from: dirs.public,
           to: dirs.dist,
           noErrorOnMissing: true,
           globOptions: {
@@ -29,7 +27,6 @@ export default merge(baseConfig, {
         },
       ]
     }),
-    new webpack.DefinePlugin(getDefinition()),
   ],
   optimization: {
     minimize: true,

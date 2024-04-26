@@ -43,4 +43,5 @@ export const dirs = {
   root,
   src: path.join(root, "src"),
   dist: path.join(root, "dist"),
+  public: path.join(root, "public"),
 }

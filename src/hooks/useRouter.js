@@ -1,8 +1,15 @@
 import {
+  CHAIN_ID_ZORA,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 
 const CONFIG = [
+  {
+    chainId: CHAIN_ID_ZORA,
+    router: "0x0FeeD701755c8040F7E1b0CeF8cEE41839270900",
+    pool: "0xB43287b2106BC044F07aE674794f5492E851d3dC",
+    fee: 10000000000000n,
+  },
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     router: "0x000017f113C10dE643B6FE57dacD17d7ABE500FF",

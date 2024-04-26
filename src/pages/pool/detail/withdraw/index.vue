@@ -12,7 +12,7 @@
           <div class="rounded flex flex-col bg-block">
             <div class="px-3 py-4 flex-y-center gap-2">
               <ZPoolIcon :currency0="currency0" :currency1="currency1" />
-              <n-input-number class="flex-1 amount-input" v-model:value="inputAmountLP" :min="0" :bordered="false" placeholder="0.0" :show-button="false" :on-blur="onAmountBlur" />
+              <n-input-number class="flex-1 amount-input" v-model:value="inputAmount" :min="0" :bordered="false" placeholder="0.0" :show-button="false" :on-blur="onAmountBlur" />
             </div>
             <n-divider class="!my-0" />
             <div class="p-3 flex-y-center justify-between gap-2">
@@ -50,9 +50,6 @@
         </div>
         <!-- button -->
         <div>
-          <!-- <n-button class="primary-btn" v-if="account" type="primary" strong block aria-label="Review Transaction" :disabled="!canReview" @click="onReviewTransaction">
-            {{ amountLP && amountLP > balanceLiquidity ? `Insufficient ${currencyLiquidity.symbol} Balance` : "Review Transaction" }}
-          </n-button> -->
           <n-button class="primary-btn" v-if="!account" type="primary" strong block aria-label="Connect Wallet" @click="openWalletConnector">Connect Wallet</n-button>
           <n-button v-else-if="requireSwitchChain" class="primary-btn" :disabled="switching" :loading="switching" type="info" block strong aria-label="Switch Network" @click="onSwitchNetwork">Switch Network</n-button>
           <n-button v-else class="primary-btn" :disabled="!canWithdraw" :loading="withdrawing" type="primary" block strong aria-label="Deposit" @click="onWithdraw">{{ signing ? 'Waiting For Wallet Confirmation' : 'Withdraw' }}</n-button>
@@ -98,8 +95,8 @@ createPriceState()
 const { states: balanceStates } = createBalanceStates(account, [currencyLiquidity])
 const balanceLiquidity = computed(() => balanceStates.value[0])
 
-const inputAmountLP = ref("")
-const amountLP = computed(() => parseAmount(inputAmountLP.value || 0, currencyLiquidity.decimals))
+const inputAmount = ref("")
+const amount = computed(() => parseAmount(inputAmount.value || 0, currencyLiquidity.decimals))
 
 const withdrawing = ref(false)
 const signing = ref(false)
@@ -109,7 +106,7 @@ const switching = ref(false)
 const onSwitchNetwork = () => doSwitchNetwork(notification, switching, pool.chainId)
 
 const canWithdraw = computed(() => {
-  if (amountLP.value === 0n || amountLP.value > balanceLiquidity.value) {
+  if (amount.value === 0n || amount.value > balanceLiquidity.value) {
     return false
   }
 
@@ -122,7 +119,7 @@ const canWithdraw = computed(() => {
 const quoteData = ref(null)
 
 const updateQuoteData = async () => {
-  if (amountLP.value === 0n) {
+  if (amount.value === 0n) {
     quoteData.value = null
     return
   }
@@ -132,7 +129,7 @@ const updateQuoteData = async () => {
   const address = getRouterAddress(id)
 
   try {
-    const result = await quoteRemoveLiquidity(publicClient, address, currency0.address, currency1.address, amountLP.value)
+    const result = await quoteRemoveLiquidity(publicClient, address, currency0.address, currency1.address, amount.value)
     quoteData.value = result
   } catch (err) {
     // outputAmount.value = ""
@@ -155,16 +152,16 @@ const reset = () => {
 }
 
 const onMax = () => {
-  inputAmountLP.value = toAmount(balanceLiquidity.value, currencyLiquidity.decimals)
+  inputAmount.value = toAmount(balanceLiquidity.value, currencyLiquidity.decimals)
   onAmountBlur()
 }
 
 const onAmountBlur = () => {
-  if (amountLP.value <= 0n) {
+  if (amount.value <= 0n) {
     return
   }
 
-  const { balance0: amount0, balance1: amount1 } = getTokenBalances(poolState.value.sqrtPriceX96, amountLP.value)
+  const { balance0: amount0, balance1: amount1 } = getTokenBalances(poolState.value.sqrtPriceX96, amount.value)
   quoteData.value = { amount0, amount1 }
 
   debounceUpdateQuoteData()
@@ -190,11 +187,12 @@ const onWithdraw = async () => {
       address,
       currency0.address,
       currency1.address,
-      amountLP.value
+      amount.value
     )
     signing.value = false
     await waitTx(notification, tx, 'Success', content)
     withdrawing.value = false
+    inputAmount.value = ""
     reset()
     updateNativeBalance()
   } catch (err) {

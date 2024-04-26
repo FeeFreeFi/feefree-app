@@ -1,20 +1,29 @@
 import {
-  CHAIN_ID_BASE_SEPOLIA,
   CHAIN_ID_ZORA,
+  CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
-  baseSepolia,
   zora,
+  baseSepolia,
 } from "viem/chains"
 
 const CHAINS = Object.freeze([
-  baseSepolia,
   zora,
+  baseSepolia,
 ])
 const CHAINS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, chain]))
 const CHAIN_IDS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, true]))
 
 const CHAIN_EXTRAS = [
+  {
+    id: CHAIN_ID_ZORA,
+    name: "Zora",
+    symbol: "ETH",
+    extraRpcUrls: [
+    ],
+    gasType: "maxFeePerGas",
+    isZkEVM: false,
+  },
   {
     id: CHAIN_ID_BASE_SEPOLIA,
     name: "Base Sepolia",
@@ -22,15 +31,6 @@ const CHAIN_EXTRAS = [
     extraRpcUrls: [
       "https://base-sepolia-rpc.publicnode.com",
       "https://base-sepolia.blockpi.network/v1/rpc/public",
-    ],
-    gasType: "maxFeePerGas",
-    isZkEVM: false,
-  },
-  {
-    id: CHAIN_ID_ZORA,
-    name: "Zora",
-    symbol: "ETH",
-    extraRpcUrls: [
     ],
     gasType: "maxFeePerGas",
     isZkEVM: false,

@@ -1,10 +1,19 @@
 import { getTxMeta } from "@/utils/getTxMeta"
 import {
+  CHAIN_ID_ZORA,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import { getChain } from "./useChains"
 
 const CONFIG = [
+  {
+    chainId: CHAIN_ID_ZORA,
+    contracts: [
+      { label: "FFGenesisNFT", address: "0xfDd0874588cAF4Df6E9AE26dACe1906c65292646", name: "FFGenesisNFT", symbol: "FFG", price: 10000000000000000n, free: false, image: "FFGenesisNFT.jpg" },
+      { label: "FFWeekNFT(202417)", address: "0x318f574DCb48Aa0ea12a7B0103009514d3A7C271", name: "FFWeekNFT", symbol: "FFW", price: 0n, free: true, image: "FFWeekNFT-1.jpg" },
+      { label: "FFWeekNFT(202418)", address: "0x81d0fCD3a651f7ceB3Fb01358aE9E732d5271d5d", name: "FFWeekNFT", symbol: "FFW", price: 0n, free: true, image: "FFWeekNFT-2.jpg" },
+    ],
+  },
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     contracts: [

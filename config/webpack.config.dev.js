@@ -1,8 +1,6 @@
-import webpack from 'webpack'
 import { merge } from 'webpack-merge'
 
 import baseConfig from './webpack.config.base.js'
-import { getDefinition } from "./environment.js"
 
 // https://webpack.js.org/configuration/
 /**
@@ -11,9 +9,6 @@ import { getDefinition } from "./environment.js"
 export default merge(baseConfig, {
   mode: 'development',
   devtool: 'eval-source-map',
-  plugins: [
-    new webpack.DefinePlugin(getDefinition(true)),
-  ],
   performance: {
     hints: false,
   },
