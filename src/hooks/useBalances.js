@@ -64,7 +64,6 @@ export const createBalanceStates = (account, tokens) => {
       return
     }
 
-    // console.log(`update token balances: ${tokens.map(it => it.symbol).join(",")}`)
     states.value = getBalances(account.value, tokens)
     await updateBalances(account.value, tokens)
     states.value = getBalances(account.value, tokens)
@@ -90,7 +89,7 @@ export const createBalanceStates = (account, tokens) => {
 
       debounceUpdate.cancel()
       if (account.value) {
-        doUpdate()
+        doUpdate(true)
       } else {
         resetBalances()
       }
@@ -149,7 +148,7 @@ export const createBalanceStates2 = (account, tokens) => {
 
       debounceUpdate.cancel()
       if (account.value) {
-        doUpdate()
+        doUpdate(true)
       } else {
         resetBalances()
       }

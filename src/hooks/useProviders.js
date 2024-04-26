@@ -219,7 +219,6 @@ const getInjectedProvider = () => {
 const onAnnounceProvider = e => {
   const { info, provider } = e.detail
   if (!providers.value[info.uuid]) {
-    // console.log(`found provider ${info.name}`)
     providers.value = {
       ...providers.value,
       [info.uuid]: { info, provider },

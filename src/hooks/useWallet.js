@@ -133,7 +133,6 @@ const onChainChanged = async (chainId) => {
 
 const onAccountsChanged = async (accounts) => {
   if (!accounts || accounts.length === 0) {
-    // console.log(`no connected accounts`)
     reset()
     return
   }

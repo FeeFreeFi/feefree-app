@@ -20,6 +20,7 @@ const cache = ref({})
 
 const DURATION = 600
 const Q96 = 79228162514264337593543950336n
+const Q192 = 6277101735386680763835789423207666416102355444464034512896n
 
 const CONFIG = [
   {
@@ -29,7 +30,7 @@ const CONFIG = [
         currency0: getZoraToken("ETH"),
         currency1: getZoraToken("USDzC"),
         currencyLiquidity: getZoraToken("ETH-USDzC"),
-        id: "0x6ce42771cfc077ff9fdc0bf42867b7959215d3e74664536a884afb9b6c503a8b",
+        id: "0x219a2c0f153258a81f975771ac32114e75de77c8bde22cf64d9aed0f20c8c13d",
       },
     ],
   },
@@ -37,22 +38,22 @@ const CONFIG = [
     chainId: CHAIN_ID_BASE_SEPOLIA,
     pools: [
       {
-        currency0: getBaseSepoliaToken("USDC"),
-        currency1: getBaseSepoliaToken("OP"),
-        currencyLiquidity: getBaseSepoliaToken("USDC-OP"),
-        id: "0x8200d68699ce30b6451b9db2ce840a47b0546c6712b07653caa9d58886c97ef9",
+        currency0: getBaseSepoliaToken("ETH"),
+        currency1: getBaseSepoliaToken("USDC"),
+        currencyLiquidity: getBaseSepoliaToken("ETH-USDC"),
+        id: "0x4dbbf714a0331c8171687b03f6e84976424a73d8955d22f462656a6532c93d85",
       },
       {
         currency0: getBaseSepoliaToken("DAI"),
         currency1: getBaseSepoliaToken("USDC"),
         currencyLiquidity: getBaseSepoliaToken("DAI-USDC"),
-        id: "0x9b5aaa46743b74314d96067d526da593f5607bb5d69f3ab035317a99cd886610",
+        id: "0xee477197580fd920133835850b5d683e493d20e824d878e9e1ca4602d25157a3",
       },
       {
         currency0: getBaseSepoliaToken("ETH"),
         currency1: getBaseSepoliaToken("OP"),
         currencyLiquidity: getBaseSepoliaToken("ETH-OP"),
-        id: "0x00a3c928e85fe7c6aeea0fa340740ebca850703309b8fb6b9e732689638e3099",
+        id: "0xd84ddb01c276135c899e04bef2d0f5eff5f170e822e128b64b57dfba1315c5a5",
       },
     ],
   },
@@ -321,7 +322,7 @@ export const addLiquidity = async ({ publicClient, walletClient }, address, curr
   const account = walletClient.account.address
   let value = 0n
   if (isNative(currency0)) {
-    value = amount0Desired
+    value = amount0Min
   }
   const deadline = getStamp() + DURATION
   const { request } = await publicClient.simulateContract({
@@ -452,7 +453,7 @@ export const getPoolStates = ids => {
  * @param {stirng} id
  */
 export const updatePoolState = async id => {
-  const { chainId } = getPool(id)
+  const { chainId, currency0, currency1 } = getPool(id)
   const publicClient = getPublicClient(chainId)
   const address = getRouterAddress(chainId)
   const [sqrtPriceX96, liquidity] = await publicClient.readContract({
@@ -462,9 +463,12 @@ export const updatePoolState = async id => {
     args: [id],
   })
 
+  const dp = currency0.decimals - currency1.decimals
+  const factor = 10 ** dp
   const { balance0, balance1, tvl, percent0, percent1 } = getPositionData(id, sqrtPriceX96, liquidity)
-  const price0 = fromValue(sqrtPriceX96 * sqrtPriceX96).div(1n << 192n).toNumber()
-  const price1 = fromValue(1n << 192n).div(sqrtPriceX96 * sqrtPriceX96).toNumber()
+  const priceX96 = sqrtPriceX96 * sqrtPriceX96
+  const price0 = fromValue(priceX96).times(factor).div(Q192).toNumber()
+  const price1 = fromValue(Q192).div(priceX96).div(factor).toNumber()
 
   cache.value = {
     ...cache.value,

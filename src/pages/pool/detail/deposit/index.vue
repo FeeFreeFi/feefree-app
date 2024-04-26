@@ -37,7 +37,7 @@
                 <div class="p-3 flex-y-center justify-between gap-2">
                   <div class="flex-y-center overflow-hidden">
                     <n-text class="mr-1 font-medium text-color-3">Balance:</n-text>
-                    <ZTokenBalance content-class="text-color-3" tooltip-class="text-xs sm:text-sm" :token="currency0" :balance="balance1" :show-symbol="false" />
+                    <ZTokenBalance content-class="text-color-3" tooltip-class="text-xs sm:text-sm" :token="currency1" :balance="balance1" :show-symbol="false" />
                   </div>
                   <n-button class="ml-[2px] h-6 p-1" text aria-label="Max" :disabled="!balance1" @click="onMax1">
                     <n-text class="text-sm font-medium" type="primary">MAX</n-text>
@@ -230,10 +230,6 @@ const reset = () => {
   depositing.value = false
   signing.value = false
   switching.value = false
-
-  // inputAmount0.value = ""
-  // inputAmount1.value = ""
-  // quoteData.value = null
 }
 
 const updateQuoteData = async () => {
@@ -250,7 +246,6 @@ const updateQuoteData = async () => {
     const result = await quoteAddLiquidity(publicClient, address, currency0.address, currency1.address, amount0.value, amount1.value)
     quoteData.value = result
   } catch (err) {
-    // outputAmount.value = ""
     notification.error({
       title: "Error",
       content: err.shortMessage || err.details || err.message,
@@ -266,7 +261,7 @@ const onMax0 = () => {
   onAmount0Blur()
 }
 const onMax1 = () => {
-  inputAmount1.value = toAmount(balance1.value, currency0.decimals)
+  inputAmount1.value = toAmount(balance1.value, currency1.decimals)
   onAmount1Blur()
 }
 const onAmount0Blur = () => {
@@ -274,7 +269,8 @@ const onAmount0Blur = () => {
     return
   }
 
-  inputAmount1.value = toAmount(getAmount1FromSqrtPrice(poolState.value.sqrtPriceX96, amount0.value), currency0.decimals)
+  const amount = getAmount1FromSqrtPrice(poolState.value.sqrtPriceX96, amount0.value)
+  inputAmount1.value = toAmount(amount, currency1.decimals, currency1.decimals)
   debounceUpdateQuoteData()
 }
 const onAmount1Blur = () => {
@@ -282,7 +278,8 @@ const onAmount1Blur = () => {
     return
   }
 
-  inputAmount0.value = toAmount(getAmount0FromSqrtPrice(poolState.value.sqrtPriceX96, amount1.value), currency1.decimals)
+  const amount = getAmount0FromSqrtPrice(poolState.value.sqrtPriceX96, amount1.value)
+  inputAmount0.value = toAmount(amount, currency0.decimals, currency0.decimals)
   debounceUpdateQuoteData()
 }
 
