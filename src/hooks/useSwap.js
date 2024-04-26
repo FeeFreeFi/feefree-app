@@ -3,10 +3,12 @@ import pMap from "p-map"
 import { getTxMeta } from "@/utils/getTxMeta"
 import { getStamp } from "@/utils/date"
 import {
+  CHAIN_ID_ZORA,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   isNative,
+  getZoraToken,
   getBaseSepoliaToken,
 } from "./useCurrency"
 import { getPrice } from "./usePrices"
@@ -20,6 +22,17 @@ const DURATION = 600
 const Q96 = 79228162514264337593543950336n
 
 const CONFIG = [
+  {
+    chainId: CHAIN_ID_ZORA,
+    pools: [
+      {
+        currency0: getZoraToken("ETH"),
+        currency1: getZoraToken("USDzC"),
+        currencyLiquidity: getZoraToken("ETH-USDzC"),
+        id: "0x6ce42771cfc077ff9fdc0bf42867b7959215d3e74664536a884afb9b6c503a8b",
+      },
+    ],
+  },
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     pools: [
@@ -46,6 +59,9 @@ const CONFIG = [
 ]
 
 const ALL_TOKENS = [
+  getZoraToken("ETH"),
+  getZoraToken("USDzC"),
+
   getBaseSepoliaToken("ETH"),
   getBaseSepoliaToken("USDC"),
   getBaseSepoliaToken("DAI"),
@@ -447,8 +463,8 @@ export const updatePoolState = async id => {
   })
 
   const { balance0, balance1, tvl, percent0, percent1 } = getPositionData(id, sqrtPriceX96, liquidity)
-  const price0 = fromValue(balance1).div(balance0).toNumber()
-  const price1 = fromValue(balance0).div(balance1).toNumber()
+  const price0 = fromValue(sqrtPriceX96 * sqrtPriceX96).div(1n << 192n).toNumber()
+  const price1 = fromValue(1n << 192n).div(sqrtPriceX96 * sqrtPriceX96).toNumber()
 
   cache.value = {
     ...cache.value,

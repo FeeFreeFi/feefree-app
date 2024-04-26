@@ -206,8 +206,6 @@ const isForInput = ref(true)
 const currentToken = computed(() => isForInput.value ? inputToken.value : outputToken.value)
 
 const canSelectToken = computed(() => allTokens.value.length > 0)
-// const inputBalance = ref(0n)
-// const outputBalance = ref(0n)
 const focusTokens = computed(() => [inputToken.value, outputToken.value])
 const { states: balanceStates, update: updateTokenBalances } = createBalanceStates2(account, focusTokens)
 const inputBalance = computed(() => balanceStates.value[0])
@@ -250,33 +248,6 @@ const onApproval = async () => {
 
 const swaping = ref(false)
 const signing = ref(false)
-
-// const setInputOutputBalances = () => {
-//   if (inputToken.value) {
-//     inputBalance.value = getBalance(account.value, inputToken.value)
-//   }
-//   if (outputToken.value) {
-//     outputBalance.value = getBalance(account.value, outputToken.value)
-//   }
-// }
-
-// const updateTokenBalances = async () => {
-//   if (!account.value) {
-//     inputBalance.value = 0n
-//     outputBalance.value = 0n
-//     return
-//   }
-
-//   const tokens = [inputToken.value, outputToken.value].filter(Boolean)
-//   if (tokens.length === 0) {
-//     return
-//   }
-
-//   setInputOutputBalances()
-//   await updateBalances(account.value, tokens)
-//   setInputOutputBalances()
-// }
-// const debounceUpdateTokenBalances = debounce(updateTokenBalances, 100, { leading: false, trailing: true })
 
 const reset = () => {
   tab.value = TAB_SWAP
@@ -386,18 +357,15 @@ const onSelectOutputToken = () => {
 }
 
 const onReverse = () => {
-  const doSwap = (a, b) => {
-    const c = a.value
-    a.value = b.value
-    b.value = c
-  }
-
-  doSwap(inputToken, outputToken)
-  doSwap(inputBalance, outputBalance)
+  const [tokenA, tokenB] = [inputToken.value, outputToken.value]
+  inputToken.value = tokenB
+  outputToken.value = tokenA
 
   inputAmount.value = ""
   outputAmount.value = ""
   quoteData.value = null
+
+  updateTokenBalances()
 }
 
 const onMax = () => {

@@ -1,4 +1,5 @@
 import {
+  CHAIN_ID_ZORA,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import { getTxMeta } from "@/utils/getTxMeta"
@@ -7,6 +8,13 @@ export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
 export const MAX_BALANCE = 115792089237316195423570985008687907853269984665640564039457584007913129639935n
 
 const CONFIG = {
+  [CHAIN_ID_ZORA]: [
+    { name: "ETH", symbol: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
+    { name: "ETH+", symbol: "ETH+", decimals: 18, dp: 4, address: "0x809E595538B64485584e9106c1Ba5Dbb000217d0" },
+    { name: "USD Coin", symbol: "USDzC", decimals: 6, dp: 4, address: "0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4" },
+
+    { name: "ETH-USDzC", symbol: "ETH-USDzC", decimals: 18, dp: 4, address: "0xf85e2820394e7bb7036acC2Bf02613150950986A" },
+  ],
   [CHAIN_ID_BASE_SEPOLIA]: [
     { name: "ETH", symbol: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
     { name: "ETH+", symbol: "ETH+", decimals: 18, dp: 4, address: "0xC6cBf086f8ef9917A2DdB1A3a10d4d9160197aBC" },
@@ -274,3 +282,4 @@ export const resolveTokenMeta = chainId => {
 }
 
 export const getBaseSepoliaToken = resolveTokenMeta(CHAIN_ID_BASE_SEPOLIA)
+export const getZoraToken = resolveTokenMeta(CHAIN_ID_ZORA)

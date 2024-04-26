@@ -6,8 +6,11 @@
         <div class="h-10 flex-y-center justify-between">
           <n-text class="text-xl sm:text-2xl font-medium">Test Tokens Faucet</n-text>
         </div>
-        <div class="mt-4 flex flex-col gap-4">
+        <div class="mt-4 flex flex-col gap-4" v-if="tokens.length > 0">
           <n-button v-for="item, index in tokens" :key="index" @click="() => onSend(item)">Send {{ item.symbol }}</n-button>
+        </div>
+        <div class="mt-4 flex-center" v-else>
+          <router-link :to="{ name: PAGE_HOME }">Oops, faucet unavailable on {{ chainName }}, take me back to home</router-link>
         </div>
       </ZSectionView>
     </div>
@@ -25,11 +28,14 @@ import { waitTx } from "@/hooks/useWaitTx"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
 import ZSectionView from '@/components/ZSectionView.vue'
+import { getChainName } from "@/hooks/useChains"
 
 const notification = useNotification()
 
 const loading = ref(false)
 const tokens = computed(() => getTokens(selectedChainId.value))
+const chainName = computed(() => getChainName(selectedChainId.value))
+
 const switching = ref(false)
 /**
  * @param {number} chainId

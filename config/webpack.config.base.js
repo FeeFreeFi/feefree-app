@@ -1,4 +1,5 @@
 import path from 'path'
+import webpack from "webpack"
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import UnpluginIcons from 'unplugin-icons/webpack'
@@ -7,11 +8,10 @@ import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 import { VueLoaderPlugin } from 'vue-loader'
 import ESLintPlugin from 'eslint-webpack-plugin'
 import formatter from 'eslint-formatter-friendly'
-import AutoImport from 'unplugin-auto-import/webpack'
 import Components from 'unplugin-vue-components/webpack'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
-import { dirs, appMeta } from './environment.js'
+import { getDefinition, dirs, appMeta } from './environment.js'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -107,22 +107,10 @@ export default {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin(getDefinition(!isProduction)),
     new ESLintPlugin({
       extensions: ['js', 'vue'],
       formatter,
-    }),
-    AutoImport({
-      imports: [
-        'vue',
-        {
-          'naive-ui': [
-            'useDialog',
-            'useMessage',
-            'useNotification',
-            'useLoadingBar',
-          ],
-        },
-      ],
     }),
     Components({
       resolvers: [
