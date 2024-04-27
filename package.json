@@ -2,7 +2,7 @@
   "private": true,
   "name": "feefree-app",
   "productName": "FeeFree",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "FeeFree aims to build a RobinHood-Style DEX in blockchain industry, enable every individual in the world to participate in DeFi!",
   "type": "module",
   "scripts": {
@@ -23,7 +23,7 @@
     "naive-ui": "^2.38.1",
     "pinia": "^2.1.7",
     "store2": "^2.14.3",
-    "viem": "2.9.27",
+    "viem": "2.9.28",
     "vue": "^3.4.25",
     "vue-router": "^4.3.2"
   },

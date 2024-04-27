@@ -406,8 +406,8 @@ export const getTokenBalances = (sqrtPriceX96, liquidity) => {
 export const getPositionData = (id, sqrtPriceX96, liquidity) => {
   const { currency0, currency1 } = getPool(id)
   const { balance0, balance1 } = getTokenBalances(sqrtPriceX96, liquidity)
-  const price0 = getPrice(currency0.symbol)
-  const price1 = getPrice(currency1.symbol)
+  const price0 = getPrice(currency0.key)
+  const price1 = getPrice(currency1.key)
   const tvl0 = byDecimals(balance0, currency0.decimals).times(price0).dp(4)
   const tvl1 = byDecimals(balance1, currency1.decimals).times(price1).dp(4)
   const tvl = tvl0.plus(tvl1)
