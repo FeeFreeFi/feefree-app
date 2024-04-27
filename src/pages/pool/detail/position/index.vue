@@ -71,10 +71,7 @@ const { state: poolState, update: updatePoolState } = createPoolState(route.para
 createPriceState(updatePoolState)
 
 const { states: balanceStates } = createBalanceStates(account, [currencyLiquidity])
-const balanceLiquidity = computed(() => {
-  console.log(balanceStates.value[0])
-  return balanceStates.value[0]
-})
+const balanceLiquidity = computed(() => balanceStates.value[0])
 
 const hasPosition = computed(() => balanceLiquidity.value > 0n)
 const positionData = computed(() => hasPosition.value ? getPositionData(pool.id, poolState.value.sqrtPriceX96, balanceLiquidity.value) : null)

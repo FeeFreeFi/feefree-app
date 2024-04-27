@@ -9,26 +9,26 @@ export const MAX_BALANCE = 11579208923731619542357098500868790785326998466564056
 
 const CONFIG = {
   [CHAIN_ID_ZORA]: [
-    { name: "ETH", symbol: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
-    { name: "ETH+", symbol: "ETH+", decimals: 18, dp: 4, address: "0x28A46A961CDe54bCE2F428554fBE8AF040a67B47" },
-    { name: "USD Coin", symbol: "USDzC", decimals: 6, dp: 4, address: "0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4" },
-    { name: "USDzC+", symbol: "USDzC+", decimals: 6, dp: 4, address: "0x054757a979f77FD5B0c85679bbA73A92B0e773F4" },
+    { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
+    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0x28A46A961CDe54bCE2F428554fBE8AF040a67B47" },
+    { name: "USD Coin", symbol: "USDzC", key: "USDC", decimals: 6, dp: 4, address: "0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4" },
+    { name: "USDzC+", symbol: "USDzC+", key: "USDC", decimals: 6, dp: 4, address: "0x054757a979f77FD5B0c85679bbA73A92B0e773F4" },
 
-    { name: "ETH-USDzC", symbol: "ETH-USDzC", decimals: 18, dp: 4, address: "0xE5bADF998f5c5828c139081f5510706f44B8E224" },
+    { name: "ETH-USDzC", symbol: "ETH-USDzC", key: "", decimals: 18, dp: 4, address: "0xE5bADF998f5c5828c139081f5510706f44B8E224" },
   ],
   [CHAIN_ID_BASE_SEPOLIA]: [
-    { name: "ETH", symbol: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
-    { name: "ETH+", symbol: "ETH+", decimals: 18, dp: 4, address: "0xa16Cbcf0055253Bd0BE2462e44A4681aB35a037D" },
-    { name: "DAI", symbol: "DAI", decimals: 18, dp: 4, address: "0x011a7b7AE1b7a4645c0341F980d0242e152Bf397" },
-    { name: "DAI+", symbol: "DAI+", decimals: 18, dp: 4, address: "0x77BB288E9FC7dfA7945EA6D7F3BAC16e65cea29D" },
-    { name: "USDC", symbol: "USDC", decimals: 6, dp: 4, address: "0xde649ebC41ADb57D6577EAB7BE7dd6FA65b555a3" },
-    { name: "USDC+", symbol: "USDC+", decimals: 6, dp: 4, address: "0x30E9c1e5db4d058155B5815A189832A6CE53a60c" },
-    { name: "OP", symbol: "OP", decimals: 18, dp: 4, address: "0x115151b4C955900a132350fF9C1e3e412D8f83Dc" },
-    { name: "OP+", symbol: "OP+", decimals: 18, dp: 4, address: "0xe5bA0c314F65F631527e372c6333bD863fC06378" },
+    { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
+    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0xa16Cbcf0055253Bd0BE2462e44A4681aB35a037D" },
+    { name: "DAI", symbol: "DAI", key: "DAI", decimals: 18, dp: 4, address: "0x011a7b7AE1b7a4645c0341F980d0242e152Bf397" },
+    { name: "DAI+", symbol: "DAI+", key: "DAI", decimals: 18, dp: 4, address: "0x77BB288E9FC7dfA7945EA6D7F3BAC16e65cea29D" },
+    { name: "USDC", symbol: "USDC", key: "USDC", decimals: 6, dp: 4, address: "0xde649ebC41ADb57D6577EAB7BE7dd6FA65b555a3" },
+    { name: "USDC+", symbol: "USDC+", key: "USDC", decimals: 6, dp: 4, address: "0x30E9c1e5db4d058155B5815A189832A6CE53a60c" },
+    { name: "OP", symbol: "OP", key: "OP", decimals: 18, dp: 4, address: "0x115151b4C955900a132350fF9C1e3e412D8f83Dc" },
+    { name: "OP+", symbol: "OP+", key: "OP", decimals: 18, dp: 4, address: "0xe5bA0c314F65F631527e372c6333bD863fC06378" },
 
-    { name: "ETH-USDC", symbol: "ETH-USDC", decimals: 18, dp: 4, address: "0xF4f111d4365C4d6068fa96b69E42A22ef8f97A93" },
-    { name: "DAI-USDC", symbol: "DAI-USDC", decimals: 18, dp: 4, address: "0x709b8236fFA91e575aa6F1acD1CA79838b346d4D" },
-    { name: "ETH-OP", symbol: "ETH-OP", decimals: 18, dp: 4, address: "0x725e1b056eDA1Ec88903aB803db006c63131e6A5" },
+    { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0xF4f111d4365C4d6068fa96b69E42A22ef8f97A93" },
+    { name: "DAI-USDC", symbol: "DAI-USDC", key: "", decimals: 18, dp: 4, address: "0x709b8236fFA91e575aa6F1acD1CA79838b346d4D" },
+    { name: "ETH-OP", symbol: "ETH-OP", key: "", decimals: 18, dp: 4, address: "0x725e1b056eDA1Ec88903aB803db006c63131e6A5" },
   ],
 }
 
@@ -37,11 +37,11 @@ const CURRENCY_MAPS = Object.fromEntries(Object.entries(CONFIG).map(([chainId, t
   return [chainId, Object.fromEntries(tokens.map(t => [t.symbol, {...t, chainId: id}]))]
 }))
 
-const ALL_SYMBOLS = (() => {
+const ALL_TOKEN_KEYS = (() => {
   let items = Object.values(CONFIG).map(tokens => {
     tokens = tokens.filter(token => !token.symbol.endsWith("+") && !token.symbol.includes("-"))
-    return tokens.map(token => token.symbol)
-  }).reduce((sum, item) => sum.concat(item), [])
+    return tokens.map(token => token.key)
+  }).reduce((sum, item) => sum.concat(item), []).filter(Boolean)
   items = [...new Set(items)]
   return items
 })()
@@ -262,7 +262,7 @@ export const transfer = async ({ publicClient, walletClient, overrides }, addres
   return getTxMeta(hash, publicClient.chain)
 }
 
-export const getAllSymbols = () => ALL_SYMBOLS
+export const getAllTokenKeys = () => ALL_TOKEN_KEYS
 
 /**
  * @param {number} chainId
