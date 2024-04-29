@@ -23,7 +23,6 @@ export const getBalance = (account, token) => {
 }
 
 /**
- * @param {number} chainId
  * @param {string} account
  * @param {{chainId:number, address:string}[]} tokens
  * @returns {bigint[]}
