@@ -1,5 +1,18 @@
-# FeeFree: Front End Interfaces
-An open source repository for FeeFree front end interfaces. FeeFree aims to build a RobinHood-Style DEX in blockchain industry, enable every individual in the world to participate in DeFi!
+# FeeFree: Frontend Interfaces
+An open source repository for FeeFree frontend interfaces.
+
+To build a Robinhood-style DEX in the blockchain industry, enabling participation in DeFi for everyone worldwide!
+
+## Usage
+```shell
+cp .env.example .env
+
+pnpm i
+
+pnpm start
+
+pnpm build
+```
 
 ## Socials
 - Twitter: [@FeeFreeFi](https://x.com/FeeFreeFi)

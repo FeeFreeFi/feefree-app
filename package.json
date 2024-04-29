@@ -3,7 +3,7 @@
   "name": "feefree-app",
   "productName": "FeeFree",
   "version": "0.2.0",
-  "description": "FeeFree aims to build a RobinHood-Style DEX in blockchain industry, enable every individual in the world to participate in DeFi!",
+  "description": "To build a Robinhood-style DEX in the blockchain industry, enabling participation in DeFi for everyone worldwide!",
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config config/webpack.config.dev.js",
