@@ -16,6 +16,13 @@
           <div class="flex justify-center">
             <n-text>{{ item.label }}</n-text>
           </div>
+          <!-- Total Supply -->
+          <div class="flex justify-center gap-2">
+            <n-text class="text-color-3">Total Supply:</n-text>
+            <div class="flex">
+              <span class="font-medium text-color-3 ml-1">{{ toBalance(nftStates[index]) }}</span>
+            </div>
+          </div>
           <!-- Price -->
           <div class="flex justify-center gap-2">
             <n-text class="text-color-3">Price:</n-text>
@@ -39,7 +46,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { useNotification } from "naive-ui"
-import { getNftList, mint } from "@/hooks/useNft"
+import { createNftStates, getNftList, mint } from "@/hooks/useNft"
 import { account, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
 import { selectedChainId } from "@/hooks/useSelectedChain"
@@ -49,7 +56,7 @@ import { getNativeCurrency } from "@/hooks/useChains"
 import NftImage from "@/components/NftImage.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import { createPriceState, getPrice } from "@/hooks/usePrices"
-import { fromValue } from "@/utils/bn"
+import { fromValue, toBalance } from "@/utils/bn"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
 
 const notification = useNotification()
@@ -57,6 +64,8 @@ createPriceState()
 
 const nfts = computed(() => getNftList(selectedChainId.value))
 const feeToken = computed(() => getNativeCurrency(selectedChainId.value))
+
+const { states: nftStates, update: updateNftStates } = createNftStates(nfts)
 
 /**
  * @param {bigint} value
@@ -106,6 +115,7 @@ const onMint = async (index, { address, label, chainId, price }) => {
     minting.value = false
     operatingIndex.value = -1
     updateNativeBalance()
+    updateNftStates(true)
   } catch (err) {
     minting.value = false
     operatingIndex.value = -1
@@ -120,6 +130,14 @@ const onMint = async (index, { address, label, chainId, price }) => {
 onMounted(() => {
   const stopWatch = watch([account, selectedChainId], () => {
     reset()
+  })
+
+  onBeforeUnmount(stopWatch)
+})
+
+onMounted(() => {
+  const stopWatch = watch(selectedChainId, () => {
+    updateNftStates(true)
   })
 
   onBeforeUnmount(stopWatch)
