@@ -29,6 +29,7 @@ import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
 import ZSectionView from '@/components/ZSectionView.vue'
 import { getChainName } from "@/hooks/useChains"
+import { PAGE_HOME } from "@/config"
 
 const notification = useNotification()
 

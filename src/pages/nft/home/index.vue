@@ -16,11 +16,11 @@
           <div class="flex justify-center">
             <n-text>{{ item.label }}</n-text>
           </div>
-          <!-- Total Supply -->
+          <!-- Minted -->
           <div class="flex justify-center gap-2">
-            <n-text class="text-color-3">Total Supply:</n-text>
+            <n-text class="text-color-3">Minted:</n-text>
             <div class="flex">
-              <span class="font-medium text-color-3 ml-1">{{ toBalance(nftStates[index]) }}</span>
+              <span class="font-medium text-color-3 ml-1">{{ toBalance(nftStates[index]) }}/{{ toBalance(item.cap) }}</span>
             </div>
           </div>
           <!-- Price -->

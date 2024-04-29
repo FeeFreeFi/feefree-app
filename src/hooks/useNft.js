@@ -29,6 +29,7 @@ const CONFIG = [
         price: 10000000000000000n,
         free: false,
         image: "FFGenesisNFT.jpg",
+        cap: 1000000n,
       },
       {
         label: "FFWeekNFT(202417)",
@@ -37,7 +38,8 @@ const CONFIG = [
         symbol: "FFW",
         price: 0n,
         free: true,
-        image: "FFWeekNFT-1.jpg"
+        image: "FFWeekNFT-1.jpg",
+        cap: 1000000n,
       },
       {
         label: "FFWeekNFT(202418)",
@@ -46,7 +48,8 @@ const CONFIG = [
         symbol: "FFW",
         price: 0n,
         free: true,
-        image: "FFWeekNFT-2.jpg"
+        image: "FFWeekNFT-2.jpg",
+        cap: 1000000n,
       },
     ],
   },
@@ -60,7 +63,8 @@ const CONFIG = [
         symbol: "FFG",
         price: 10000000000000000n,
         free: false,
-        image: "FFGenesisNFT.jpg"
+        image: "FFGenesisNFT.jpg",
+        cap: 1000000n,
       },
       {
         label: "FFWeekNFT(202416)",
@@ -69,7 +73,8 @@ const CONFIG = [
         symbol: "FFW",
         price: 0n,
         free: true,
-        image: "FFWeekNFT-1.jpg"
+        image: "FFWeekNFT-1.jpg",
+        cap: 1000000n,
       },
       {
         label: "FFWeekNFT(202417)",
@@ -78,7 +83,8 @@ const CONFIG = [
         symbol: "FFW",
         price: 0n,
         free: true,
-        image: "FFWeekNFT-2.jpg"
+        image: "FFWeekNFT-2.jpg",
+        cap: 1000000n,
       },
     ],
   },
