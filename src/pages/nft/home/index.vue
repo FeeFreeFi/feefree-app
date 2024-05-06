@@ -20,7 +20,7 @@
           <div class="flex justify-center gap-2">
             <n-text class="text-color-3">Minted:</n-text>
             <div class="flex">
-              <span class="font-medium text-color-3 ml-1">{{ toBalance(nftStates[index]) }}/{{ toBalance(item.cap) }}</span>
+              <span class="font-medium text-color-3 ml-1">{{ toBalance(nftStates[index]) }}/{{ item.capLabel }}</span>
             </div>
           </div>
           <!-- Price -->
@@ -96,7 +96,7 @@ const onMint = async (index, { address, label, chainId, price }) => {
   }
 
   if (chainId !== selectedChainId.value) {
-    onSwitchNetwork(chainId)
+    onSwitchNetwork(selectedChainId.value)
     return
   }
 

@@ -40,7 +40,7 @@ const getAccounts = async provider => {
   return provider.request({ method: 'eth_accounts' })
 }
 
-const init = async (provider, account, chainId, walletName) => {
+const init = async (provider, account, chainId, targetChainId, walletName) => {
   if (cachedProvider !== provider) {
     provider.on("connect", onConnect)
     provider.on("chainChanged", onChainChanged)
@@ -51,10 +51,13 @@ const init = async (provider, account, chainId, walletName) => {
 
   walletNameRef.value = walletName
 
-  if (!isSupportChain(chainId)) {
-    const { id } = getDefaultChain()
-    replaceWalletClient(id, account)
-    await switchChain(id)
+  if (!isSupportChain(chainId) || (targetChainId && chainId !== targetChainId)) {
+    if (!targetChainId) {
+      const defaultChain = getDefaultChain()
+      targetChainId = defaultChain.id
+    }
+    replaceWalletClient(targetChainId, account)
+    await switchChain(targetChainId)
     return
   }
 
@@ -150,7 +153,12 @@ const onDisconnect = () => {
   reset()
 }
 
-export const connect = async (provider, info) => {
+/**
+ * @param {*} provider
+ * @param {*} info
+ * @param {number} targetChainId
+ */
+export const connect = async (provider, info, targetChainId) => {
   const accounts = await provider.request({ method: 'eth_requestAccounts' })
   if (!accounts) {
     return false
@@ -161,7 +169,7 @@ export const connect = async (provider, info) => {
   }
 
   const chainId = await getChainId(provider)
-  await init(provider, accounts[0], chainId, info.name)
+  await init(provider, accounts[0], chainId, targetChainId, info.name)
 
   return true
 }
@@ -170,6 +178,9 @@ export const disconnect = () => {
   clear()
 }
 
+/**
+ * @param {number} chainId
+ */
 const addChain = async chainId => {
   const { id, name, nativeCurrency, rpcUrls, blockExplorers } = getChain(chainId)
   const params = [
