@@ -1,14 +1,17 @@
 import {
   CHAIN_ID_ZORA,
+  CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   zora,
+  base,
   baseSepolia,
 } from "viem/chains"
 
 const CHAINS = Object.freeze([
   zora,
+  base,
   baseSepolia,
 ])
 const CHAINS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, chain]))
@@ -20,6 +23,17 @@ const CHAIN_EXTRAS = [
     name: "Zora",
     symbol: "ETH",
     extraRpcUrls: [
+    ],
+    gasType: "maxFeePerGas",
+    isZkEVM: false,
+  },
+  {
+    id: CHAIN_ID_BASE,
+    name: "Base",
+    symbol: "ETH",
+    extraRpcUrls: [
+      "https://base.llamarpc.com",
+      "https://base.drpc.org",
     ],
     gasType: "maxFeePerGas",
     isZkEVM: false,

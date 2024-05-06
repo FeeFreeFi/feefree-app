@@ -4,6 +4,7 @@ import { ref, readonly, onMounted, onBeforeUnmount } from "vue"
 import { getTxMeta } from "@/utils/getTxMeta"
 import {
   CHAIN_ID_ZORA,
+  CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import { getPublicClient } from "./useClient"
@@ -30,6 +31,7 @@ const CONFIG = [
         free: false,
         image: "FFGenesisNFT.jpg",
         cap: 1000000n,
+        capLabel: "1M",
       },
       {
         label: "FFWeekNFT(202417)",
@@ -40,6 +42,7 @@ const CONFIG = [
         free: true,
         image: "FFWeekNFT-1.jpg",
         cap: 1000000n,
+        capLabel: "1M",
       },
       {
         label: "FFWeekNFT(202418)",
@@ -50,6 +53,45 @@ const CONFIG = [
         free: true,
         image: "FFWeekNFT-2.jpg",
         cap: 1000000n,
+        capLabel: "1M",
+      },
+    ],
+  },
+  {
+    chainId: CHAIN_ID_BASE,
+    contracts: [
+      {
+        label: "FFGenesisNFT",
+        address: "0x47Fbf1c403eb4366796A363847eB100103b0a829",
+        name: "FFGenesisNFT",
+        symbol: "FFG",
+        price: 10000000000000000n,
+        free: false,
+        image: "FFGenesisNFT.jpg",
+        cap: 10000n,
+        capLabel: "10K",
+      },
+      {
+        label: "FFWeekNFT(202419)",
+        address: "0x17022A3854AE6d8a0BbcC14934CC219123D96a00",
+        name: "FFWeekNFT",
+        symbol: "FFW",
+        price: 0n,
+        free: true,
+        image: "FFWeekNFT-1.jpg",
+        cap: 1000000n,
+        capLabel: "1M",
+      },
+      {
+        label: "FFWeekNFT(202420)",
+        address: "0x25BA65303D920744da81A847DB923BfCb9cf56Bc",
+        name: "FFWeekNFT",
+        symbol: "FFW",
+        price: 0n,
+        free: true,
+        image: "FFWeekNFT-2.jpg",
+        cap: 1000000n,
+        capLabel: "1M",
       },
     ],
   },
@@ -65,6 +107,7 @@ const CONFIG = [
         free: false,
         image: "FFGenesisNFT.jpg",
         cap: 1000000n,
+        capLabel: "1M",
       },
       {
         label: "FFWeekNFT(202416)",
@@ -75,6 +118,7 @@ const CONFIG = [
         free: true,
         image: "FFWeekNFT-1.jpg",
         cap: 1000000n,
+        capLabel: "1M",
       },
       {
         label: "FFWeekNFT(202417)",
@@ -85,6 +129,7 @@ const CONFIG = [
         free: true,
         image: "FFWeekNFT-2.jpg",
         cap: 1000000n,
+        capLabel: "1M",
       },
     ],
   },

@@ -56,7 +56,7 @@ const onSend = async token => {
 
   const { address: tokenAddress, chainId: id, symbol } = token
   if (id !== selectedChainId.value) {
-    onSwitchNetwork(id)
+    onSwitchNetwork(selectedChainId.value)
     return
   }
 
