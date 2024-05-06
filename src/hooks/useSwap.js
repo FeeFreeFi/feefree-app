@@ -4,11 +4,13 @@ import { getTxMeta } from "@/utils/getTxMeta"
 import { getStamp } from "@/utils/date"
 import {
   CHAIN_ID_ZORA,
+  CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   isNative,
   getZoraToken,
+  getBaseToken,
   getBaseSepoliaToken,
 } from "./useCurrency"
 import { getPrice } from "./usePrices"
@@ -31,6 +33,17 @@ const CONFIG = [
         currency1: getZoraToken("USDzC"),
         currencyLiquidity: getZoraToken("ETH-USDzC"),
         id: "0x219a2c0f153258a81f975771ac32114e75de77c8bde22cf64d9aed0f20c8c13d",
+      },
+    ],
+  },
+  {
+    chainId: CHAIN_ID_BASE,
+    pools: [
+      {
+        currency0: getBaseToken("ETH"),
+        currency1: getBaseToken("USDC"),
+        currencyLiquidity: getBaseToken("ETH-USDC"),
+        id: "0xb2a10047a5ff1d8823670d36a0ef35fecca00cb388757d7d8948c4bff9873b17",
       },
     ],
   },
@@ -62,6 +75,9 @@ const CONFIG = [
 const ALL_TOKENS = [
   getZoraToken("ETH"),
   getZoraToken("USDzC"),
+
+  getBaseToken("ETH"),
+  getBaseToken("USDC"),
 
   getBaseSepoliaToken("ETH"),
   getBaseSepoliaToken("USDC"),

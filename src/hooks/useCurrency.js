@@ -1,5 +1,6 @@
 import {
   CHAIN_ID_ZORA,
+  CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import { getTxMeta } from "@/utils/getTxMeta"
@@ -15,6 +16,14 @@ const CONFIG = {
     { name: "USDzC+", symbol: "USDzC+", key: "USDC", decimals: 6, dp: 4, address: "0x054757a979f77FD5B0c85679bbA73A92B0e773F4" },
 
     { name: "ETH-USDzC", symbol: "ETH-USDzC", key: "", decimals: 18, dp: 4, address: "0xE5bADF998f5c5828c139081f5510706f44B8E224" },
+  ],
+  [CHAIN_ID_BASE]: [
+    { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
+    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0x7370ECc5eE30152da5F1F4B9056DE2691627E59b" },
+    { name: "USD Coin", symbol: "USDC", key: "USDC", decimals: 6, dp: 4, address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" },
+    { name: "USDC+", symbol: "USDC+", key: "USDC", decimals: 6, dp: 4, address: "0x8a48D78a090D25E9aB276bA3b3f8408b215eF045" },
+
+    { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0x0501B40a851b75597cB83Bd702B646C74287d881" },
   ],
   [CHAIN_ID_BASE_SEPOLIA]: [
     { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
@@ -282,5 +291,6 @@ export const resolveTokenMeta = chainId => {
   return symbol => getTokenMeta(chainId, symbol)
 }
 
-export const getBaseSepoliaToken = resolveTokenMeta(CHAIN_ID_BASE_SEPOLIA)
 export const getZoraToken = resolveTokenMeta(CHAIN_ID_ZORA)
+export const getBaseToken = resolveTokenMeta(CHAIN_ID_BASE)
+export const getBaseSepoliaToken = resolveTokenMeta(CHAIN_ID_BASE_SEPOLIA)
