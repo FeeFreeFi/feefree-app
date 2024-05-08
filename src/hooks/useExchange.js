@@ -33,8 +33,8 @@ const CONFIG = [
         currency1: getBaseToken("ETH+"),
       },
       {
-        currency0: getBaseToken("USDzC"),
-        currency1: getBaseToken("USDzC+"),
+        currency0: getBaseToken("USDC"),
+        currency1: getBaseToken("USDC+"),
       },
     ],
   },
