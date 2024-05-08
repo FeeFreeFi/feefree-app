@@ -1,17 +1,23 @@
 import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
+  CHAIN_ID_SCROLL,
+  CHAIN_ID_ZKSYNC,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   zora,
   base,
+  scroll,
+  zkSync,
   baseSepolia,
 } from "viem/chains"
 
 const CHAINS = Object.freeze([
   zora,
   base,
+  scroll,
+  zkSync,
   baseSepolia,
 ])
 const CHAINS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, chain]))
@@ -37,6 +43,28 @@ const CHAIN_EXTRAS = [
     ],
     gasType: "maxFeePerGas",
     isZkEVM: false,
+  },
+  {
+    id: CHAIN_ID_SCROLL,
+    name: "Scroll",
+    symbol: "ETH",
+    extraRpcUrls: [
+      "https://scroll.drpc.org",
+      "https://rpc.ankr.com/scroll",
+    ],
+    gasType: "maxFeePerGas",
+    isZkEVM: true,
+  },
+  {
+    id: CHAIN_ID_ZKSYNC,
+    name: "zkSync Era",
+    symbol: "ETH",
+    extraRpcUrls: [
+      "https://zksync.drpc.org",
+      "https://zksync-era.blockpi.network/v1/rpc/public",
+    ],
+    gasType: "maxFeePerGas",
+    isZkEVM: true,
   },
   {
     id: CHAIN_ID_BASE_SEPOLIA,
