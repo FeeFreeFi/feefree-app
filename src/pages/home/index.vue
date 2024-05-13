@@ -121,7 +121,6 @@
                   <n-text class="font-medium shrink-0 text-color-3">Output:</n-text>
                   <div class="flex">
                     <ZTokenBalance :token="outputToken" :balance="quoteData?.amountOut || 0n" :dp="6" />
-                    <!-- <span class="font-medium text-color-3 ml-1">(${{ quoteData?.amountOutValue || 0 }})</span> -->
                   </div>
                 </div>
                 <n-divider class="!my-0" />
@@ -130,7 +129,7 @@
                   <n-text class="font-medium text-color-3">Swap Fee:</n-text>
                   <div class="flex">
                     <ZTokenBalance :token="gasToken" :balance="fee" :dp="9" />
-                    <span class="font-medium text-color-3 ml-1">(${{ feeValue }})</span>
+                    <n-text class="font-medium text-color-3 ml-1">(${{ feeValue }})</n-text>
                   </div>
                 </div>
                 <n-divider v-if="recipient" class="!my-0" />
@@ -141,8 +140,26 @@
                     <template #trigger>
                       <n-text class="font-medium">{{ shortString(recipient) }}</n-text>
                     </template>
-                    <span class="text-xs sm:text-sm">{{ recipient }}</span>
+                    <n-text class="text-xs sm:text-sm">{{ recipient }}</n-text>
                   </n-tooltip>
+                </div>
+                <n-divider v-if="showValueWarning" class="!my-0" />
+                <!-- Value change reminder-->
+                <div class="py-4 flex justify-between" v-if="showValueWarning">
+                  <n-text class="font-medium text-warning">Value Warning:</n-text>
+                  <div class="flex-y-center">
+                    <div>
+                      <n-text class="font-medium">{{ inputToken.symbol }}</n-text>
+                      <n-text class="font-medium text-warning">${{ inputValue }}</n-text>
+                    </div>
+                    <n-text>
+                      <i-mdi-chevron-double-right />
+                    </n-text>
+                    <div>
+                      <n-text class="font-medium">{{ outputToken.symbol }}</n-text>
+                      <n-text class="font-medium text-warning">${{ outputValue }}</n-text>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -166,7 +183,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { useNotification } from "naive-ui"
 import debounce from "lodash-es/debounce"
-import { fromValue, parseAmount, toAmount } from "@/utils/bn"
+import { byDecimals, fromValue, parseAmount, toAmount } from "@/utils/bn"
 import shortString from "@/utils/shortString"
 import { account, chainId, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { createBalanceStates2 } from "@/hooks/useBalances"
@@ -214,7 +231,6 @@ const outputBalance = computed(() => balanceStates.value[1])
 const inputAmount = ref("")
 const outputAmount = ref("")
 const amountIn = computed(() => inputToken.value ? parseAmount(inputAmount.value || 0, inputToken.value.decimals) : 0n)
-const amountOut = computed(() => outputToken.value ? parseAmount(outputAmount.value || 0, outputToken.value.decimals) : 0n)
 const fee = computed(() => inputToken.value ? getFee(inputToken.value.chainId) : 0n)
 const gasToken = computed(() => inputToken.value ? getNativeCurrency(inputToken.value.chainId) : null)
 const feeValue = computed(() => gasToken.value ? fromValue(getPrice(gasToken.value.symbol)).times(fee.value).div(1e18).dp(4).toNumber() : 0)
@@ -223,6 +239,31 @@ const feeValue = computed(() => gasToken.value ? fromValue(getPrice(gasToken.val
  * @type {import('vue').Ref<{deltaAmounts: bigint[], sqrtPriceX96Afters: bigint[], amountIn:bigint, amountOut:bigint, paths:string[], amountSpecified:bigint}>}
  */
 const quoteData = ref(null)
+const inputValue = computed(() => {
+  if (!quoteData.value) {
+    return 0
+  }
+
+  const { amountIn } = quoteData.value
+  const { symbol, decimals, dp } = inputToken.value
+  return byDecimals(amountIn, decimals).times(getPrice(symbol)).dp(dp).toNumber()
+})
+const outputValue = computed(() => {
+  if (!quoteData.value) {
+    return 0
+  }
+
+  const { amountOut } = quoteData.value
+  const { symbol, decimals, dp } = outputToken.value
+  return byDecimals(amountOut, decimals).times(getPrice(symbol)).dp(dp).toNumber()
+})
+const showValueWarning = computed(() => {
+  if (!inputValue.value || !outputValue.value || outputValue.value > inputValue.value) {
+    return false
+  }
+
+  return (inputValue.value - outputValue.value) > 0.05 * inputValue.value
+})
 
 const showTokenSelector = ref(false)
 const showAddRecipient = ref(false)
@@ -393,11 +434,11 @@ const onSwap = async () => {
   const walletClient = getWalletClient()
   const address = getRouterAddress(id)
 
-  const _amountIn = toAmount(amountIn.value, inputToken.value.decimals, inputToken.value.dp)
-  const _amountOut = toAmount(amountOut.value, outputToken.value.decimals, outputToken.value.dp)
-  const content = `Swap ${_amountIn} ${inputToken.value.symbol} for ${_amountOut} ${outputToken.value.symbol}`
+  const { paths, sqrtPriceX96Afters, amountIn: _amountIn, amountOut: _amountOut, amountSpecified } = quoteData.value
+  const input = toAmount(_amountIn, inputToken.value.decimals, inputToken.value.dp)
+  const output = toAmount(_amountOut, outputToken.value.decimals, outputToken.value.dp)
 
-  const { paths, sqrtPriceX96Afters, amountIn: amount, amountSpecified } = quoteData.value
+  const content = `Swap ${input} ${inputToken.value.symbol} for ${output} ${outputToken.value.symbol}`
 
   try {
     const tx = await swap(
@@ -405,7 +446,7 @@ const onSwap = async () => {
       address,
       paths,
       sqrtPriceX96Afters,
-      amount,
+      _amountIn,
       amountSpecified,
       recipient.value || account.value,
       fee.value,
