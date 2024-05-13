@@ -475,6 +475,8 @@ onMounted(() => {
 
     inputToken.value = allTokens.value[0] || null
     outputToken.value = allTokens.value[1] || null
+
+    updateTokenBalances(true)
   })
 
   onBeforeUnmount(stopWatch)

@@ -283,7 +283,6 @@ const onSelectToken = async token => {
     inputToken.value = findOtherToken(token)
   }
 
-  // inputAmount.value = ""
   updateTokenBalances(true)
 }
 
@@ -374,6 +373,8 @@ onMounted(() => {
 
     inputToken.value = allPairs.value[0]?.currency0 || null
     outputToken.value = allPairs.value[0]?.currency1 || null
+
+    updateTokenBalances(true)
   })
 
   onBeforeUnmount(stopWatch)
