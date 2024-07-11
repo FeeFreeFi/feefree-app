@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="theme" :theme-overrides="themeOverrides" abstract preflight-style-disabled inline-theme-disabled>
+  <n-config-provider :theme-overrides="themeOverrides" abstract preflight-style-disabled inline-theme-disabled>
     <n-message-provider>
       <n-notification-provider :max="3" :scrollable="false">
         <n-dialog-provider>
@@ -13,5 +13,5 @@
 </template>
 
 <script setup>
-import { theme, themeOverrides } from "@/hooks/useTheme"
+import { themeOverrides } from "@/hooks/useTheme"
 </script>

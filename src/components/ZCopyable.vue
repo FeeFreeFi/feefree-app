@@ -1,8 +1,8 @@
 <template>
-  <span @click="onClick">
+  <n-text @click="onClick">
     <slot v-if="copied" name="copied" />
     <slot v-else />
-  </span>
+  </n-text>
 </template>
 
 <script setup>

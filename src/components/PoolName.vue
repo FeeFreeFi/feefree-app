@@ -1,8 +1,8 @@
 <template>
   <div class="flex-center gap-[2px]">
-    <ZTokenSymbol :symbol="symbol0" />
-    <i-ic-baseline-minus class="size-4" />
-    <ZTokenSymbol :symbol="symbol1" />
+    <ZTokenSymbol class="!text-base" :symbol="symbol0" />
+    <i-ic-baseline-minus class="size-3 text-base text-basic font-medium" />
+    <ZTokenSymbol class="!text-base" :symbol="symbol1" />
   </div>
 </template>
 

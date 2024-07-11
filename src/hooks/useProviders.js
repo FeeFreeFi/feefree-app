@@ -1,11 +1,17 @@
 import { ref } from "vue"
 import uuid from "@/utils/uuid"
 
-const providers = ref({})
+const providersRef = ref({})
 
 export const getProviders = () => {
-  const items = Object.values(providers.value)
+  const items = Object.values(providersRef.value)
   return items.length > 0 ? items : [getInjectedProvider()].filter(Boolean)
+}
+
+export const findProvider = name => {
+  const providers = getProviders()
+  const item = providers.find(it => it.info.name === name)
+  return item?.provider
 }
 
 const getProviderMeta = provider => {
@@ -218,9 +224,9 @@ const getInjectedProvider = () => {
 
 const onAnnounceProvider = e => {
   const { info, provider } = e.detail
-  if (!providers.value[info.uuid]) {
-    providers.value = {
-      ...providers.value,
+  if (!providersRef.value[info.uuid]) {
+    providersRef.value = {
+      ...providersRef.value,
       [info.uuid]: { info, provider },
     }
   }

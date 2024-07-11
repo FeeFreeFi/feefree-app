@@ -1,5 +1,5 @@
 <template>
-  <img class="rounded-full" :src="`/static/chains/${chainName}.svg`" loading="lazy" :alt="`${chainName} icon`" />
+  <img class="rounded-full" :src="`/static/chains/${chainName}.svg`" loading="lazy" :alt="`${chainName} icon`">
 </template>
 
 <script setup>

@@ -11,7 +11,7 @@ import PlusTokenIcon from "./PlusTokenIcon.vue"
 defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{chainId:number, name:string, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,

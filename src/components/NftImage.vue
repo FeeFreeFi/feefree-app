@@ -1,5 +1,5 @@
 <template>
-  <img :src="`/static/nfts/${src}`" loading="lazy" :alt="label" />
+  <img :src="`/static/nfts/${src}`" loading="lazy" :alt="label">
 </template>
 
 <script setup>

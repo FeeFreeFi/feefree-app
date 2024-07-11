@@ -1,63 +1,44 @@
 <template>
-  <ZModalView class="h-[480px]" content-class="overflow-hidden !p-0" title="Select Token" :on-close="onClose">
+  <ZModalView class="h-[480px]" title="Select Token" :on-close="onClose">
     <div class="h-full flex flex-col relative">
-      <div class="p-4">
-        <div class="bg-block h-12 flex-y-center rounded">
-          <n-input class="search-input !bg-transparent" v-model:value="search" placeholder="Search by name or paste address" size="large">
-            <template #prefix>
-              <i-material-symbols-search class="size-5 text-color-3" />
-            </template>
-          </n-input>
-        </div>
+      <div class="px-4">
+        <ZSearch v-model="search" placeholder="Search by name or paste address" />
       </div>
-      <n-divider class="!my-0" />
-      <n-scrollbar class="flex-1">
-        <div class="flex flex-col px-[5px] py-2" v-if="displayTokens.length > 0">
-          <n-button class="h-14 !p-0 flex-col items-stretch" v-for="token, index in displayTokens" :key="index" :class="isCurrentToken(token) ? '!bg-pressed' : ''" quaternary block @click="() => onTokenClick(token)">
-            <div class="flex-1 flex-y-center px-4 py-2 gap-2">
-              <slot name="token" :token="token">
-                <ZTokenIcon :token="token" />
-              </slot>
-              <div class="flex flex-col justify-between items-start">
-                <n-text class="font-medium text-sm">{{ token.name }}</n-text>
-                <n-text class="text-xs text-color-3">{{ token.symbol }}</n-text>
-              </div>
-              <div class="flex-1"></div>
-              <ZTokenBalance v-if="account && token.chainId === current.chainId" content-class="text-color-3" :show-symbol="false" :token="token" :balance="balances[token.address] || 0n" />
-              <n-text v-else class="text-sm text-color-3">{{ getChainName(token.chainId) }}</n-text>
+      <div class="flex-1 relative">
+        <div v-if="displayTokens.length > 0" class="size-full absolute top-0 left-0">
+          <n-scrollbar class="p-4">
+            <div class="flex flex-col gap-2">
+              <TokenItem v-for="token, index in displayTokens" :key="index" :token="token" :balance="balances[token.address] || 0n" :show-balance="isShowBalance(token)" :active="isCurrentToken(token)" @click="() => onTokenClick(token)" />
             </div>
-          </n-button>
+          </n-scrollbar>
         </div>
-        <n-empty class="size-full justify-center absolute" v-else description="NO TOKENS FOUND">
-          <template #icon>
-            <i-solar-dollar-bold />
-          </template>
-        </n-empty>
-      </n-scrollbar>
+        <NoToken v-else />
+      </div>
     </div>
   </ZModalView>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue"
-import { getChainName } from "@/hooks/useChains"
 import { getBalances, updateBalances } from "@/hooks/useBalances"
 import { account } from "@/hooks/useWallet"
+import { isSame } from "@/hooks/useCurrency"
 import ZModalView from '@/components/ZModalView.vue'
-import ZTokenIcon from '@/components/ZTokenIcon.vue'
-import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import ZSearch from '@/components/ZSearch.vue'
+import TokenItem from "./TokenItem.vue"
+import NoToken from "./NoToken.vue"
 
 const props = defineProps({
   current: {
     /**
-     * @type {import('vue').PropType<{chainId:number, name:string, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,
   },
   tokens: {
     /**
-     * @type {import('vue').PropType<{chainId:number, name:string, symbol:string, address:string}[]>}
+     * @type {import('vue').PropType<import('@/types').Token[]>}
      */
     type: Array,
     required: true,
@@ -91,7 +72,11 @@ const displayTokens = computed(() => {
 })
 
 const isCurrentToken = computed(() => {
-  return token => token.chainId === props.current.chainId && token.address === props.current.address
+  return token => isSame(token, props.current)
+})
+
+const isShowBalance = computed(() => {
+  return token => account.value && token.chainId === props.current.chainId
 })
 
 const onTokenClick = token => {
@@ -102,7 +87,7 @@ const onTokenClick = token => {
 /**
  *
  * @param {string} owner
- * @param {{chainId:number, address:string}} tokens
+ * @param {import('@/types').Token[]} tokens
  */
 const refreshBalances = (owner, tokens) => {
   const result = getBalances(owner, tokens)
@@ -123,23 +108,3 @@ const update = async () => {
 
 onMounted(update)
 </script>
-
-<style lang="scss">
-.search-input {
-  .n-input__input-el {
-    @apply caret-color-base text-sm;
-  }
-
-  .n-input__placeholder {
-    @apply text-color-3 text-sm;
-  }
-
-  .n-input__border {
-    display: none;
-  }
-
-  .n-input__state-border {
-    display: none;
-  }
-}
-</style>

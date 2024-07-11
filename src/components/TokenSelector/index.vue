@@ -1,5 +1,5 @@
 <template>
-  <ZModalWrapper :show="show" :on-close="onClose" modal-class="w-[440px]">
+  <ZModalWrapper :show="show" :on-close="onClose" modal-class="w-[400px]">
     <TokenSelectorView :current="current" :tokens="tokens" :on-select="onSelect" :on-close="onClose">
       <template #token="{token}">
         <slot name="token" :token="token" />
@@ -17,14 +17,14 @@ const show = defineModel("show", { type: Boolean, default: false })
 defineProps({
   current: {
     /**
-     * @type {import('vue').PropType<{chainId:number, name:string, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,
   },
   tokens: {
     /**
-     * @type {import('vue').PropType<{chainId:number, name:string, symbol:string, address:string}[]>}
+     * @type {import('vue').PropType<import('@/types').Token[]>}
      */
     type: Array,
     required: true,

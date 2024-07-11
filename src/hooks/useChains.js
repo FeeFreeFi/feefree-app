@@ -136,3 +136,13 @@ export const getChainSymbol = chainId => CHAIN_EXTRAS_MAP[chainId].symbol
  * @param {number} chainId
  */
 export const getNativeCurrency = chainId => CHAINS_MAP[chainId].nativeCurrency
+
+/**
+ * @param {number} chainId
+ */
+export const getExplorerUrl = chainId => {
+  const chain = getChain(chainId)
+  const url = chain.blockExplorers.default.url
+
+  return url.endsWith("/") ? url.slice(0, -1) : url
+}

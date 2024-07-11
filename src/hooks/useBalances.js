@@ -9,13 +9,13 @@ import { createInterval } from "./useTimer"
 const cache = createCache()
 
 /**
- * @param {{chainId:number, address:string}} token
+ * @param {import('@/types').Token} token
  */
 const getTokenKey = token => `${token.chainId}:${token.address}`
 
 /**
  * @param {string} account
- * @param {{chainId:number, address:string}} token
+ * @param {import('@/types').Token} token
  * @returns {bigint}
  */
 export const getBalance = (account, token) => {
@@ -24,7 +24,7 @@ export const getBalance = (account, token) => {
 
 /**
  * @param {string} account
- * @param {{chainId:number, address:string}[]} tokens
+ * @param {import('@/types').Token[]} tokens
  * @returns {bigint[]}
  */
 export const getBalances = (account, tokens) => {
@@ -34,7 +34,7 @@ export const getBalances = (account, tokens) => {
 
 /**
  * @param {string} account
- * @param {{chainId:number, address:string}[]} tokens
+ * @param {import('@/types').Token[]} tokens
  */
 export const updateBalances = async (account, tokens) => {
   const items = await pMap(tokens, async token => {
@@ -53,10 +53,10 @@ export const resetBalances = () => {
 
 /**
  * @param {import('vue').Ref<string>} account
- * @param {{chainId:number, address:string, symbol:string}[]} tokens
+ * @param {import('@/types').Token[]} tokens
  */
 export const createBalanceStates = (account, tokens) => {
-  const states = ref(tokens.map(() => 0n))
+  const states = ref(account.value ? getBalances(account.value, tokens) : tokens.map(() => 0n))
 
   const doUpdate = async () => {
     if (!account.value) {
@@ -107,7 +107,7 @@ export const createBalanceStates = (account, tokens) => {
 
 /**
  * @param {import('vue').Ref<string>} account
- * @param {import('vue').ComputedRef<{chainId:number, address:string, symbol:string}[]>} tokens
+ * @param {import('vue').ComputedRef<import('@/types').Token[]>} tokens
  */
 export const createBalanceStates2 = (account, tokens) => {
   const initState = tokens.value.map(() => 0n)

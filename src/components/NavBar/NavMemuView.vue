@@ -1,49 +1,35 @@
 <template>
-  <div class="flex flex-col gap-2">
-    <div class="flex justify-between items-center pl-[14px]">
-      <n-text class="cursor-default">Theme</n-text>
-      <ThemeButton />
-    </div>
-    <n-divider class="!my-0" />
-    <div v-if="screen.lt.sm" class="flex flex-col">
-      <n-button class="h-10 rounded flex-col items-stretch" quaternary tag="a" :to="{ name: PAGE_FAUCET }" aria-label="NFTs">
-        <n-text class="w-full flex-y-center justify-between">
-          <span>Faucet</span>
-          <i-mdi-faucet class="size-6" />
-        </n-text>
-      </n-button>
-    </div>
-    <n-divider v-if="screen.lt.sm" class="!my-0" />
-    <div class="flex flex-col">
-      <n-button class="h-10 rounded flex-col items-stretch" quaternary tag="a" :href="URL_DISCORD" target="_blank" aria-label="discord">
-        <n-text class="w-full flex-y-center justify-between">
-          <span>Discord</span>
-          <i-ic-round-discord class="size-6" />
-        </n-text>
-      </n-button>
-      <n-button class="h-10 rounded flex-col items-stretch" quaternary tag="a" :href="URL_TWITTER" target="_blank" aria-label="twitter">
-        <n-text class="w-full flex-y-center justify-between">
-          <span>Twitter</span>
-          <i-ri-twitter-x-fill class="size-6" />
-        </n-text>
-      </n-button>
-      <n-button class="h-10 rounded flex-col items-stretch" quaternary tag="a" :href="URL_GITHUB" target="_blank" aria-label="github">
-        <n-text class="w-full flex-y-center justify-between">
-          <span>Github</span>
-          <i-mdi-github class="size-6" />
-        </n-text>
-      </n-button>
-    </div>
+  <div class="flex flex-col">
+    <NavLink2 v-if="screen.lt.sm" :href="faucetUrl" :blank="false" aria-label="Faucet">
+      <n-text>Faucet</n-text>
+      <i-my-faucet class="size-6" />
+    </NavLink2>
+    <NavLink2 :href="URL_DISCORD" aria-label="Discord">
+      <n-text>Discord</n-text>
+      <i-ic-round-discord class="size-6" />
+    </NavLink2>
+    <NavLink2 :href="URL_TWITTER" aria-label="Twitter">
+      <n-text>Twitter</n-text>
+      <i-ri-twitter-x-fill class="size-6" />
+    </NavLink2>
+    <NavLink2 :href="URL_GITHUB" aria-label="Github">
+      <n-text>Github</n-text>
+      <i-mdi-github class="size-6" />
+    </NavLink2>
   </div>
 </template>
 
 <script setup>
+import { useRouter } from "vue-router"
 import {
   URL_DISCORD,
   URL_TWITTER,
   URL_GITHUB,
   PAGE_FAUCET,
 } from "@/config"
-import ThemeButton from "./ThemeButton.vue"
-import { screen } from "@/hooks/useScreen";
+import { screen } from "@/hooks/useScreen"
+import NavLink2 from "./NavLink2.vue"
+
+const router = useRouter()
+const faucetUrl = router.resolve({ name: PAGE_FAUCET }).href
 </script>

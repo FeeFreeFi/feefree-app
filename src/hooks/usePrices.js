@@ -1,14 +1,7 @@
 import { onBeforeUnmount, onMounted, readonly, ref, watch } from "vue"
 import debounce from "lodash-es/debounce"
-import { PRICE_API_KEY } from "@/config"
-import { getAllTokenKeys } from "./useCurrency"
 import { createInterval } from "./useTimer"
-
-const ALL_TOKEN_KEYS = getAllTokenKeys()
-const URL = `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${ALL_TOKEN_KEYS.join(',')}&tsyms=USD`
-const PRICE_HEADERS = {
-  headers: { authorization: `Apikey ${PRICE_API_KEY}` }
-}
+import { getPrices } from "@/api"
 
 const pricesRef = ref({})
 const priceChangedRef = ref(0)
@@ -19,17 +12,14 @@ const update = async () => {
     return
   }
 
-  const res = await fetch(URL, PRICE_HEADERS).catch(() => false)
-  if (!res || res.status !== 200) {
+  const res = await getPrices()
+  if (!res || res.code !== 0) {
     return
   }
 
-  const data = await res.json()
-  const prices = Object.fromEntries(Object.keys(data).map(name => [name, data[name].USD]))
-
   pricesRef.value = {
     ...pricesRef.value,
-    ...prices,
+    ...res.data,
   }
   priceChangedRef.value++
 }
@@ -40,11 +30,11 @@ export const startUpdate = start
 export const stopUpdate = stop
 
 /**
- * @param {string} symbol
+ * @param {string} key
  * @returns {number}
  */
-export const getPrice = symbol => {
-  return pricesRef.value[symbol] || 0
+export const getPrice = key => {
+  return pricesRef.value[key] || 0
 }
 
 /**

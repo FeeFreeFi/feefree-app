@@ -1,7 +1,9 @@
 <template>
-  <div class="flex justify-center relative">
-    <span class="p-1 bg-white rounded-full shadow translate-x-[4px] z-[1]"><ZTokenIcon class="size-6" :token="currency0"/></span>
-    <span class="p-1 bg-white rounded-full shadow translate-x-[-4px]"><ZTokenIcon class="size-6" :token="currency1" /></span>
+  <div>
+    <n-text class="flex justify-center relative w-[50px]">
+      <n-text class="p-[1px] bg-white rounded-full shadow translate-x-[1px] z-[1] shrink-0"><ZTokenIcon class="size-6" :token="currency0" /></n-text>
+      <n-text class="p-[1px] bg-white rounded-full shadow translate-x-[-1px] shrink-0"><ZTokenIcon class="size-6" :token="currency1" /></n-text>
+    </n-text>
   </div>
 </template>
 
@@ -11,14 +13,14 @@ import ZTokenIcon from './ZTokenIcon.vue'
 defineProps({
   currency0: {
     /**
-     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,
   },
   currency1: {
     /**
-     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,

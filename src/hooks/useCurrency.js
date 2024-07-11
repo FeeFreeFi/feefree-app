@@ -3,7 +3,7 @@ import {
   CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
-import { getTxMeta } from "@/utils/getTxMeta"
+import { getTxMeta } from "@/utils/chain"
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
 export const MAX_BALANCE = 115792089237316195423570985008687907853269984665640564039457584007913129639935n
@@ -163,8 +163,8 @@ const ABI_TRANSFER = [
 export const isNative = address => !address || address === ADDRESS_ZERO
 
 /**
- * @param {{chainId:number, address:string}} a
- * @param {{chainId:number, address:string}} b
+ * @param {import('@/types').Token} a
+ * @param {import('@/types').Token} b
  */
 export const isSame = (a, b) => a.chainId === b.chainId && a.address === b.address
 

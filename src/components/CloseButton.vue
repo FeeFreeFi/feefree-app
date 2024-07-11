@@ -1,7 +1,7 @@
 <template>
-  <n-button secondary type="tertiary" size="small" circle aria-label="close" @click="onClose">
-    <i-ic-round-close />
-  </n-button>
+  <span class="size-6 cursor-pointer" aria-label="close" @click="onClose">
+    <i-my-close class="size-6" />
+  </span>
 </template>
 
 <script setup>

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 
 dotenv.config()
 
-const { PRICE_API_KEY } = process.env
+const { API_BASE } = process.env
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 const root = path.resolve(__dirname, "..")
@@ -15,6 +15,7 @@ const { version, name, productName, description }  = fs.readJsonSync(path.resolv
 const APP_META = {
   APP_NAME: JSON.stringify(name),
   APP_PRODUCT_NAME: JSON.stringify(productName),
+  APP_DESCRIPTION: JSON.stringify(description),
   APP_VERSION: JSON.stringify(version),
 }
 
@@ -23,7 +24,7 @@ export const appMeta = { version, name, productName, description }
 export const getDefinition = (dev = false) => {
   const env = {
     NODE_ENV: JSON.stringify(dev ? 'development' : 'production'),
-    PRICE_API_KEY: JSON.stringify(PRICE_API_KEY),
+    API_BASE: JSON.stringify(API_BASE),
     ...APP_META,
   }
 

@@ -1,25 +1,24 @@
 <template>
-  <div class="flex flex-col py-6 sm:py-10">
-    <div class="mx-auto relative w-full sm:w-[520px] h-[428px] sm:h-[488px]">
-      <ZSectionView>
-        <!-- header -->
-        <div class="h-10 flex-y-center justify-between">
-          <n-text class="text-xl sm:text-2xl font-medium">Test Tokens Faucet</n-text>
-        </div>
-        <div class="mt-4 flex flex-col gap-4" v-if="tokens.length > 0">
-          <n-button v-for="item, index in tokens" :key="index" @click="() => onSend(item)">Send {{ item.symbol }}</n-button>
-        </div>
-        <div class="mt-4 flex-center" v-else>
-          <router-link :to="{ name: PAGE_HOME }">Oops, faucet unavailable on {{ chainName }}, take me back to home</router-link>
-        </div>
-      </ZSectionView>
+  <div class="margin-center w-full max-w-[400px] p-8 flex-center flex-col gap-8 bg-container rounded-20">
+    <div class="flex-center gap-3">
+      <i-my-faucet class="size-6" />
+      <n-text class="text-base font-semibold">Test Tokens Faucet</n-text>
+    </div>
+    <div class="flex flex-col items-center gap-4">
+      <ZButton class="w-48" v-for="item, index in tokens" :key="index" @click="() => onSend(item)">Send {{ item.symbol }}</ZButton>
+    </div>
+    <div class="flex-center">
+      <router-link class="no-underline" :to="{ name: PAGE_HOME }">
+        <ZGhostButton class="w-36" aria-label="Back">Back</ZGhostButton>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
+import { ref, watch, onMounted, onBeforeUnmount } from "vue"
 import { useNotification } from "naive-ui"
+import { PAGE_HOME } from "@/config"
 import { getTokens, send, getFaucetAddress } from "@/hooks/useFaucet"
 import { account, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
@@ -27,17 +26,16 @@ import { selectedChainId } from "@/hooks/useSelectedChain"
 import { waitTx } from "@/hooks/useWaitTx"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
-import ZSectionView from '@/components/ZSectionView.vue'
-import { getChainName } from "@/hooks/useChains"
-import { PAGE_HOME } from "@/config"
+import ZGhostButton from '@/components/ZGhostButton.vue'
+import ZButton from '@/components/ZButton.vue'
 
 const notification = useNotification()
 
 const loading = ref(false)
-const tokens = computed(() => getTokens(selectedChainId.value))
-const chainName = computed(() => getChainName(selectedChainId.value))
+const tokens = getTokens()
 
 const switching = ref(false)
+
 /**
  * @param {number} chainId
  */
@@ -56,17 +54,20 @@ const onSend = async token => {
 
   const { address: tokenAddress, chainId: id, symbol } = token
   if (id !== selectedChainId.value) {
-    onSwitchNetwork(selectedChainId.value)
-    return
+    const success = await onSwitchNetwork(id)
+    if (!success) {
+      return
+    }
   }
 
+  const faucetAddress = getFaucetAddress()
   loading.value = true
   try {
     const publicClient = getPublicClient(id)
     const walletClient = getWalletClient()
     const tx = await send(
       { publicClient, walletClient },
-      getFaucetAddress(id),
+      faucetAddress,
       tokenAddress,
       account.value
     )
@@ -86,6 +87,7 @@ const onSend = async token => {
 onMounted(() => {
   const stopWatch = watch([account, selectedChainId], () => {
     reset()
+    updateNativeBalance()
   })
 
   onBeforeUnmount(stopWatch)

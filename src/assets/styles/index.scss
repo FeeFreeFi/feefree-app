@@ -1,6 +1,4 @@
-@use './variables.scss';
+@use './variables.module.scss';
 @use './reset.scss';
 @use './tailwind.scss';
 @use './app.scss';
-@use './theme-light.scss';
-@use './theme-dark.scss';

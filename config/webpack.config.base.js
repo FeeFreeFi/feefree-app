@@ -65,12 +65,36 @@ export default {
         }
       },
       {
-        test: /\.s?css$/,
+        test: /\.scss$/,
+        exclude: /\.module\.scss$/,
         use: [
           isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
           {
             loader: 'css-loader',
-            options: { importLoaders: 2 }
+            options: {
+              importLoaders: 2,
+            }
+          },
+          {
+            loader: 'postcss-loader',
+          },
+          {
+            loader: 'sass-loader',
+          }
+        ]
+      },
+      {
+        test: /\.module\.scss$/,
+        use: [
+          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2,
+              modules: {
+                mode: 'local',
+              },
+            }
           },
           {
             loader: 'postcss-loader',
@@ -109,6 +133,7 @@ export default {
   plugins: [
     new webpack.DefinePlugin(getDefinition(!isProduction)),
     new ESLintPlugin({
+      configType: "flat",
       extensions: ['js', 'vue'],
       formatter,
     }),

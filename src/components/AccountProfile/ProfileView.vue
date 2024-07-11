@@ -1,42 +1,68 @@
 <template>
-  <div class="h-11 flex-y-center">
-    <ZChainIcon class="mr-2 size-7" :chain-id="chainId" />
-    <div class="flex-1">
-      <div class="flex gap-1">
-        <n-text class="cursor-default text-sm font-semibold flex-1">{{ shortString(account) }}</n-text>
-        <ZCopyable :text="account">
-          <template #copied>
-            <n-button class="size-6 px-0 rounded" size="tiny" tertiary type="success" aria-label="copied">
-              <i-mdi-checkbox-marked-circle class="size-4" />
-            </n-button>
-          </template>
-          <n-button class="size-6 px-0 rounded" size="tiny" tertiary aria-label="copy">
-            <n-text class="text-color-3">
-              <i-mdi-content-copy class="size-4" />
-            </n-text>
-          </n-button>
-        </ZCopyable>
-        <n-button class="size-6 px-0 rounded" size="tiny" tertiary aria-label="exit" @click="onDisconnect">
-          <n-text type="error">
-            <i-mdi-exit-to-app class="size-4" />
-          </n-text>
-        </n-button>
+  <ZModalView class="text-sm" :on-close="onClose">
+    <div class="px-6 pb-8 flex flex-col relative">
+      <div class="flex justify-center">
+        <img class="size-12 rounded-full" :src="jazzicon(account)" :alt="account">
       </div>
-      <n-text class="cursor-default text-xs font-medium flex-y-center whitespace-nowrap text-color-3">
-        <span>{{ chainName }}</span>
-        <span class="mx-1 size-[2px] rounded-full bg-[currentColor]"></span>
-        <ZTokenBalance class="text-color-3" :balance="balance" :token="nativeCurrency" :dp="6" />
-      </n-text>
+      <div class="mt-4 flex justify-center">
+        <n-text class="text-lg font-medium">{{ shortString(account, 9, -7) }}</n-text>
+      </div>
+      <div class="mt-4 flex gap-4">
+        <ZCopyable class="flex-1 flex justify-end cursor-pointer" :text="account">
+          <template #copied>
+            <div class="flex-y-center gap-3" aria-label="Copy address">
+              <span aria-label="Copied">
+                <i-my-success class="size-4" />
+              </span>
+              <n-text depth="1">Copy Address</n-text>
+            </div>
+          </template>
+          <div class="flex-y-center gap-3" aria-label="Copy address">
+            <span aria-label="Copy">
+              <i-my-dark-copy class="size-4" />
+            </span>
+            <n-text depth="1">Copy Address</n-text>
+          </div>
+        </ZCopyable>
+        <ViewTransaction class="flex-1" :url="accountUrl" />
+      </div>
+      <div class="mt-6 px-4 flex justify-center gap-6" v-if="profile">
+        <div class="flex-y-center">
+          <n-text depth="1">Points:</n-text>
+          <n-text class="ml-2 mr-1">{{ profile.score }}</n-text>
+          <i-my-score class="size-4" />
+        </div>
+        <div class="flex-y-center cursor-pointer" @click="onShare">
+          <n-text depth="1">Referral:</n-text>
+          <n-text class="ml-2 mr-1">{{ profile.referral }}</n-text>
+          <i-my-share class="size-4" />
+        </div>
+      </div>
+      <div class="mt-8">
+        <ZButton class="h-10 sm:h-12 w-full" @click="onLogout">Logout</ZButton>
+      </div>
     </div>
-  </div>
+  </ZModalView>
 </template>
 
 <script setup>
+import { computed } from "vue"
+import { useMessage } from "naive-ui"
+import jazzicon from "@/utils/jazzicon"
 import shortString from "@/utils/shortString"
-import { account, balance, chainId, disconnect, nativeCurrency } from '@/hooks/useWallet'
+import { getAccountUrl } from "@/utils/chain"
+import { copyText } from "@/utils/clipboard"
+import { account, chainId, disconnect } from '@/hooks/useWallet'
+import ZModalView from '@/components/ZModalView.vue'
 import ZCopyable from "@/components/ZCopyable.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZChainIcon from "@/components/ZChainIcon.vue"
+import ZButton from '@/components/ZButton.vue'
+import ViewTransaction from "@/components/ViewTransaction.vue"
+import { getExplorerUrl } from "@/hooks/useChains"
+import { clearAuth } from "@/hooks/useAuth"
+import { logout } from "@/api"
+import { profile } from "@/hooks/useUser"
+
+const message = useMessage()
 
 const props = defineProps({
   onClose: {
@@ -45,8 +71,21 @@ const props = defineProps({
   },
 })
 
-const onDisconnect = () => {
+const accountUrl = computed(() => getAccountUrl(account.value, getExplorerUrl(chainId.value)))
+const shareUrl = computed(() => {
+  const { protocol, host } = window.location
+  return `${protocol}//${host}/?referral=${profile.value.referral}`
+})
+
+const onShare = async () => {
+  const success = await copyText(shareUrl.value)
+  success && message.success("Referral copied, share and earn points!")
+}
+
+const onLogout = () => {
   disconnect()
+  logout()
+  clearAuth()
   props.onClose()
 }
 </script>

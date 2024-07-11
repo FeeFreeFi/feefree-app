@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="flex gap-2">
-      <n-button v-if="!requireSwitchChain && !account" class="rounded" strong secondary type="info" size="large" aria-label="connect wallet" @click="open">Connect Wallet</n-button>
+    <div class="flex-y-center gap-4">
+      <ZButton v-if="!requireSwitchChain && !account" class="w-40 h-9" aria-label="Connect Wallet" @click="onOpen">Connect Wallet</ZButton>
       <AccountProfile v-else-if="!requireSwitchChain" />
       <ChainSelector />
     </div>
@@ -12,7 +12,12 @@
 <script setup>
 import { account, requireSwitchChain } from "@/hooks/useWallet"
 import { open } from "@/hooks/useWalletConnector"
+import ZButton from "@/components/ZButton.vue"
 import WalletConnector from "@/components/WalletConnector/index.vue"
 import AccountProfile from "@/components/AccountProfile/index.vue"
 import ChainSelector from "./ChainSelector.vue"
+
+const onOpen = () => {
+  open()
+}
 </script>

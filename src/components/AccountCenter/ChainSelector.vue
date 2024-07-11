@@ -1,16 +1,13 @@
 <template>
   <div>
     <n-popselect class="w-[240px] max-h-[360px] rounded-lg" trigger="click" :value="current.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
-      <n-button v-if="requireSwitchChain" class="rounded" strong secondary type="info" size="large" aria-label="connect wallet">
-        <span>Switch Network</span>
-        <span><i-mdi-chevron-down class="size-5" /></span>
-      </n-button>
-      <n-button v-else class="size-10 px-0 rounded-lg relative" size="large" tertiary aria-label="select chain">
-        <ZChainIcon class="size-6" :chain-id="current.value" />
-        <div class="absolute right-[2px] bottom-[2px] bg-white text-black rounded-full">
-          <i-mdi-chevron-down class="size-4" />
+      <ZActionButton class="size-9 relative " aria-label="select chain">
+        <i-ion-warning v-if="requireSwitchChain" class="size-4 text-warning" />
+        <ZChainIcon v-else class="size-6" :chain-id="current.value" />
+        <div class="absolute right-[2px] bottom-[2px]">
+          <DownArrow class="!size-3" />
         </div>
-      </n-button>
+      </ZActionButton>
     </n-popselect>
   </div>
 </template>
@@ -21,6 +18,8 @@ import { getChainName, getChains, isSupportChain } from "@/hooks/useChains"
 import { chainId, requireSwitchChain } from "@/hooks/useWallet"
 import { selectedChainId, setSelectedChainId } from "@/hooks/useSelectedChain"
 import { useNotification } from "naive-ui"
+import ZActionButton from "@/components/ZActionButton.vue"
+import DownArrow from "@/components/Arrow/DownArrow.vue"
 import ZChainIcon from "@/components/ZChainIcon.vue"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
 
@@ -67,7 +66,7 @@ const onSelect = value => {
   onSwitchNetwork(value)
 }
 
-const onChainChange = (newChainId, oldChainId) => {
+const onChainChange = (newChainId) => {
   if (!newChainId || !isSupportChain(newChainId)) {
       return
     }

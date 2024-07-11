@@ -1,21 +1,20 @@
-import { getTxMeta } from "@/utils/getTxMeta"
+import { getTxMeta } from "@/utils/chain"
 import {
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import { getBaseSepoliaToken } from "./useCurrency"
 
-const CONFIG = [
-  {
-    chainId: CHAIN_ID_BASE_SEPOLIA,
-    faucet: "0xA6B89e264DCdbC6B39e8c05FEe7Ce0F5911810bA",
-    tokens: [
-      getBaseSepoliaToken("USDC"),
-      getBaseSepoliaToken("DAI"),
-      getBaseSepoliaToken("OP"),
-    ],
-  },
-]
-const CONFIG_MAP = Object.fromEntries(CONFIG.map(c => [c.chainId, c]))
+const CONFIG = {
+  chainId: CHAIN_ID_BASE_SEPOLIA,
+  faucet: "0xA6B89e264DCdbC6B39e8c05FEe7Ce0F5911810bA",
+  tokens: [
+    getBaseSepoliaToken("USDC"),
+    getBaseSepoliaToken("DAI"),
+    getBaseSepoliaToken("OP"),
+  ],
+}
+
+const SUPPORTED_CHAINS = [{ chainId: CONFIG.chainId }]
 
 const ABI_SEND = [
   {
@@ -30,15 +29,16 @@ const ABI_SEND = [
   }
 ]
 
-/**
- * @param {number} chainId
- */
-export const getTokens = chainId => (CONFIG_MAP[chainId] || {}).tokens || []
+export const getSupportedChains = () => SUPPORTED_CHAINS
 
 /**
  * @param {number} chainId
  */
-export const getFaucetAddress = chainId => CONFIG_MAP[chainId].faucet
+export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainId === chainId)
+
+export const getTokens = () => CONFIG.tokens
+
+export const getFaucetAddress = () => CONFIG.faucet
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}

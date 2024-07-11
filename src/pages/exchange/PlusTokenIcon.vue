@@ -14,7 +14,7 @@ import IconPlus from '@/components/IconPlus.vue'
 const props = defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{chainId:number, name:string, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,

@@ -1,8 +1,5 @@
 import BigNumber from "bignumber.js"
 
-// eslint-disable-next-line no-extend-native
-BigInt.prototype.toJSON = BigInt.prototype.toJSON || function toJSON() { return this.toString() }
-
 /**
  * @param {BigNumber|string|number} value
  */
