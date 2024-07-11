@@ -1,7 +1,7 @@
 <template>
   <div class="flex-center gap-1">
     <ZTokenIcon :token="token" />
-    <n-text class="text-sm sm:text-base font-medium">{{ token.symbol }}</n-text>
+    <n-text class="text-sm font-medium">{{ token.symbol }}</n-text>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import ZTokenIcon from "./ZTokenIcon.vue"
 defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,

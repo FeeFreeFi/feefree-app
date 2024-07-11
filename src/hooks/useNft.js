@@ -1,7 +1,7 @@
 import pMap from "p-map"
 import debounce from "lodash-es/debounce"
 import { ref, readonly, onMounted, onBeforeUnmount } from "vue"
-import { getTxMeta } from "@/utils/getTxMeta"
+import { getTxMeta } from "@/utils/chain"
 import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
@@ -14,7 +14,7 @@ import { getChain } from "./useChains"
 import { createInterval } from "./useTimer"
 
 /**
- * @param {{chainId:number, address:string}[]} nft
+ * @param {import('@/types').Nft} nft
  */
 const getNftKey = nft => `${nft.chainId}: ${nft.address}`
 
@@ -213,6 +213,7 @@ const CONFIG = [
   },
 ]
 const CONFIG_MAP = Object.fromEntries(CONFIG.map(c => [c.chainId, c]))
+const SUPPORTED_CHAINS = CONFIG.map(c => ({ chainId: c.chainId }))
 
 const ABI_MINT = [
   {
@@ -242,6 +243,13 @@ const ABI_TOTAL_SUPPLY = [
     ],
   },
 ]
+
+export const getSupportedChains = () => SUPPORTED_CHAINS
+
+/**
+ * @param {number} chainId
+ */
+export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainId === chainId)
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
@@ -296,7 +304,7 @@ export const getNftExplorerUrl = (chainId, address, id) => {
 }
 
 /**
- * @param {{chainId:number, address:string}} nft
+ * @param {import('@/types').Nft} nft
  * @returns {bigint}
  */
 const getState = nft => {
@@ -305,14 +313,14 @@ const getState = nft => {
 }
 
 /**
- * @param {{chainId:number, address:string}[]} nfts
+ * @param {import('@/types').Nft[]} nfts
  */
 const getStates = nfts => {
   return nfts.map(nft => getState(nft))
 }
 
 /**
- * @param {{chainId:number, address:string}[]} nfts
+ * @param {import('@/types').Nft[]} nfts
  */
 const updateStates = async nfts => {
   const items = await pMap(nfts, async nft => {
@@ -332,7 +340,7 @@ const updateStates = async nfts => {
 }
 
 /**
- * @param {import('vue').ComputedRef<{chainId:number, address:string, symbol:string}[]>} nfts
+ * @param {import('vue').ComputedRef<import('@/types').Nft[]>} nfts
  */
 export const createNftStates = nfts => {
   const states = ref(nfts.value.map(() => 0n))

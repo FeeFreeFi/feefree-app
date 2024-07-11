@@ -40,7 +40,7 @@ const getAccounts = async provider => {
   return provider.request({ method: 'eth_accounts' })
 }
 
-const init = async (provider, account, chainId, targetChainId, walletName) => {
+const init = async (provider, walletName, account, chainId, targetChainId) => {
   if (cachedProvider !== provider) {
     provider.on("connect", onConnect)
     provider.on("chainChanged", onChainChanged)
@@ -155,10 +155,10 @@ const onDisconnect = () => {
 
 /**
  * @param {*} provider
- * @param {*} info
+ * @param {string} walletName
  * @param {number} targetChainId
  */
-export const connect = async (provider, info, targetChainId) => {
+export const connect = async (provider, walletName, targetChainId = undefined) => {
   const accounts = await provider.request({ method: 'eth_requestAccounts' })
   if (!accounts) {
     return false
@@ -169,9 +169,18 @@ export const connect = async (provider, info, targetChainId) => {
   }
 
   const chainId = await getChainId(provider)
-  await init(provider, accounts[0], chainId, targetChainId, info.name)
+  await init(provider, walletName, accounts[0], chainId, targetChainId)
 
   return true
+}
+
+export const autoConnect = async (provider, walletName) => {
+  const accounts = await getAccounts(provider)
+  if (accounts.length === 0) {
+    return false
+  }
+
+  return connect(provider, walletName)
 }
 
 export const disconnect = () => {

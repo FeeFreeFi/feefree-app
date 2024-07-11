@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {
+  Patterns,
   APP_PRODUCT_NAME,
   PAGE_HOME,
   PAGE_POOL_HOME,
@@ -17,6 +18,9 @@ import { isValidPool } from "@/hooks/useSwap"
 import DefaultLayout from "@/layouts/index.vue"
 import PageHome from "@/pages/home/index.vue"
 
+/**
+ * @type {import('vue-router').RouteLocationRaw[]}
+ */
 const routes = [
   {
     path: '/',
@@ -27,6 +31,12 @@ const routes = [
         name: PAGE_HOME,
         component: PageHome,
         meta: { title: APP_PRODUCT_NAME },
+        beforeEnter: to => {
+          const { referral, ...rest } = to.query
+          if (referral && !Patterns.Referral.test(referral)) {
+            return { name: PAGE_HOME, query: rest }
+          }
+        },
       },
       {
         path: "pool",
@@ -39,7 +49,8 @@ const routes = [
         component: () => import('@/pages/pool/detail/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
         beforeEnter: to => {
-          if (!isValidPool(to.params.id)) {
+          const id = to.params.id
+          if (!Patterns.PoolId.test(id) || !isValidPool(id)) {
             return { name: PAGE_NOT_FOUND }
           }
         },

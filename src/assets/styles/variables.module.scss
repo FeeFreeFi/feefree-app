@@ -1,0 +1,135 @@
+$content-max-w: 1280px;
+
+$header-h: 64px;
+$header-z: 999;
+
+$main-min-h: calc(100vh - $header-h);
+$main-scrollbar-z: $header-z + 1;
+
+$footer-h: 64px;
+
+:root {
+  --x-content-max-w: #{$content-max-w};
+
+  --x-header-h: #{$header-h};
+  --x-header-z: #{$header-z};
+
+  --x-main-min-h: #{$main-min-h};
+  --x-main-scrollbar-z: #{$main-scrollbar-z};
+
+  --x-footer-h: #{$footer-h};
+}
+
+$primaryColor: rgb(65, 245, 207);
+$successColor: rgb(65, 245, 109);
+$warningColor: rgb(245, 183, 65);
+$errorColor: rgb(245, 65, 65);
+
+$primary10: rgb(65, 245, 207, 0.1);
+$primary20: rgb(65, 245, 207, 0.2);
+$primary30: rgb(65, 245, 207, 0.3);
+$primary40: rgb(65, 245, 207, 0.4);
+$primary50: rgb(65, 245, 207, 0.5);
+$primary60: rgb(65, 245, 207, 0.6);
+$primary70: rgb(65, 245, 207, 0.7);
+$primary80: rgb(65, 245, 207, 0.8);
+$primary90: rgb(65, 245, 207, 0.9);
+
+$textColorBase: rgba(255, 255, 255, 1);
+$textColor1: rgba(255, 255, 255, 0.7);
+$textColor2: rgba(255, 255, 255, 0.5);
+$textColor3: rgba(255, 255, 255, 0.3);
+$textColorDisabled: rgba(255, 255, 255, 0.1);
+
+$buttonTextColor: rgba(19, 19, 27, 1);
+$buttonTextColorHover: rgba(19, 19, 27, 0.8);
+$buttonTextColorFocus: rgba(19, 19, 27, 0.8);
+$buttonTextColorPressed: rgba(19, 19, 27, 0.5);
+$buttonTextColorDisabled: rgba(19, 19, 27, 0.3);
+$opacityDisabled: 0.8;
+
+$inputPadding: 0 0;
+
+$colorBody: rgb(4, 32, 39);
+$colorHeader: rgb(23, 25, 26);
+$colorContainer: rgb(61, 77, 74);
+$colorCard: rgb(45, 57, 54);
+$colorCard1: rgba(45, 57, 54, 0.6);
+$colorTab: rgb(31, 42, 39);
+$colorDialog: rgb(60, 77, 73);
+$colorDivider: rgba(75, 75, 81, 1);
+$colorDivider1: rgba(75, 96, 92, 1);
+
+$transparent: transparent;
+$none: none;
+
+$rounded: 4px;
+$roundedMd: 6px;
+$roundedLg: 8px;
+$roundedXl: 12px;
+
+$textXs: 12px;
+$textSm: 14px;
+$textBase: 16px;
+$textLg: 18px;
+
+$px2: 2px;
+$px12: 12px;
+
+:export {
+  primaryColor: $primaryColor;
+  successColor: $successColor;
+  warningColor: $warningColor;
+  errorColor: $errorColor;
+
+  primary10: $primary10;
+  primary20: $primary20;
+  primary30: $primary30;
+  primary40: $primary40;
+  primary50: $primary50;
+  primary60: $primary60;
+  primary70: $primary70;
+  primary80: $primary80;
+  primary90: $primary90;
+
+  textColorBase: $textColorBase;
+  textColor1: $textColor1;
+  textColor2: $textColor2;
+  textColor3: $textColor3;
+  textColorDisabled: $textColorDisabled;
+
+  buttonTextColor: $buttonTextColor;
+  buttonTextColorHover: $buttonTextColorHover;
+  buttonTextColorFocus: $buttonTextColorFocus;
+  buttonTextColorPressed: $buttonTextColorPressed;
+  buttonTextColorDisabled: $buttonTextColorDisabled;
+  opacityDisabled: $opacityDisabled;
+
+  inputPadding: $inputPadding;
+
+  colorBody: $colorBody;
+  colorHeader: colorHeader;
+  colorContainer: $colorContainer;
+  colorCard: $colorCard;
+  colorCard1: $colorCard1;
+  colorTab: $colorTab;
+  colorDialog: $colorDialog;
+  colorDivider: $colorDivider;
+  colorDivider1: $colorDivider1;
+
+  transparent: $transparent;
+  none: $none;
+
+  rounded: $rounded;
+  roundedMd: $roundedMd;
+  roundedLg: $roundedLg;
+  roundedXl: $roundedXl;
+
+  textXs: $textXs;
+  textSm: $textSm;
+  textBase: $textBase;
+  textLg: $textLg;
+
+  px2: $px2;
+  px12: $px12;
+}

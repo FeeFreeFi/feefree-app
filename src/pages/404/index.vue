@@ -1,19 +1,23 @@
 <template>
-  <div class="flex flex-col py-6 sm:py-10">
-    <div class="mx-auto relative w-full sm:w-[520px] h-[428px] sm:h-[488px]">
-      <ZSectionView>
-        <div class="h-10 flex-center">
-          <n-text class="text-xl sm:text-2xl font-medium">Not Found</n-text>
+  <div class="margin-center w-full max-w-[444px] p-8 flex-center flex-col bg-container rounded-20">
+    <div class="relative w-[272px] sm:w-[380px] flex flex-col items-center justify-center">
+      <div class="w-[272px] sm:w-[380px] relative">
+        <img class="size-full aspect-square" :src="notFoundBg" loading="lazy" alt="Not found">
+        <div class="absolute w-full bottom-8 text-center">
+          <n-text depth="1">Page not found!</n-text>
         </div>
-        <div class="mt-4 flex-center">
-          <router-link :to="{ name: PAGE_HOME }">Oops, take me back to home</router-link>
-        </div>
-      </ZSectionView>
+      </div>
+      <div>
+        <router-link class="no-underline" :to="{ name: PAGE_HOME }">
+          <ZGhostButton class="w-36" aria-label="Back">Back</ZGhostButton>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import ZSectionView from '@/components/ZSectionView.vue'
 import { PAGE_HOME } from '@/config'
+import ZGhostButton from '@/components/ZGhostButton.vue'
+import notFoundBg from "@/assets/images/not-found-bg.svg"
 </script>

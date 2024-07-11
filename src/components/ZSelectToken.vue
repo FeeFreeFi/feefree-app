@@ -3,15 +3,15 @@
     <n-button v-if="token" text :aria-label="label" :disabled="disabled" @click="onSelect">
       <div class="flex-y-center">
         <slot />
-        <n-text class="text-color-3" aria-label="down arrow">
+        <n-text aria-label="down arrow">
           <i-mdi-chevron-down class="size-5" />
         </n-text>
       </div>
     </n-button>
     <n-button v-else class="rounded-full" type="info" :disabled="disabled" :aria-label="placeholder" @click="onSelect">
       <div class="flex-y-center">
-        <n-text class="text-color-bright text-sm">{{ placeholder }}</n-text>
-        <n-text class="text-color-bright" aria-label="down arrow">
+        <n-text class="text-sm">{{ placeholder }}</n-text>
+        <n-text aria-label="down arrow">
           <i-mdi-chevron-down class="size-5" />
         </n-text>
       </div>
@@ -23,7 +23,7 @@
 defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{symbol:string, address:string, decimals:number, dp:number, chainId:number}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     default: null,

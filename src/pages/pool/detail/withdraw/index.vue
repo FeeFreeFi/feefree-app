@@ -1,61 +1,31 @@
 <template>
-  <div class="flex flex-col text-sm sm:text-base">
-    <div class="relative w-full sm:max-w-[432px]">
-      <!-- withdraw -->
-      <ZSectionView>
-        <!-- header -->
-        <div class="h-10 flex-y-center justify-between">
-          <n-text class="text-xl sm:text-2xl font-medium">Withdraw</n-text>
-        </div>
-        <div class="mt-4 mb-6 flex flex-col gap-6 relative">
-          <!-- currency LP -->
-          <div class="rounded flex flex-col bg-block">
-            <div class="px-3 py-4 flex-y-center gap-2">
-              <ZPoolIcon :currency0="currency0" :currency1="currency1" />
-              <n-input-number class="flex-1 amount-input" v-model:value="inputAmount" :min="0" :bordered="false" placeholder="0.0" :show-button="false" :on-blur="onAmountBlur" />
-            </div>
-            <n-divider class="!my-0" />
-            <div class="p-3 flex-y-center justify-between gap-2">
-              <div class="flex-y-center overflow-hidden">
-                <n-text class="mr-1 font-medium text-color-3">Liquidity:</n-text>
-                <ZTokenBalance content-class="text-color-3" tooltip-class="text-xs sm:text-sm" :token="currencyLiquidity" :balance="balanceLiquidity" :show-symbol="false" />
-              </div>
-              <n-button class="ml-[2px] h-6 p-1" text aria-label="Max" :disabled="!balanceLiquidity" @click="onMax">
-                <n-text class="text-sm font-medium" type="primary">MAX</n-text>
-              </n-button>
-            </div>
-          </div>
-          <div class="bg-block px-3 sm:px-4 flex flex-col">
-            <!-- currency0 -->
-            <div class="py-4 flex justify-between gap-2">
-              <div class="flex-y-center gap-2">
-                <ZTokenIcon :token="currency0" />
-                <ZTokenSymbol :symbol="currency0.symbol" />
-              </div>
-              <div class="flex">
-                <ZTokenBalance :token="currency0" :balance="quoteData?.amount0 || 0n" :dp="6" :show-symbol="false" />
-              </div>
-            </div>
-            <!-- currency1 -->
-            <div class="py-4 flex justify-between gap-2">
-              <div class="flex-y-center gap-2">
-                <ZTokenIcon :token="currency1" />
-                <ZTokenSymbol :symbol="currency1.symbol" />
-              </div>
-              <div class="flex">
-                <ZTokenBalance :token="currency1" :balance="quoteData?.amount1 || 0n" :dp="6" :show-symbol="false" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- button -->
-        <div>
-          <n-button class="primary-btn" v-if="!account" type="primary" strong block aria-label="Connect Wallet" @click="openWalletConnector">Connect Wallet</n-button>
-          <n-button v-else-if="requireSwitchChain" class="primary-btn" :disabled="switching" :loading="switching" type="info" block strong aria-label="Switch Network" @click="onSwitchNetwork">Switch Network</n-button>
-          <n-button v-else class="primary-btn" :disabled="!canWithdraw" :loading="withdrawing" type="primary" block strong aria-label="Deposit" @click="onWithdraw">{{ signing ? 'Waiting For Wallet Confirmation' : 'Withdraw' }}</n-button>
-        </div>
-      </ZSectionView>
+  <div class="flex-1 lg:p-6 flex flex-col gap-4 lg:bg-card lg:rounded-20">
+    <div v-if="screen.lg" class="hidden lg:flex items-center gap-2">
+      <div class="flex">
+        <n-text class="font-medium text-base">Withdraw</n-text>
+      </div>
     </div>
+    <div class="flex-1 flex flex-col lg:flex-row gap-8 lg:gap-6">
+      <div class="flex-1 lg:p-6 flex flex-col gap-10 lg:bg-tab lg:rounded">
+        <div class="flex flex-col gap-4">
+          <n-text class="text-xs" depth="1">Amount to withdraw</n-text>
+          <WithdrawInput v-model="inputAmount" :token="currencyLiquidity" :balance="balanceLiquidity" @change="onAmountChange" />
+          <n-text class="text-xs" depth="1">Excepted to receive</n-text>
+          <div class="p-4 flex flex-col gap-4 bg-card lg:bg-section rounded-lg">
+            <TokenReceive :token="currency0" :balance="quoteData?.amount0 || 0n" />
+            <TokenReceive :token="currency1" :balance="quoteData?.amount1 || 0n" />
+          </div>
+        </div>
+        <div>
+          <ActionButton :chain-id="pool.chainId" :chains="supportedChains">
+            <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
+            <ZButton v-else class="h-10 sm:h-12 w-full" :loading="withdrawing" aria-label="Deposit" @click="onWithdraw">Withdraw</ZButton>
+          </ActionButton>
+        </div>
+      </div>
+      <PoolPosition class="w-full lg:w-56" :amount="amount" :balance="balanceLiquidity" :total="poolState.liquidity" />
+    </div>
+    <WithdrawModal v-model="withdrawAction" />
   </div>
 </template>
 
@@ -64,27 +34,29 @@ import debounce from "lodash-es/debounce"
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { useRoute } from "vue-router"
 import { useNotification } from "naive-ui"
-import { parseAmount, toAmount } from "@/utils/bn"
-import { account, chainId, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { parseAmount } from "@/utils/bn"
+import { screen } from "@/hooks/useScreen"
+import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
-import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import { waitTx } from "@/hooks/useWaitTx"
 import { getRouterAddress } from "@/hooks/useRouter"
-import { getTokenBalances, removeLiquidity, quoteRemoveLiquidity, getPool } from "@/hooks/useSwap"
+import { getTokenBalances, quoteRemoveLiquidity, getPool, getSupportedChains } from "@/hooks/useSwap"
 import { createInterval } from "@/hooks/useTimer"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { createPoolState } from "@/hooks/usePoolState"
 import { createPriceState } from "@/hooks/usePrices"
 import { createBalanceStates } from "@/hooks/useBalances"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZSectionView from "@/components/ZSectionView.vue"
-import ZPoolIcon from "@/components/ZPoolIcon.vue"
-import ZTokenSymbol from "@/components/ZTokenSymbol.vue"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
-import { doSwitchNetwork } from "@/hooks/useInteraction"
+import { doWithdraw } from "@/hooks/useInteraction"
+import ZButton from "@/components/ZButton.vue"
+import ActionButton from "@/components/ActionButton.vue"
+import PoolPosition from "./PoolPosition.vue"
+import WithdrawInput from "./WithdrawInput.vue"
+import TokenReceive from "./TokenReceive.vue"
+import WithdrawModal from "./WithdrawModal.vue"
 
 const notification = useNotification()
 const route = useRoute()
+
+const supportedChains = getSupportedChains()
 
 const pool = getPool(route.params.id)
 const { currency0, currency1, currencyLiquidity } = pool
@@ -97,21 +69,11 @@ const balanceLiquidity = computed(() => balanceStates.value[0])
 
 const inputAmount = ref("")
 const amount = computed(() => parseAmount(inputAmount.value || 0, currencyLiquidity.decimals))
+const inputHint = computed(() => "Please enter amount")
+const isInputValid = computed(() => amount.value && amount.value <= balanceLiquidity.value)
 
 const withdrawing = ref(false)
-const signing = ref(false)
-
-const requireSwitchChain = computed(() => chainId.value !== pool.chainId)
-const switching = ref(false)
-const onSwitchNetwork = () => doSwitchNetwork(notification, switching, pool.chainId)
-
-const canWithdraw = computed(() => {
-  if (amount.value === 0n || amount.value > balanceLiquidity.value) {
-    return false
-  }
-
-  return true
-})
+const withdrawAction = ref({ show: false })
 
 /**
  * @type {import('vue').Ref<{amount0: bigint, amount1: bigint}>}
@@ -119,7 +81,7 @@ const canWithdraw = computed(() => {
 const quoteData = ref(null)
 
 const updateQuoteData = async () => {
-  if (amount.value === 0n) {
+  if (!amount.value || amount.value > poolState.value.liquidity) {
     quoteData.value = null
     return
   }
@@ -145,19 +107,12 @@ const { start: startUpdateQuoteData, stop: stopUpdateQuoteData  } = createInterv
 
 const reset = () => {
   withdrawing.value = false
-  signing.value = false
-  switching.value = false
-
   quoteData.value = null
 }
 
-const onMax = () => {
-  inputAmount.value = toAmount(balanceLiquidity.value, currencyLiquidity.decimals)
-  onAmountBlur()
-}
-
-const onAmountBlur = () => {
-  if (amount.value <= 0n) {
+const onAmountChange = () => {
+  if (!amount.value || amount.value > poolState.value.liquidity) {
+    quoteData.value = null
     return
   }
 
@@ -168,48 +123,25 @@ const onAmountBlur = () => {
 }
 
 const onWithdraw = async () => {
-  withdrawing.value = true
-  signing.value = true
-
-  const id = currency0.chainId
-  const publicClient = getPublicClient(id)
-  const walletClient = getWalletClient()
-  const address = getRouterAddress(id)
-
-  const { amount0, amount1 } = quoteData.value
-  const _amount0 = toAmount(amount0, currency0.decimals, currency0.dp)
-  const _amount1 = toAmount(amount1, currency1.decimals, currency1.dp)
-  const content = `Withdraw for ${_amount0} ${currency0.symbol} and ${_amount1} ${currency1.symbol}`
-
-  try {
-    const tx = await removeLiquidity(
-      { publicClient, walletClient },
-      address,
-      currency0.address,
-      currency1.address,
-      amount.value
-    )
-    signing.value = false
-    await waitTx(notification, tx, 'Success', content)
-    withdrawing.value = false
+  const success = await doWithdraw(withdrawAction, withdrawing, pool, amount.value, quoteData.value)
+  if (success) {
     inputAmount.value = ""
     reset()
     updateNativeBalance()
-  } catch (err) {
-    console.log(err)
-    withdrawing.value = false
-    signing.value = false
-    notification.error({
-      title: `Withdraw fail`,
-      content: err.shortMessage || err.details || err.message,
-      duration: 5000,
-    })
   }
 }
 
 onMounted(() => {
   const stopWatch = watch(selectedChainId, () => {
     reset()
+  })
+
+  onBeforeUnmount(stopWatch)
+})
+
+onMounted(() => {
+  const stopWatch = watch(account, () => {
+    onAmountChange()
   })
 
   onBeforeUnmount(stopWatch)

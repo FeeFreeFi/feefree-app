@@ -1,67 +1,70 @@
 <template>
-  <div class="flex flex-col py-6 sm:py-10 text-sm sm:text-base">
-    <div class="mx-auto relative w-full">
-      <div class="flex justify-between">
-        <div class="flex-center px-3 py-1 rounded-full border-all !border-grey-5 text-sm gap-1">
-          <i-my-nft class="size-6" />
-          <n-text>FeeFree NFTs</n-text>
-        </div>
+  <ZContainer class="flex flex-col ">
+    <div class="flex mb-4">
+      <div class="flex-center gap-3">
+        <i-my-nfts class="size-6" />
+        <n-text class="text-base font-semibold">FeeFree NFTs</n-text>
       </div>
-      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
-        <div class="flex flex-col items-center gap-2 shadow rounded-xl relative w-[300px]" v-for="item, index in nfts" :key="index">
-          <div>
-            <NftImage class="aspect-square rounded-t-xl" :src="item.image" :label="item.label" />
-          </div>
+    </div>
+    <div class="grid gap-y-4 sm:gap-y-8 grid-cols-1 sm:grid-cols-2 sm:gap-x-8 md:grid-cols-2 md:gap-x-32 lg:grid-cols-3 lg:gap-x-14 xl:grid-cols-4 xl:gap-x-8 2xl:grid-cols-5 2xl:gap-x-4 justify-items-center">
+      <div class="relative w-full max-w-[400px] sm:w-[272px] flex flex-col bg-card rounded-lg" v-for="item, index in nfts" :key="index">
+        <div class="w-full aspect-square">
+          <NftImage class="aspect-square rounded-t-lg" :src="item.image" :label="item.label" />
+        </div>
+        <div class="flex flex-col px-4 sm:px-6 pb-6 pt-4">
           <!-- NFT name -->
-          <div class="flex justify-center">
-            <n-text>{{ item.label }}</n-text>
+          <div class="flex">
+            <n-text class="text-base font-medium">{{ item.label }}</n-text>
           </div>
           <!-- Minted -->
-          <div class="flex justify-center gap-2">
-            <n-text class="text-color-3">Minted:</n-text>
+          <div class="mt-3 sm:mt-4 flex justify-between text-xs">
+            <n-text depth="1">Minted:</n-text>
             <div class="flex">
-              <span class="font-medium text-color-3 ml-1">{{ toBalance(nftStates[index]) }}/{{ item.capLabel }}</span>
+              <n-text>{{ toBalance(nftStates[index]) }}/{{ item.capLabel }}</n-text>
             </div>
           </div>
           <!-- Price -->
-          <div class="flex justify-center gap-2">
-            <n-text class="text-color-3">Price:</n-text>
+          <div class="mt-2 sm:mt-3 flex justify-between text-xs">
+            <n-text depth="1">Price:</n-text>
             <div class="flex" v-if="item.free">
-              <span class="font-medium text-color-3 ml-1">Free</span>
+              <n-text class="text-primary">Free</n-text>
             </div>
             <div class="flex" v-else>
-              <ZTokenBalance :token="feeToken" :balance="item.price" :dp="9" />
-              <span class="font-medium text-color-3 ml-1">(${{ getFeeValue(item.price) }})</span>
+              <ZTokenBalance class="ml-1" :token="feeToken" :balance="item.price" :dp="9" />
+              <n-text>(${{ getFeeValue(item.price) }})</n-text>
             </div>
           </div>
-          <div class="w-full">
-            <n-button class="!text-white rounded w-full" :disabled="switching || minting" :loading="operatingIndex === index" type="primary" strong :aria-label="item.free ? 'Free Mint' : 'Mint'" @click="() => onMint(index, item)">{{ item.free ? "Free Mint" : "Mint" }}</n-button>
+          <div class="mt-4 sm:mt-6 flex">
+            <ActionButton class="w-full" btn-class="!h-10" :chain-id="item.chainId" :chains="supportedChains">
+              <ZButton class="h-10 w-full" :disabled="minting" :loading="operatingIndex === index" :aria-label="item.free ? 'Free Mint' : 'Mint'" @click="() => onMint(index, item)">{{ item.free ? "Free Mint" : "Mint" }}</ZButton>
+            </ActionButton>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    <MintModal v-model="mintAction" />
+  </ZContainer>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
-import { useNotification } from "naive-ui"
-import { createNftStates, getNftList, mint } from "@/hooks/useNft"
-import { account, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
-import { getPublicClient } from "@/hooks/useClient"
-import { selectedChainId } from "@/hooks/useSelectedChain"
-import { waitTx } from "@/hooks/useWaitTx"
-import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import { getNativeCurrency } from "@/hooks/useChains"
-import NftImage from "@/components/NftImage.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import { createPriceState, getPrice } from "@/hooks/usePrices"
 import { fromValue, toBalance } from "@/utils/bn"
-import { doSwitchNetwork } from "@/hooks/useInteraction"
+import { createNftStates, getNftList, getSupportedChains } from "@/hooks/useNft"
+import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { selectedChainId } from "@/hooks/useSelectedChain"
+import { getNativeCurrency } from "@/hooks/useChains"
+import { createPriceState, getPrice } from "@/hooks/usePrices"
+import { doMint } from "@/hooks/useInteraction"
+import ZContainer from "@/components/ZContainer.vue"
+import ZTokenBalance from "@/components/ZTokenBalance.vue"
+import ZButton from "@/components/ZButton.vue"
+import NftImage from "@/components/NftImage.vue"
+import ActionButton from "@/components/ActionButton.vue"
+import MintModal from "./MintModal.vue"
 
-const notification = useNotification()
 createPriceState()
 
+const supportedChains = getSupportedChains()
 const nfts = computed(() => getNftList(selectedChainId.value))
 const feeToken = computed(() => getNativeCurrency(selectedChainId.value))
 
@@ -74,56 +77,27 @@ const getFeeValue = value => {
   return fromValue(getPrice(feeToken.value.symbol)).times(value).div(1e18).dp(4).toNumber()
 }
 
-const switching = ref(false)
-/**
- * @param {number} chainId
- */
-const onSwitchNetwork = chainId => doSwitchNetwork(notification, switching, chainId)
-
+const mintAction = ref({ show: false })
 const minting = ref(false)
 const operatingIndex = ref(-1)
 
 const reset = () => {
   minting.value = false
-  switching.value = false
   operatingIndex.value = -1
 }
 
-const onMint = async (index, { address, label, chainId, price }) => {
-  if (!account.value) {
-    openWalletConnector()
-    return
-  }
-
-  if (chainId !== selectedChainId.value) {
-    onSwitchNetwork(selectedChainId.value)
-    return
-  }
-
+/**
+ * @param {number} index
+ * @param {import('@/types').Nft} nft
+ */
+const onMint = async (index, nft) => {
   operatingIndex.value = index
-  minting.value = true
-  try {
-    const publicClient = getPublicClient(chainId)
-    const walletClient = getWalletClient()
-    const tx = await mint(
-      { publicClient, walletClient },
-      address,
-      account.value,
-      price,
-    )
-    await waitTx(notification, tx, 'Success', `Mint ${label}`)
-    minting.value = false
-    operatingIndex.value = -1
+  const succuess = await doMint(mintAction, minting, nft, account.value)
+  operatingIndex.value = -1
+
+  if (succuess) {
     updateNativeBalance()
     updateNftStates(true)
-  } catch (err) {
-    minting.value = false
-    operatingIndex.value = -1
-    notification.error({
-      title: `Mint ${label} fail`,
-      content: err.shortMessage || err.details || err.message,
-      duration: 5000,
-    })
   }
 }
 

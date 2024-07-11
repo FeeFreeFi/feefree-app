@@ -1,4 +1,4 @@
-import { getTxMeta } from "@/utils/getTxMeta"
+import { getTxMeta } from "@/utils/chain"
 import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
@@ -62,6 +62,7 @@ const CONFIG = [
 ]
 const ALL_PAIRS_MAP = Object.fromEntries(CONFIG.map(c => [c.chainId, c.pairs]))
 const IS_EXCHANGE_TOKENS = Object.fromEntries(CONFIG.map(c => [c.chainId, Object.fromEntries(c.pairs.map(p => [p.currency1.address, true]))]))
+const SUPPORTED_CHAINS = CONFIG.map(c => ({ chainId: c.chainId }))
 
 const ABI_EXCHANGE = [
   {
@@ -82,6 +83,13 @@ const ABI_EXCHANGE = [
     stateMutability: "payable"
   }
 ]
+
+export const getSupportedChains = () => SUPPORTED_CHAINS
+
+/**
+ * @param {number} chainId
+ */
+export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainId === chainId)
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
@@ -112,12 +120,12 @@ export const exchange = async ({ publicClient, walletClient }, address, currency
 export const getPairs = chainId => ALL_PAIRS_MAP[chainId] || []
 
 /**
- * @param {{chainId:number, address:string}} token
+ * @param {import('@/types').Token} token
  */
 export const isExchangeToken = token => IS_EXCHANGE_TOKENS[token.chainId][token.address]
 
 /**
- * @param {{chainId:number, address:string}} token
+ * @param {import('@/types').Token} token
  */
 export const findOtherToken = token => {
   const pairs = getPairs(token.chainId)

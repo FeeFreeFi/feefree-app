@@ -8,48 +8,45 @@ import animate from "tailwindcss-animate"
  * @type {import('tailwindcss').Config}
  */
 export default {
-  darkMode: 'class',
+  // darkMode: 'class',
   content: ['./src/**/*.{html,js,vue}'],
   theme: {
     extend: {
       colors: {
-        'primary': "var(--x-primary-color)",
-        'info': "var(--x-info-color)",
-        'success': "var(--x-success-color)",
-        'warning': "var(--x-warning-color)",
-        'error': "var(--x-error-color)",
-
-        'bg-1': "var(--x-bg-color-1)",
-        'bg-2': "var(--x-bg-color-2)",
-        'bg-3': "var(--x-bg-color-3)",
-        'bg-4': "var(--x-bg-color-4)",
-        'bg-5': "var(--x-bg-color-5)",
-
-        'grey-1': "var(--x-grey-color-1)",
-        'grey-2': "var(--x-grey-color-2)",
-        'grey-3': "var(--x-grey-color-3)",
-        'grey-4': "var(--x-grey-color-4)",
-        'grey-5': "var(--x-grey-color-5)",
-        'grey-6': "var(--x-grey-color-6)",
-
-        'body': "var(--x-body-color)",
-        'main': "var(--x-main-color)",
-        'background': "var(--x-background-color)",
-        'block': "var(--x-block-color)",
-        'divider': "var(--x-divider-color)",
-        'pressed': "var(--x-pressed-color)",
-
-        'color-base': "var(--x-text-color-base)",
-        'color-1': "var(--x-text-color-1)",
-        'color-2': "var(--x-text-color-2)",
-        'color-3': "var(--x-text-color-3)",
-        'color-bright': "var(--x-text-color-bright)",
+        primary: 'rgb(65, 245, 207)',
+        success: 'rgb(65, 245, 109)',
+        warning: 'rgb(245, 183, 65)',
+        error: 'rgb(245, 65, 65)',
       },
-      boxShadow: {
-        'x-1': "var(--x-box-shadow-1)",
-        'x-2': "var(--x-box-shadow-2)",
+      textColor: {
+        basic: 'rgba(255, 255, 255, 1)',
+        'basic-1': 'rgba(255, 255, 255, 0.7)',
+        'basic-2': 'rgba(255, 255, 255, 0.5)',
+        'basic-3': 'rgba(255, 255, 255, 0.3)',
+        disabled: 'rgba(255, 255, 255, 0.1)',
       },
-    }
+      backgroundColor: {
+        body: 'rgb(4, 32, 39)',
+        header: 'rgb(23, 25, 26)',
+        container: 'rgb(61, 77, 74)',
+        card: 'rgb(45, 57, 54)',
+        'card-1': 'rgba(45, 57, 54, 0.6)',
+        tab: 'rgb(31, 42, 39)',
+        dialog: 'rgb(60, 77, 73)',
+        section: 'rgb(24, 33, 30)',
+        divider: 'rgb(75, 75, 81)',
+        'divider-1': 'rgb(75, 96, 92)',
+        box: 'rgba(34, 45, 42, 0.5)',
+      },
+      backgroundImage: {
+        'primary-gradient': "linear-gradient(256deg, #E7E368 0%, #41F5CF 100%)",
+        'primary-gradient-hover': "linear-gradient(256deg, #DFDA2D 0%, #35EDC6 100%)",
+        'tab-gradient': "linear-gradient(270deg, rgba(61,77,74,0.5) 0%, #1C2423 100%)",
+      },
+      borderRadius: {
+        20: '20px',
+      },
+    },
   },
   plugins: [
     animate,
@@ -68,6 +65,25 @@ export default {
           top: "50%",
           transform: "translateY(-50%)",
         },
+        '.margin-center': {
+          left: "0",
+          right: "0",
+          top: "0",
+          bottom: "0",
+          margin: "auto",
+        },
+        '.margin-x-center': {
+          left: "0",
+          right: "0",
+          "margin-left": "auto",
+          "margin-right": "auto",
+        },
+        '.margin-y-center': {
+          top: "0",
+          bottom: "0",
+          "margin-top": "auto",
+          "margin-bottom": "auto",
+        },
         '.flex-center': {
           display: "flex",
           "justify-content": "center",
@@ -81,38 +97,6 @@ export default {
         '.flex-y-center': {
           display: "flex",
           "align-items": "center",
-        },
-        '.flip-x': {
-          transform: "scaleX(-1)",
-        },
-        '.flip-y': {
-          transform: "scaleY(-1)",
-        },
-        '.flip-xy': {
-          transform: "scale(-1)",
-        },
-        '.border-lr': {
-          'border-left': "1px solid transparent",
-          'border-right': "1px solid transparent",
-        },
-        '.border-tb': {
-          'border-top': "1px solid transparent",
-          'border-bottom': "1px solid transparent",
-        },
-        '.border-top': {
-          'border-top': "1px solid transparent",
-        },
-        '.border-bottom': {
-          'border-bottom': "1px solid transparent",
-        },
-        '.border-left': {
-          'border-left': "1px solid transparent",
-        },
-        '.border-right': {
-          'border-right': "1px solid transparent",
-        },
-        '.border-all': {
-          'border': "1px solid transparent",
         },
       })
     }),

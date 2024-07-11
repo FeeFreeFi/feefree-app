@@ -1,74 +1,104 @@
-import { computed, readonly, ref } from "vue"
-import { generate } from '@ant-design/colors'
-import { darkTheme } from 'naive-ui'
-
-const DARK = "dark"
-const LIGHT = "light"
-const DARK_OPTS = { theme: DARK, backgroundColor: "#141414" }
-
-const themeConfig = ref({
-  primary: "#7f1fff",
-  success: '#039855',
-  warning: "#ad7307",
-  error: "#e92084",
-})
+import * as themeVars from "@/assets/styles/variables.module.scss"
 
 /**
- * @type {import('vue').Ref<DARK | LIGHT>}
+ * @type {import('naive-ui').GlobalThemeOverrides}
  */
-const themeModeRef = ref("")
+export const themeOverrides = {
+  common: {
+    primaryColor: themeVars.primaryColor,
+    successColor: themeVars.successColor,
+    warningColor: themeVars.warningColor,
+    errorColor: themeVars.errorColor,
 
-/**
- *
- * @param {{[colorName:string]: string}} config
- * @param {boolean} isDark
- * @returns {import('naive-ui').GlobalThemeOverrides}
- */
-const genThemeOverrides = (config, isDark) => {
-  const scenes = [['', 5], ['Hover', 4], ['Pressed', 6], ['Suppl', 4]]
-  const common = Object.fromEntries(Object.keys(config).map(name => {
-    const color = config[name]
-    const colors = generate(color, isDark ? DARK_OPTS : undefined)
-    return scenes.map(([scene, index]) => [`${name}Color${scene}`, colors[index]])
-  }).reduce((sum, item) => sum.concat(item), []))
-
-  return {
-    name: isDark ? DARK : LIGHT,
-    common,
-  }
+    textColorBase: themeVars.textColorBase,
+    textColor1: themeVars.textColor1,
+    textColor2: themeVars.textColor2,
+    textColor3: themeVars.textColor3,
+    textColorDisabled: themeVars.textColorDisabled,
+  },
+  Typography: {
+    textColor: themeVars.textColorBase,
+    textColor1Depth: themeVars.textColor1,
+    textColor2Depth: themeVars.textColor2,
+    textColor3Depth: themeVars.textColor3,
+  },
+  Button: {
+    textColor: themeVars.buttonTextColor,
+    textColorHover: themeVars.buttonTextColorHover,
+    textColorFocus: themeVars.buttonTextColorFocus,
+    textColorPressed: themeVars.buttonTextColorPressed,
+    textColorDisabled: themeVars.buttonTextColorDisabled,
+    textColorTextDisabledPrimary: themeVars.primary80,
+    opacityDisabled: themeVars.opacityDisabled,
+  },
+  Input: {
+    caretColor: themeVars.textColorBase,
+    color: themeVars.transparent,
+    colorFocus: themeVars.transparent,
+    paddingTiny: themeVars.inputPadding,
+    paddingSmall: themeVars.inputPadding,
+    paddingMedium: themeVars.inputPadding,
+    paddingLarge: themeVars.inputPadding,
+    textColor: themeVars.textColorBase,
+  },
+  Checkbox: {
+    color: themeVars.transparent,
+    colorChecked: themeVars.primaryColor,
+    colorDisabled: themeVars.transparent,
+    colorDisabledChecked: themeVars.primary50,
+    textColor: themeVars.textColor1,
+    textColorDisabled: themeVars.textColor3,
+    border: `1px solid ${themeVars.primaryColor}`,
+    borderChecked: `1px solid ${themeVars.primaryColor}`,
+    borderDisabled: `1px solid ${themeVars.primary50}`,
+    borderDisabledChecked: `1px solid ${themeVars.primary50}`,
+    boxShadowFocus: themeVars.none,
+  },
+  Popselect: {
+    peers: {
+      InternalSelectMenu: {
+        optionTextColor: themeVars.textColorBase,
+        color: themeVars.colorContainer,
+        // optionColorActive: themeVars.colorCard,
+        optionColorActivePending: themeVars.colorCard1,
+        optionColorPending: themeVars.colorCard1,
+      },
+    },
+  },
+  Notification: {
+    color: themeVars.colorDialog,
+    borderRadius: themeVars.roundedLg,
+    titleFontSize: themeVars.textSm,
+    fontSize: themeVars.textXs,
+    headerTextColor: themeVars.textColorBase,
+    textColor: themeVars.textColorBase,
+  },
+  Message: {
+    color: themeVars.colorDialog,
+    colorInfo: themeVars.colorDialog,
+    colorSuccess: themeVars.colorDialog,
+    colorWarning: themeVars.colorDialog,
+    colorError: themeVars.colorDialog,
+    borderRadius: themeVars.roundedLg,
+    titleFontSize: themeVars.textSm,
+    fontSize: themeVars.textXs,
+    textColor: themeVars.textColorBase,
+    textColorInfo: themeVars.textColorBase,
+    textColorSuccess: themeVars.textColorBase,
+    textColorWarning: themeVars.textColorBase,
+    textColorError: themeVars.textColorBase,
+  },
+  Slider: {
+    railColor: themeVars.primary20,
+    railColorHover: themeVars.primary20,
+    railHeight: themeVars.px2,
+    handleSize: themeVars.px12,
+  },
+  Divider: {
+    color: themeVars.colorDivider1,
+  },
+  Scrollbar: {
+    color: themeVars.primary40,
+    colorHover: themeVars.primary50,
+  },
 }
-
-const setThemeMode = value => {
-  themeModeRef.value = value
-
-  document.documentElement.classList.remove(DARK, LIGHT)
-  document.documentElement.classList.add(value)
-}
-
-const onMediaChange = e => {
-  setThemeMode(e.matches ? DARK : LIGHT)
-}
-
-export const themeMode = readonly(themeModeRef)
-export const isDarkMode = computed(() => themeModeRef.value === DARK)
-
-export const theme = computed(() => isDarkMode.value ? darkTheme : undefined)
-export const themeOverrides = computed(() => genThemeOverrides(themeConfig.value, isDarkMode.value))
-
-export const setThemeConfig = config => {
-  themeConfig.value = {
-    ...themeConfig.value,
-    ...config,
-  }
-}
-
-export const toggleThemeMode = () => {
-  setThemeMode(isDarkMode.value ? LIGHT : DARK)
-}
-
-export default function install() {
-  const media = window.matchMedia("(prefers-color-scheme: dark)")
-  media.addEventListener('change', onMediaChange)
-  onMediaChange(media)
-}
-

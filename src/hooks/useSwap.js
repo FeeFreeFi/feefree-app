@@ -1,6 +1,6 @@
 import { ref } from "vue"
 import pMap from "p-map"
-import { getTxMeta } from "@/utils/getTxMeta"
+import { getTxMeta } from "@/utils/chain"
 import { getStamp } from "@/utils/date"
 import {
   CHAIN_ID_ZORA,
@@ -29,6 +29,7 @@ const CONFIG = [
     chainId: CHAIN_ID_ZORA,
     pools: [
       {
+        name: 'ETH-USDzC',
         currency0: getZoraToken("ETH"),
         currency1: getZoraToken("USDzC"),
         currencyLiquidity: getZoraToken("ETH-USDzC"),
@@ -40,6 +41,7 @@ const CONFIG = [
     chainId: CHAIN_ID_BASE,
     pools: [
       {
+        name: 'ETH-USDC',
         currency0: getBaseToken("ETH"),
         currency1: getBaseToken("USDC"),
         currencyLiquidity: getBaseToken("ETH-USDC"),
@@ -51,18 +53,21 @@ const CONFIG = [
     chainId: CHAIN_ID_BASE_SEPOLIA,
     pools: [
       {
+        name: 'ETH-USDC',
         currency0: getBaseSepoliaToken("ETH"),
         currency1: getBaseSepoliaToken("USDC"),
         currencyLiquidity: getBaseSepoliaToken("ETH-USDC"),
         id: "0x4dbbf714a0331c8171687b03f6e84976424a73d8955d22f462656a6532c93d85",
       },
       {
+        name: 'DAI-USDC',
         currency0: getBaseSepoliaToken("DAI"),
         currency1: getBaseSepoliaToken("USDC"),
         currencyLiquidity: getBaseSepoliaToken("DAI-USDC"),
         id: "0xee477197580fd920133835850b5d683e493d20e824d878e9e1ca4602d25157a3",
       },
       {
+        name: 'ETH-OP',
         currency0: getBaseSepoliaToken("ETH"),
         currency1: getBaseSepoliaToken("OP"),
         currencyLiquidity: getBaseSepoliaToken("ETH-OP"),
@@ -89,6 +94,7 @@ const ALL_POOLS_MAP = Object.fromEntries(CONFIG.map(c => {
   const { chainId, pools, ...rest } = c
   return pools.map(pool => ({ ...pool, chainId, ...rest }))
 }).reduce((sum, item) => sum.concat(item), []).map(item => [item.id, item]))
+const SUPPORTED_CHAINS = CONFIG.map(c => ({ chainId: c.chainId }))
 
 const ABI_ADD_LIQUIDITY = [
   {
@@ -241,12 +247,19 @@ const ABI_GET_POOL_STATE = [
   }
 ]
 
+export const getSupportedChains = () => SUPPORTED_CHAINS
+
+/**
+ * @param {number} chainId
+ */
+export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainId === chainId)
+
 /**
  * @param {import('viem').PublicClient} publicClient
  * @param {stirng} address
  * @param {stirng[]} paths
  * @param {bigint} amountSpecified
- * @returns {{deltaAmounts: bigint[], sqrtPriceX96Afters: bigint[], amountIn:bigint, amountOut:bigint, paths:string[], amountSpecified:bigint}}
+ * @returns {import('@/types').SwapQuoteData}
  */
 export const quoteSwap = async (publicClient, address, paths, amountSpecified) => {
   const { result } = await publicClient.simulateContract({
@@ -305,7 +318,7 @@ export const swap = async ({ publicClient, walletClient }, address, paths, sqrtP
  * @param {stirng} currency1
  * @param {bigint} amount0Desired
  * @param {bigint} amount1Desired
- * @returns {{amount0Min:bigint, amount1Min:bigint, liquidity:bigint}}
+ * @returns {import('@/types').DepositQuoteData}
  */
 export const quoteAddLiquidity = async (publicClient, address, currency0, currency1, amount0Desired, amount1Desired) => {
   const { result } = await publicClient.simulateContract({
@@ -334,7 +347,7 @@ export const quoteAddLiquidity = async (publicClient, address, currency0, curren
  * @param {bigint} amount1Min
  * @param {string} to
  */
-export const addLiquidity = async ({ publicClient, walletClient }, address, currency0, currency1, amount0Desired, amount1Desired, amount0Min, amount1Min, to) => {
+export const addLiquidity = async ({ publicClient, walletClient }, address, currency0, currency1, amount0Desired, amount1Desired, amount0Min, amount1Min, to = '') => {
   const account = walletClient.account.address
   let value = 0n
   if (isNative(currency0)) {
@@ -346,7 +359,7 @@ export const addLiquidity = async ({ publicClient, walletClient }, address, curr
     address,
     abi: ABI_ADD_LIQUIDITY,
     functionName: 'addLiquidity',
-    args: [{ currency0, currency1, amount0Desired, amount1Desired, amount0Min, amount1Min, to, deadline }],
+    args: [{ currency0, currency1, amount0Desired, amount1Desired, amount0Min, amount1Min, to: to || account, deadline }],
     value,
   })
   const hash = await walletClient.writeContract(request)
@@ -448,11 +461,13 @@ const getDefaultState = () => ({
   tvl: 0n,
   price0: 0,
   price1: 0,
+  percent0: "0%",
+  percent1: "0%",
 })
 
 /**
  * @param {string} id
- * @returns {{sqrtPriceX96:bigint, liquidity:bigint, balance0:bigint, balance1:bigint, tvl:bigint, price0:number, price1:number, percent0:string, percent1:string}}
+ * @returns {import('@/types').PoolState}
  */
 export const getPoolState = id => {
   return cache.value[id] || getDefaultState()
@@ -519,6 +534,11 @@ export const isValidPool = poolId => !!ALL_POOLS_MAP[poolId]
  */
 export const getChainTokens = chainId => ALL_TOKENS.filter(t => t.chainId === chainId)
 
+/**
+ * @param {import('@/types').Token} inputToken
+ * @param {import('@/types').Token} outputToken
+ * @param {import('@/types').Pool[]} pools
+ */
 const findPath = (inputToken, outputToken, pools) => {
   const [a, b] = inputToken.address.toLowerCase() < outputToken.address.toLowerCase() ? [inputToken.address, outputToken.address] : [outputToken.address, inputToken.address]
   const pool = pools.find(it => it.currency0.address === a && it.currency1.address === b)
@@ -532,9 +552,9 @@ const findPath = (inputToken, outputToken, pools) => {
 const mapPool = (pool, token) => pool.currency0.address === token.address ? pool.currency1 : pool.currency1.address === token.address ? pool.currency0 : null
 
 /**
- * @param {{chainId:number, address:string, symbol:string}} inputToken
- * @param {{chainId:number, address:string, symbol:string}} outputToken
- * @returns {{chainId:number, address:string, symbol:string}[][]}
+ * @param {import('@/types').Token} inputToken
+ * @param {import('@/types').Token} outputToken
+ * @returns {import('@/types').Token[][]}
  */
 export const findPaths = (inputToken, outputToken) => {
   if (!inputToken || !outputToken || inputToken.chainId !== outputToken.chainId) {

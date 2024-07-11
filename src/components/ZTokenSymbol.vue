@@ -1,5 +1,5 @@
 <template>
-  <n-text class="text-sm sm:text-base font-medium">{{ symbol }}</n-text>
+  <n-text class="text-sm font-medium">{{ symbol || '' }}</n-text>
 </template>
 
 <script setup>

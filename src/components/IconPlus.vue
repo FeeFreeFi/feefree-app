@@ -1,5 +1,5 @@
 <template>
-  <img class="size-3 rounded-full bg-white" loading="lazy" :src="IconPlus" alt="exchangeable" />
+  <img class="size-3 rounded-full bg-white" loading="lazy" :src="IconPlus" alt="exchangeable">
 </template>
 
 <script setup>

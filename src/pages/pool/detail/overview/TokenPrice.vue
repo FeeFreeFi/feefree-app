@@ -1,28 +1,29 @@
 <template>
-  <div class="flex-center px-3 py-2 shadow rounded-full cursor-pointer text-sm" @click="onTogglePrice">
-    <ZTokenIcon :token="srcToken" />
-    <n-text class="ml-1">1 {{ srcToken.symbol }}</n-text>
-    <i-ic-round-swap-horiz class="size-5 mx-2" />
-    <ZTokenIcon :token="dstToken" />
-    <n-text class="ml-1">{{ price.toFixed(6) }} {{ dstToken.symbol }}</n-text>
+  <div class="flex-center cursor-pointer" @click="onTogglePrice">
+    <ZTokenIcon :token="inputToken" />
+    <n-text class="ml-1">1 {{ inputToken.symbol }}</n-text>
+    <i-my-swap class="size-5 mx-3" />
+    <ZTokenIcon :token="outputToken" />
+    <n-text class="ml-1">{{ priceValue }} {{ outputToken.symbol }}</n-text>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from "vue"
+import formatPrice from "@/utils/formatPrice"
 import ZTokenIcon from "@/components/ZTokenIcon.vue"
 
 const props = defineProps({
   currency0: {
     /**
-     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,
   },
   currency1: {
     /**
-     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,
@@ -38,9 +39,11 @@ const props = defineProps({
 })
 
 const showPrice0 = ref(true)
-const srcToken = computed(() => showPrice0.value ? props.currency0 : props.currency1)
-const dstToken = computed(() => showPrice0.value ? props.currency1 : props.currency0)
+const inputToken = computed(() => showPrice0.value ? props.currency0 : props.currency1)
+const outputToken = computed(() => showPrice0.value ? props.currency1 : props.currency0)
 const price = computed(() => showPrice0.value ? props.price0 : props.price1)
+
+const priceValue = computed(() => formatPrice(price.value))
 
 const onTogglePrice = () => {
   showPrice0.value = !showPrice0.value

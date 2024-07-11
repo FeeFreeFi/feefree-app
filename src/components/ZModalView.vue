@@ -1,13 +1,18 @@
 <template>
   <div class="flex flex-col overflow-hidden relative">
-    <div class="h-16 px-6 py-4 flex-y-center justify-between">
+    <div class="absolute top-0 left-0 w-full">
+      <img class="absolute w-full top-0 translate-x-center pointer-events-none" :src="gradientBg" loading="lazy" alt="dialog gradient background">
+    </div>
+    <div class="p-4 flex-y-center justify-between">
+      <span class="size-6" />
       <slot name="title">
-        <n-text class="text-base font-semibold">{{ title }}</n-text>
+        <div v-if="title" class="h-7 flex-1 text-center" :class="titleClass">
+          <n-text class="text-base sm:text-lg font-medium">{{ title }}</n-text>
+        </div>
       </slot>
       <CloseButton :on-close="onClose" />
     </div>
-    <n-divider class="!my-0" />
-    <div class="flex-1 px-6 py-4 relative" :class="contentClass">
+    <div class="flex-1 relative overflow-hidden" :class="contentClass">
       <slot />
     </div>
   </div>
@@ -15,6 +20,7 @@
 
 <script setup>
 import CloseButton from '@/components/CloseButton.vue'
+import gradientBg from '@/assets/images/dialog-gradient-bg.svg'
 
 defineProps({
   title: {
@@ -24,6 +30,10 @@ defineProps({
   onClose: {
     type: Function,
     required: true,
+  },
+  titleClass: {
+    type: String,
+    default: '',
   },
   contentClass: {
     type: String,

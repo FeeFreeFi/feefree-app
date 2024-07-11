@@ -1,5 +1,5 @@
 <template>
-  <img class="size-5 rounded-full" :src="`/static/tokens/${iconName}.svg`" loading="lazy" :alt="`${iconName} icon`" />
+  <img class="size-5 rounded-full" :src="`/static/tokens/${iconName}.svg`" loading="lazy" :alt="`${iconName} icon`">
 </template>
 
 <script setup>
@@ -8,10 +8,10 @@ import { computed } from 'vue'
 const props = defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{chainId:number, symbol:string, address:string}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
-    required: true,
+    default: () => null,
   },
 })
 

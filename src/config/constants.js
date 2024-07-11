@@ -16,3 +16,14 @@ export const CHAIN_ID_SEPOLIA = 11155111
 export const URL_DISCORD = "https://discord.gg/5WSNamMknK"
 export const URL_TWITTER = "https://x.com/FeeFreeFi"
 export const URL_GITHUB = "https://github.com/FeeFreeFi"
+
+export const SIGN_IN_DOMAIN = "feefree.fi"
+export const SIGN_IN_URL = "https://app.feefree.fi/"
+// 30s
+export const SIGN_EXPIRE = 30000
+
+export const JWT_ISSUER = "FeeFree"
+
+export const CACHE_RECENT = "recent"
+export const CACHE_AUTH = "auth"
+export const CACHE_REFERRAL = "referral"
