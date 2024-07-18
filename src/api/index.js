@@ -1,18 +1,13 @@
 import { createFetch } from "ofetch"
 import { API_BASE } from "@/config"
-import { clearAuth, getAccessToken } from "@/hooks/useAuth"
+import { clearAuth, getAccessToken, getRefreshToken } from "@/hooks/useAuth"
+import { refreshToken as _refreshToken, login as _login } from "@/hooks/useLogin"
 
 const service = createFetch({
   defaults: {
     baseURL: API_BASE,
     timeout: 10000,
     method: "POST",
-    async onResponseError({ response }) {
-      if (response.status === 401) {
-        // Unauthorized
-        clearAuth()
-      }
-    },
   },
 })
 
@@ -21,15 +16,45 @@ const service = createFetch({
  * @param {boolean} withToken
  * @returns {Promise<{code:number, data:Object, message:string}>}
  */
-const fetch = (config, withToken = true) => {
-  const _config = withToken ? {...config, headers: { ...config.headers, Authorization: `Bearer ${getAccessToken()}` } } : config
-  const { url, data, headers, ...rest } = _config
+const fetch = async (config, withToken = true) => {
+  if (withToken) {
+    if (!getAccessToken()) {
+      if (getRefreshToken()) {
+        await _refreshToken()
+      } else {
+        await _login()
+      }
+    }
 
-  return service(url, {
+    const accessToken = getAccessToken()
+    if (accessToken) {
+      config = {
+        ...config,
+        headers: {
+          ...config.headers,
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    }
+  }
+
+  const { url, data, headers, ...rest } = config
+
+  const res = await service(url, {
     headers,
     body: data,
     ...rest,
+  }).catch(err => {
+    console.error(err)
+    return { code: -1, message: err.message || err }
   })
+
+  if (res.code === 401) {
+    clearAuth()
+    setTimeout(_login, 0)
+  }
+
+  return res
 }
 
 export const getPrices = () => {

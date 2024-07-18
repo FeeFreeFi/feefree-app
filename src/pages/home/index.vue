@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
+  <div class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20" :id="containerId.slice(1)">
     <div class="flex flex-col">
       <n-text class="text-lg font-medium">Swap</n-text>
       <SwapInput class="mt-4 sm:mt-8" v-model="inputAmount" :token="inputToken" :balance="inputBalance" @change="onAmountChange" @select="onSelectInputToken" />
@@ -10,14 +10,15 @@
           <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
           <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading aria-label="Checking for Approval">Checking for Approval</ZButton>
           <ZButton v-else-if="!approved" class="h-10 sm:h-12 w-full" :disabled="approving" :loading="approving" :aria-label="`Unlock ${inputToken.symbol}`" @click="onApproval">Unlock {{ inputToken.symbol }}</ZButton>
-          <ZButton v-else class="h-10 sm:h-12 w-full" :loading="swaping" aria-label="Swap" @click="onSwap">Swap</ZButton>
+          <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="!quoteData" :loading="swaping" aria-label="Swap" @click="onSwap">Swap</ZButton>
         </ActionButton>
       </div>
-      <RecipientAddress class="mt-4" v-model="recipient" />
+      <RecipientAddress class="mt-4" v-model="recipient" :to="containerId" />
     </div>
     <TokenSelector v-model:show="showTokenSelector" :current="currentToken" :tokens="allTokens" :on-select="onSelectToken" />
     <ApproveModal v-model="approveAction" />
     <SwapModal v-model="swapAction" />
+    <ValueChangeModal v-model="valueChangeAction" :on-confirm="swap" />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import { useRoute } from "vue-router"
 import { useNotification } from "naive-ui"
 import debounce from "lodash-es/debounce"
 import { parseAmount } from "@/utils/bn"
+import uuid from "@/utils/uuid"
 import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { createBalanceStates2 } from "@/hooks/useBalances"
 import { getPublicClient } from "@/hooks/useClient"
@@ -34,9 +36,10 @@ import { createPriceState } from "@/hooks/usePrices"
 import { isSame } from "@/hooks/useCurrency"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { createInterval } from "@/hooks/useTimer"
-import { getChainTokens, findPaths, quoteSwap, getSupportedChains, isSupportChain } from "@/hooks/useSwap"
+import { getChainTokens, findPaths, quoteSwap, getSupportedChains, isSupportChain, checkValueChange } from "@/hooks/useSwap"
 import { getFee, getRouterAddress } from "@/hooks/useRouter"
 import { doApproval, doCheckAllowance, doCheckApproval, doSwap } from "@/hooks/useInteraction"
+import { saveReferral } from "@/hooks/useUser"
 import TokenSelector from "@/components/TokenSelector/index.vue"
 import RecipientAddress from "@/components/RecipientAddress/index.vue"
 import ActionButton from "@/components/ActionButton.vue"
@@ -46,14 +49,13 @@ import ReverseButton from "@/components/ReverseButton.vue"
 import SwapInput from "./SwapInput.vue"
 import SwapOutput from "./SwapOutput.vue"
 import SwapModal from "./SwapModal.vue"
-import { saveReferral } from "@/hooks/useUser"
+import ValueChangeModal from "./ValueChangeModal.vue"
 
+const containerId = `#el-${uuid()}`
 const route = useRoute()
 
 createPriceState()
 const notification = useNotification()
-
-const approveAction = ref({ show: false })
 
 const supportedChains = getSupportedChains()
 const isSupported = computed(() => isSupportChain(selectedChainId.value))
@@ -98,6 +100,7 @@ const isInputValid = computed(() => {
 const showTokenSelector = ref(false)
 const recipient = ref('')
 
+const approveAction = ref({ show: false })
 const approved = ref(false)
 const approvalChecking = ref(false)
 const approving = ref(false)
@@ -114,6 +117,8 @@ const onApproval = async () => {
 
 const swaping = ref(false)
 const swapAction = ref({ show: false })
+
+const valueChangeAction = ref({ show: false })
 
 const handleReferral = () => {
   const { referral } = route.query
@@ -229,7 +234,7 @@ const onReverse = () => {
   updateTokenBalances()
 }
 
-const onSwap = async () => {
+const swap = async () => {
   const { chainId } = inputToken.value
   const fee = getFee(chainId)
   const to = recipient.value || account.value
@@ -239,6 +244,20 @@ const onSwap = async () => {
     updateTokenBalances(true)
     updateNativeBalance()
   }
+}
+
+const onSwap = () => {
+  if (!quoteData.value) {
+    return
+  }
+
+  const data = checkValueChange(inputToken.value, outputToken.value, quoteData.value)
+  if (data) {
+    valueChangeAction.value = { show: true, data }
+    return
+  }
+
+  swap()
 }
 
 onMounted(() => {

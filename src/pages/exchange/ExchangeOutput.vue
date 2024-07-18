@@ -19,8 +19,6 @@
         <div class="flex-y-center gap-2">
           <i-my-fee class="size-4" />
           <div class="flex-y-center gap-1">
-            <!-- <ZTokenBalance class="!font-normal text-basic-1" :token="gasToken" :balance="fee" :dp="9" />
-            <n-text depth="1">(${{ feeValue }})</n-text> -->
             <n-text depth="1">${{ feeValue }}</n-text>
           </div>
         </div>

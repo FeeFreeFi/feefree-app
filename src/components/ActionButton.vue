@@ -8,10 +8,10 @@
 
 <script setup>
 import { ref, computed } from "vue"
+import { useNotification } from "naive-ui"
 import { account, chainId as currentChainId } from "@/hooks/useWallet"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
-import { useNotification } from "naive-ui"
 import ZButton from "@/components/ZButton.vue"
 
 const notification = useNotification()

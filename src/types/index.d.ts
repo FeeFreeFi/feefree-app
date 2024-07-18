@@ -130,6 +130,16 @@ export interface WithdrawQuoteData {
   amount1: bigint;
 }
 
+export interface ValueChangedData {
+  inputToken: Token;
+  outputToken: Token;
+  amountIn: bigint;
+  amountOut: bigint;
+  inputValue: Number;
+  outputValue: Number;
+  percent: Number;
+}
+
 export interface SignatureData {
   account: string;
   chainId: number;
@@ -145,4 +155,15 @@ export interface Profile {
   referral: string;
   score: number;
   inviter: string;
+}
+
+export interface JwtToken {
+  value: String;
+  exp: number;
+}
+
+export interface Auth {
+  accessToken: JwtToken;
+  refreshToken: JwtToken;
+  id: string;
 }

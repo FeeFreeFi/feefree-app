@@ -20,7 +20,7 @@ const units = [
 const props = defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{symbol:string, decimals:number, dp:number}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     default: () => null,

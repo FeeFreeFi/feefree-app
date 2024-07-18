@@ -1,23 +1,25 @@
 import { createSiweMessage, generateSiweNonce } from 'viem/siwe'
-import { SIGN_IN_DOMAIN, SIGN_IN_URL, SIGN_EXPIRE } from '@/config'
+import { SIGN_EXPIRE } from '@/config'
 
 /**
  * @param {{walletClient: import('viem').WalletClient}}
  * @param {number} chainId
+ * @param {string} domain
+ * @param {string} uri
  */
-export const signIn = async ({ walletClient }, chainId) => {
+export const signIn = async ({ walletClient }, chainId, domain, uri) => {
   const account = walletClient.account.address
   const nonce = generateSiweNonce()
   const timestamp = Date.now()
-  const expire = SIGN_EXPIRE
+  const expire = SIGN_EXPIRE * 1000
 
   const message = createSiweMessage({
     version: '1',
     address: account,
     chainId,
     nonce,
-    domain: SIGN_IN_DOMAIN,
-    uri: SIGN_IN_URL,
+    domain,
+    uri,
     issuedAt: new Date(timestamp),
     expirationTime: new Date(timestamp + expire),
   })
@@ -31,25 +33,4 @@ export const signIn = async ({ walletClient }, chainId) => {
     expire,
     signature,
   }
-}
-
-/**
- * @param {{publicClient: import('viem').PublicClient}}
- * @param {import('@/types').SignatureData} data
- * @param {string} signature
- */
-export const verifySignIn = async ({ publicClient }, data, signature) => {
-  const { account, chainId, nonce, timestamp, expire } = data
-  const message = createSiweMessage({
-    version: '1',
-    address: account,
-    chainId,
-    nonce,
-    domain: SIGN_IN_DOMAIN,
-    uri: SIGN_IN_URL,
-    issuedAt: new Date(timestamp),
-    expirationTime: new Date(timestamp + expire),
-  })
-
-  return publicClient.verifySiweMessage({ message, signature })
 }

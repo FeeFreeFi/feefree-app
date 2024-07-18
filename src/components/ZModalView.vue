@@ -19,8 +19,8 @@
 </template>
 
 <script setup>
-import CloseButton from '@/components/CloseButton.vue'
 import gradientBg from '@/assets/images/dialog-gradient-bg.svg'
+import CloseButton from '@/components/CloseButton.vue'
 
 defineProps({
   title: {

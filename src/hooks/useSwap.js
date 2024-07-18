@@ -608,3 +608,32 @@ export const getAmount1FromSqrtPrice = (sqrtPriceX96, amount0) => {
   return (sqrtPriceX96 * sqrtPriceX96 * amount0) >> 192n
 }
 
+/**
+ * @param {import('@/types').Token} inputToken
+ * @param {import('@/types').Token} outputToken
+ * @param {import('@/types').SwapQuoteData} quote
+ */
+export const checkValueChange = (inputToken, outputToken, quote) => {
+  const inputValue = byDecimals(quote.amountIn, inputToken.decimals).times(getPrice(inputToken.symbol)).dp(inputToken.dp).toNumber()
+  const outputValue = byDecimals(quote.amountOut, outputToken.decimals).times(getPrice(outputToken.symbol)).dp(outputToken.dp).toNumber()
+
+  if (inputValue === 0 || outputValue > inputValue) {
+    return null
+  }
+
+  const percent = (inputValue - outputValue) / inputValue
+
+  if (percent <= 0.05) {
+    return null
+  }
+
+  return {
+    inputToken,
+    outputToken,
+    amountIn: quote.amountIn,
+    amountOut: quote.amountOut,
+    inputValue,
+    outputValue,
+    percent,
+  }
+}

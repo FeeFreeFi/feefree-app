@@ -1,6 +1,6 @@
 <template>
   <n-modal class="bg-dialog rounded-lg transition-all" :show="modelValue.show" :mask-closable="false" :auto-focus="false">
-    <ZModalView class="w-[400px] text-sm transition-all" :on-close="onClose">
+    <ZModalView class="max-w-[400px] w-[calc(100vw-32px)] sm:w-[400px] text-sm transition-all" :on-close="onClose">
       <div class="px-6 pb-8 flex flex-col gap-4 relative">
         <div class="flex justify-center">
           <i-my-smile v-if="isSuccess" class="size-[72px]" />
@@ -26,8 +26,8 @@
 
 <script setup>
 import { computed } from "vue"
-import ZModalView from "@/components/ZModalView"
-import ZButton from "@/components/ZButton"
+import ZModalView from "@/components/ZModalView.vue"
+import ZButton from "@/components/ZButton.vue"
 import ViewTransaction from "@/components/ViewTransaction.vue"
 
 /**

@@ -39,17 +39,17 @@
 
 <script setup>
 import { computed } from "vue"
+import { PAGE_POOL_OVERVIEW } from '@/config'
+import { toBalance } from "@/utils/bn"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { getPools } from "@/hooks/useSwap"
-import { PAGE_POOL_OVERVIEW } from '@/config'
+import { createPriceState } from "@/hooks/usePrices"
+import { createPoolStates } from "@/hooks/usePoolState"
 import ZContainer from "@/components/ZContainer.vue"
 import ZChainIcon from "@/components/ZChainIcon.vue"
 import ZButton from "@/components/ZButton.vue"
 import ZPoolIcon from "@/components/ZPoolIcon.vue"
 import PoolName from "@/components/PoolName.vue"
-import { createPriceState } from "@/hooks/usePrices"
-import { toBalance } from "@/utils/bn"
-import { createPoolStates } from "@/hooks/usePoolState"
 import poolBg from "@/assets/images/pool-bg.svg"
 
 const pools = computed(() => getPools(selectedChainId.value))

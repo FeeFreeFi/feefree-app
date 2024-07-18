@@ -21,8 +21,8 @@ import { getProviders } from "@/hooks/useProviders"
 import { connect } from "@/hooks/useWallet"
 import { selectedChainId } from "@/hooks/useSelectedChain"
 import { connecting, reset, connectingWallet, recentWallet, setRecent } from "@/hooks/useConnecting"
-import WalletItem from "./WalletItem.vue"
 import ZModalView from '@/components/ZModalView.vue'
+import WalletItem from "./WalletItem.vue"
 import NoWallet from "./NoWallet.vue"
 
 const notification = useNotification()

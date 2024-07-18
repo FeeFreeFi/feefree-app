@@ -11,21 +11,25 @@
         <n-text type="primary">Edit</n-text>
       </div>
     </div>
-    <ZModalWrapper :show="show" :on-close="onClose" modal-class="w-[490px]">
+    <n-drawer class="bg-dialog !rounded-t-2xl !h-auto" placement="bottom" v-model:show="show" :to="screen.sm ? to : undefined" :auto-focus="false" :trap-focus="!screen.sm" :block-scroll="!screen.sm">
       <RecipientView v-model="modelValue" :on-close="onClose" />
-    </ZModalWrapper>
+    </n-drawer>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue"
 import shortString from "@/utils/shortString"
-import ZModalWrapper from "@/components/ZModalWrapper.vue"
+import { screen } from "@/hooks/useScreen"
 import RecipientView from "./RecipientView.vue"
 
 const modelValue = defineModel({ type: String, required: true })
 
 const props = defineProps({
+  to: {
+    type: String,
+    required: true,
+  },
   disabled: {
     type: Boolean,
     default: false,

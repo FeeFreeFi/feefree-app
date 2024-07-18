@@ -16,8 +16,8 @@
 <script setup>
 import { ref } from "vue"
 import { screen } from "@/hooks/useScreen"
-import NavMemuView from "./NavMemuView.vue"
 import DownArrow from "@/components/Arrow/DownArrow.vue"
+import NavMemuView from "./NavMemuView.vue"
 
 const show = ref(false)
 const maskClosable = ref(true)
