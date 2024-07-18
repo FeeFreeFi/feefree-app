@@ -19,10 +19,10 @@
 
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount, computed } from "vue"
+import { parseAmount, toAmount } from "@/utils/bn"
 import { account } from "@/hooks/useWallet"
 import ZToken from '@/components/ZToken.vue'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
-import { parseAmount, toAmount } from "@/utils/bn"
 
 const modelValue = defineModel({ type: String, required: true })
 

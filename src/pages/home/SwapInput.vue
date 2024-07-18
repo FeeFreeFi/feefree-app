@@ -33,7 +33,7 @@ const modelValue = defineModel({ type: String, required: true })
 const props = defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{symbol:string, decimals:number, dp:number}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     default: () => null,
@@ -48,7 +48,7 @@ const props = defineProps({
 })
 const emit = defineEmits(["change", "select"])
 
-const amount = ref(modelValue.value)
+const amount = ref(parseFloat(modelValue.value) || null)
 const maxAmount = computed(() => account.value && props.token ? toAmount(props.balance, props.token.decimals) : undefined)
 const amountValue = computed(() => props.token ? parseAmount(amount.value || 0, props.token.decimals) : 0n)
 
@@ -66,6 +66,7 @@ const onInputBlur = () => {
 
   const { token } = props
   modelValue.value = toAmount(amountValue.value, token.decimals)
+
   emit("change")
 }
 
@@ -81,7 +82,7 @@ const onPickAmount = value => {
 
 onMounted(() => {
   const stopWatch = watch(modelValue, () => {
-    amount.value = !modelValue.value || modelValue.value === '0' ? '' : modelValue.value
+    amount.value = !modelValue.value || modelValue.value === '0' ? null : parseFloat(modelValue.value) || null
   })
 
   onBeforeUnmount(stopWatch)

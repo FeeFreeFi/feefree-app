@@ -52,15 +52,15 @@ import jazzicon from "@/utils/jazzicon"
 import shortString from "@/utils/shortString"
 import { getAccountUrl } from "@/utils/chain"
 import { copyText } from "@/utils/clipboard"
+import { logout } from "@/api"
 import { account, chainId, disconnect } from '@/hooks/useWallet'
+import { getExplorerUrl } from "@/hooks/useChains"
+import { clearAuth } from "@/hooks/useAuth"
+import { profile } from "@/hooks/useUser"
 import ZModalView from '@/components/ZModalView.vue'
 import ZCopyable from "@/components/ZCopyable.vue"
 import ZButton from '@/components/ZButton.vue'
 import ViewTransaction from "@/components/ViewTransaction.vue"
-import { getExplorerUrl } from "@/hooks/useChains"
-import { clearAuth } from "@/hooks/useAuth"
-import { logout } from "@/api"
-import { profile } from "@/hooks/useUser"
 
 const message = useMessage()
 

@@ -16,7 +16,7 @@ import ZTokenIcon from "@/components/ZTokenIcon.vue"
 defineProps({
   token: {
     /**
-     * @type {import('vue').PropType<{symbol:string, decimals:number, dp:number}>}
+     * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
     required: true,

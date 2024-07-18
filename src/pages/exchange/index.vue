@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
+  <div class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20" :id="containerId.slice(1)">
     <div class="flex flex-col">
       <n-text class="text-lg font-medium">Exchange</n-text>
       <ExchangeInput class="mt-4 sm:mt-8" v-model="inputAmount" :token="inputToken" :balance="inputBalance" @change="onAmountChange" @select="onSelectInputToken" />
@@ -13,7 +13,7 @@
           <ZButton v-else class="h-10 sm:h-12 w-full" :loading="withdrawing" aria-label="Exchange" @click="onExchange">Exchange</ZButton>
         </ActionButton>
       </div>
-      <RecipientAddress class="mt-4" v-model="recipient" />
+      <RecipientAddress class="mt-4" v-model="recipient" :to="containerId" />
     </div>
     <TokenSelector v-model:show="showTokenSelector" :current="currentToken" :tokens="allTokens" :on-select="onSelectToken" />
     <ApproveModal v-model="approveAction" />
@@ -24,6 +24,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { parseAmount, toAmount } from "@/utils/bn"
+import uuid from "@/utils/uuid"
 import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
 import { createBalanceStates2 } from "@/hooks/useBalances"
 import { getPairs, findOtherToken, isExchangeToken, getSupportedChains, isSupportChain } from "@/hooks/useExchange"
@@ -42,6 +43,7 @@ import ExchangeInput from "./ExchangeInput.vue"
 import ExchangeOutput from "./ExchangeOutput.vue"
 import ExchangeModal from "./ExchangeModal.vue"
 
+const containerId = `#el-${uuid()}`
 createPriceState()
 
 const approveAction = ref({ show: false })

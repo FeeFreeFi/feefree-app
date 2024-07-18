@@ -6,16 +6,12 @@
 
 <script setup>
 import { watch, onMounted, onBeforeUnmount } from "vue"
-import { useNotification } from "naive-ui"
-import { login, refreshToken } from "@/api"
-import { account, chainId, autoConnect, getWalletClient } from "@/hooks/useWallet"
+import { account, autoConnect } from "@/hooks/useWallet"
 import { findProvider } from "@/hooks/useProviders"
 import { recentWallet } from "@/hooks/useConnecting"
-import { signIn } from "@/hooks/useSignIn"
-import { clearAuth, setAuth, isMatchAccount, getAccessToken, getRefreshToken, auth, loadAuth } from "@/hooks/useAuth"
+import { login, refreshToken } from "@/hooks/useLogin"
+import { clearAuth, isMatchAccount, getAccessToken, auth, loadAuth } from "@/hooks/useAuth"
 import { fetchProfile, resetProfile } from "@/hooks/useUser"
-
-const notification = useNotification()
 
 const doAutoConnect = async () => {
   if (!recentWallet.value) {
@@ -30,73 +26,32 @@ const doAutoConnect = async () => {
     return
   }
 
-  let success = await autoConnect(provider, walletName)
+  const success = await autoConnect(provider, walletName)
   watchAccount()
 
-  if (!success) {
-    return
-  }
+  success && loadProfile()
+}
 
+const loadProfile = async () => {
   if (isMatchAccount(account.value)) {
+    if (!getAccessToken()) {
+      await refreshToken()
+    }
+
     if (getAccessToken()) {
       fetchProfile()
       return
     }
-
-    success = await refresh()
-    if (success) {
-      return
-    }
   }
 
-  onAccountChanged()
-}
-
-const refresh = async () => {
-  const res = await refreshToken({ refreshToken: getRefreshToken() })
-  if (res.code !== 0) {
-    clearAuth()
-    console.warn(`refreshToken fail`)
-    return false
-  }
-
-  setAuth(res.data)
-  return true
-}
-
-const onAccountChanged = async () => {
-  console.log("onAccountChanged")
   clearAuth()
-
-  const walletClient = getWalletClient()
-  const signData = await signIn({ walletClient }, chainId.value).catch(err => {
-    notification.error({
-      title: "Login fail",
-      content: err.shortMessage || err.details || err.message,
-      duration: 5000,
-    })
-  })
-  if (!signData) {
-    return
-  }
-
-  const res = await login(signData)
-  if (res.code !== 0) {
-    notification.error({
-      title: "Login fail",
-      content: res.message,
-      duration: 5000,
-    })
-    return
-  }
-
-  setAuth(res.data)
+  login()
 }
 
 const watchAccount = () => {
-  console.log("watchAccount")
-  const stopWatch = watch(account, newAccount => {
-    newAccount && onAccountChanged()
+  const stopWatch = watch(account, (newAccount, oldAccount) => {
+    console.log("watchAccount", { newAccount, oldAccount })
+    newAccount && login()
   })
 
   onBeforeUnmount(stopWatch)
