@@ -170,8 +170,8 @@ export const isSame = (a, b) => a.chainId === b.chainId && a.address === b.addre
 
 /**
  * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
- * @returns {bigint}
+ * @param {string} address
+ * @returns {Promise<bigint>}
  */
 export const totalSupply = async (publicClient, address) => {
   return publicClient.readContract({
@@ -183,9 +183,9 @@ export const totalSupply = async (publicClient, address) => {
 
 /**
  * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
+ * @param {string} address
  * @param {string} account
- * @returns {bigint}
+ * @returns {Promise<bigint>}
  */
 export const balanceOf = async (publicClient, address, account) => {
   if (isNative(address)) {
@@ -202,10 +202,10 @@ export const balanceOf = async (publicClient, address, account) => {
 
 /**
  * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
+ * @param {string} address
  * @param {string} owner
  * @param {string} spender
- * @returns {bigint}
+ * @returns {Promise<bigint>}
  */
 export const allowance = async (publicClient, address, owner, spender) => {
   if (isNative(address)) {
@@ -222,7 +222,7 @@ export const allowance = async (publicClient, address, owner, spender) => {
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient, overrides: Object}}
- * @param {stirng} address
+ * @param {string} address
  * @param {string} spender
  * @param {bigint} value
  */
@@ -242,7 +242,7 @@ export const approve = async ({ publicClient, walletClient, overrides }, address
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient, overrides: Object}}
- * @param {stirng} address
+ * @param {string} address
  * @param {string} to
  * @param {bigint} value
  */

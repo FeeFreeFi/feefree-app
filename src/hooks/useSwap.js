@@ -256,10 +256,10 @@ export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainI
 
 /**
  * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
- * @param {stirng[]} paths
+ * @param {string} address
+ * @param {string[]} paths
  * @param {bigint} amountSpecified
- * @returns {import('@/types').SwapQuoteData}
+ * @returns {Promise<import('@/types').SwapQuoteData>}
  */
 export const quoteSwap = async (publicClient, address, paths, amountSpecified) => {
   const { result } = await publicClient.simulateContract({
@@ -313,12 +313,12 @@ export const swap = async ({ publicClient, walletClient }, address, paths, sqrtP
 
 /**
  * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
- * @param {stirng} currency0
- * @param {stirng} currency1
+ * @param {string} address
+ * @param {string} currency0
+ * @param {string} currency1
  * @param {bigint} amount0Desired
  * @param {bigint} amount1Desired
- * @returns {import('@/types').DepositQuoteData}
+ * @returns {Promise<import('@/types').DepositQuoteData>}
  */
 export const quoteAddLiquidity = async (publicClient, address, currency0, currency1, amount0Desired, amount1Desired) => {
   const { result } = await publicClient.simulateContract({
@@ -338,7 +338,7 @@ export const quoteAddLiquidity = async (publicClient, address, currency0, curren
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
- * @param {stirng} address
+ * @param {string} address
  * @param {string} currency0
  * @param {string} currency1
  * @param {bigint} amount0Desired
@@ -369,11 +369,11 @@ export const addLiquidity = async ({ publicClient, walletClient }, address, curr
 
 /**
  * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
- * @param {stirng} currency0
- * @param {stirng} currency1
+ * @param {string} address
+ * @param {string} currency0
+ * @param {string} currency1
  * @param {bigint} liquidity
- * @returns {{amount0:bigint, amount1:bigint}}
+ * @returns {Promise<import('@/types').WithdrawQuoteData>}
  */
 export const quoteRemoveLiquidity = async (publicClient, address, currency0, currency1, liquidity) => {
   const { result } = await publicClient.simulateContract({
@@ -392,7 +392,7 @@ export const quoteRemoveLiquidity = async (publicClient, address, currency0, cur
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
- * @param {stirng} address
+ * @param {string} address
  * @param {string} currency0
  * @param {string} currency1
  * @param {bigint} liquidity
@@ -481,7 +481,7 @@ export const getPoolStates = ids => {
 }
 
 /**
- * @param {stirng} id
+ * @param {string} id
  */
 export const updatePoolState = async id => {
   const { chainId, currency0, currency1 } = getPool(id)
@@ -508,7 +508,7 @@ export const updatePoolState = async id => {
 }
 
 /**
- * @param {stirng[]} ids
+ * @param {string[]} ids
  */
 export const updatePoolStates = async ids => {
   await pMap(ids, updatePoolState, { concurrency: 3 })

@@ -93,7 +93,7 @@ export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainI
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
- * @param {stirng} address
+ * @param {string} address
  * @param {string} currency
  * @param {bigint} amountSpecified
  * @param {string} to
