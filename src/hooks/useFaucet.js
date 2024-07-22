@@ -42,9 +42,9 @@ export const getFaucetAddress = () => CONFIG.faucet
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
- * @param {stirng} address
- * @param {stirng} token
- * @param {stirng} to
+ * @param {string} address
+ * @param {string} token
+ * @param {string} to
  */
 export const send = async ({ publicClient, walletClient }, address, token, to) => {
   const account = walletClient.account.address

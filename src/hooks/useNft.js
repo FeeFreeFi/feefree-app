@@ -286,8 +286,8 @@ export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainI
 
 /**
  * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
- * @param {stirng} address
- * @param {stirng} to
+ * @param {string} address
+ * @param {string} to
  * @param {bigint} price
  */
 export const mint = async ({ publicClient, walletClient }, address, to, price) => {
@@ -307,8 +307,8 @@ export const mint = async ({ publicClient, walletClient }, address, to, price) =
 
 /**
  * @param {import('viem').PublicClient} publicClient
- * @param {stirng} address
- * @returns {bigint}
+ * @param {string} address
+ * @returns {Promise<bigint>}
  */
 export const totalSupply = async (publicClient, address) => {
   return publicClient.readContract({
