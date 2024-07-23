@@ -149,11 +149,11 @@ export interface SignatureData {
 }
 
 export interface Profile {
-  id: string;
+  uid: string;
   account: string;
   nickname: string;
-  referral: string;
   score: number;
+  referral: string;
   inviter: string;
 }
 
@@ -165,5 +165,5 @@ export interface JwtToken {
 export interface Auth {
   accessToken: JwtToken;
   refreshToken: JwtToken;
-  id: string;
+  uid: string;
 }
