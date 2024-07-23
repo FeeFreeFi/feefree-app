@@ -49,8 +49,7 @@ const loadProfile = async () => {
 }
 
 const watchAccount = () => {
-  const stopWatch = watch(account, (newAccount, oldAccount) => {
-    console.log("watchAccount", { newAccount, oldAccount })
+  const stopWatch = watch(account, newAccount => {
     newAccount && login()
   })
 

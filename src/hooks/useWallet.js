@@ -34,7 +34,7 @@ const getChainId = async provider => {
 }
 
 /**
- * @returns {string[]}
+ * @returns {Promise<string[]>}
  */
 const getAccounts = async provider => {
   return provider.request({ method: 'eth_accounts' })

@@ -22,6 +22,7 @@ const handleInvite = async () => {
   const res = await acceptInvite({ referral: referral.value })
   if (res.code !== 0) {
     console.warn(res.message)
+    return
   }
 
   await fetchProfile()

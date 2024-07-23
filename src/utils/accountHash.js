@@ -7,20 +7,20 @@ const fromHexString = hexString => Uint8Array.from(hexString.match(/.{1,2}/g).ma
  * @param {string} account
  */
 const getAccountHash = account => {
-  return base58.encode(fromHexString(hashMessage(account).slice(2)))
+  return base58.encode(fromHexString(hashMessage(account.toLowerCase()).slice(2)))
 }
 
 /**
  * @param {string} account
  */
-export const getAccountId = account => {
+const getAccountUid = account => {
   return getAccountHash(account).slice(0, 8)
 }
 
 /**
  * @param {string} account
  */
-export const getAccountReferral = account => {
+const getAccountReferral = account => {
   return getAccountHash(account).slice(-8)
 }
 
@@ -28,8 +28,8 @@ export const getAccountReferral = account => {
  * @param {string} account
  * @param {string} id
  */
-export const isSelfAccount = (account, id) => {
-  return getAccountId(account) === id
+export const isSelfAccount = (account, uid) => {
+  return getAccountUid(account) === uid
 }
 
 /**
