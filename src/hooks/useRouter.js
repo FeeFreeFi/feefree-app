@@ -1,6 +1,6 @@
 import {
   CHAIN_ID_ZORA,
-  CHAIN_ID_BASE,
+  // CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 
@@ -11,16 +11,16 @@ const CONFIG = [
     pool: "0xB43287b2106BC044F07aE674794f5492E851d3dC",
     fee: 10000000000000n,
   },
-  {
-    chainId: CHAIN_ID_BASE,
-    router: "0x0Fee76f15DE74A5211e5Bc2aBF95394d7f50C400",
-    pool: "0xc08304a5300D9a2310A603b8D7fB8470f752947F",
-    fee: 10000000000000n,
-  },
+  // {
+  //   chainId: CHAIN_ID_BASE,
+  //   router: "0x0Fee76f15DE74A5211e5Bc2aBF95394d7f50C400",
+  //   pool: "0xc08304a5300D9a2310A603b8D7fB8470f752947F",
+  //   fee: 10000000000000n,
+  // },
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
-    router: "0x0FEE6485473aF19020D3d073A3Ec3691a298064E",
-    pool: "0xAfF728d14d5b33912f1A53D8C4E999a8cCC8228e",
+    router: "0x0FeeFCeF3d2908e0c3aBe5AD3FbEf63EC1172100",
+    pool: "0xD022fD930efeCc608096C5c984ab6c187b7d55D7",
     fee: 10000000000000n,
   },
 ]
