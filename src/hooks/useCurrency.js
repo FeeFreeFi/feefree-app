@@ -27,17 +27,17 @@ const CONFIG = {
   ],
   [CHAIN_ID_BASE_SEPOLIA]: [
     { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
-    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0xa16Cbcf0055253Bd0BE2462e44A4681aB35a037D" },
+    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0xa5000DAfa02aCCec2D9b1C831e80Db5f679Dc4b2" },
     { name: "DAI", symbol: "DAI", key: "DAI", decimals: 18, dp: 4, address: "0x011a7b7AE1b7a4645c0341F980d0242e152Bf397" },
-    { name: "DAI+", symbol: "DAI+", key: "DAI", decimals: 18, dp: 4, address: "0x77BB288E9FC7dfA7945EA6D7F3BAC16e65cea29D" },
+    { name: "DAI+", symbol: "DAI+", key: "DAI", decimals: 18, dp: 4, address: "0x62D244FafaBd48a63C40a2757B8a540e2047C502" },
     { name: "USDC", symbol: "USDC", key: "USDC", decimals: 6, dp: 4, address: "0xde649ebC41ADb57D6577EAB7BE7dd6FA65b555a3" },
-    { name: "USDC+", symbol: "USDC+", key: "USDC", decimals: 6, dp: 4, address: "0x30E9c1e5db4d058155B5815A189832A6CE53a60c" },
+    { name: "USDC+", symbol: "USDC+", key: "USDC", decimals: 6, dp: 4, address: "0x12C272Fc1c7A5dc78ddfA31795d0bFE10f0edF0D" },
     { name: "OP", symbol: "OP", key: "OP", decimals: 18, dp: 4, address: "0x115151b4C955900a132350fF9C1e3e412D8f83Dc" },
-    { name: "OP+", symbol: "OP+", key: "OP", decimals: 18, dp: 4, address: "0xe5bA0c314F65F631527e372c6333bD863fC06378" },
+    { name: "OP+", symbol: "OP+", key: "OP", decimals: 18, dp: 4, address: "0x1afc24e1A519e1a56D88393f9EE7a61a67C5B4C4" },
 
-    { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0xF4f111d4365C4d6068fa96b69E42A22ef8f97A93" },
-    { name: "DAI-USDC", symbol: "DAI-USDC", key: "", decimals: 18, dp: 4, address: "0x709b8236fFA91e575aa6F1acD1CA79838b346d4D" },
-    { name: "ETH-OP", symbol: "ETH-OP", key: "", decimals: 18, dp: 4, address: "0x725e1b056eDA1Ec88903aB803db006c63131e6A5" },
+    { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0x827966E8615a9edffB362230769d98be28956eC2" },
+    { name: "DAI-USDC", symbol: "DAI-USDC", key: "", decimals: 18, dp: 4, address: "0xC2AF4E5caA99A9009b6ce1dF6Ea5673F4e126706" },
+    { name: "ETH-OP", symbol: "ETH-OP", key: "", decimals: 18, dp: 4, address: "0xC63b7E793332E10B0931A1B2Cb05daa13907d4d2" },
   ],
 }
 

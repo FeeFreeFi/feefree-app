@@ -4,13 +4,13 @@ import { getTxMeta } from "@/utils/chain"
 import { getStamp } from "@/utils/date"
 import {
   CHAIN_ID_ZORA,
-  CHAIN_ID_BASE,
+  // CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   isNative,
   getZoraToken,
-  getBaseToken,
+  // getBaseToken,
   getBaseSepoliaToken,
 } from "./useCurrency"
 import { getPrice } from "./usePrices"
@@ -37,18 +37,18 @@ const CONFIG = [
       },
     ],
   },
-  {
-    chainId: CHAIN_ID_BASE,
-    pools: [
-      {
-        name: 'ETH-USDC',
-        currency0: getBaseToken("ETH"),
-        currency1: getBaseToken("USDC"),
-        currencyLiquidity: getBaseToken("ETH-USDC"),
-        id: "0xb2a10047a5ff1d8823670d36a0ef35fecca00cb388757d7d8948c4bff9873b17",
-      },
-    ],
-  },
+  // {
+  //   chainId: CHAIN_ID_BASE,
+  //   pools: [
+  //     {
+  //       name: 'ETH-USDC',
+  //       currency0: getBaseToken("ETH"),
+  //       currency1: getBaseToken("USDC"),
+  //       currencyLiquidity: getBaseToken("ETH-USDC"),
+  //       id: "0xb2a10047a5ff1d8823670d36a0ef35fecca00cb388757d7d8948c4bff9873b17",
+  //     },
+  //   ],
+  // },
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     pools: [
@@ -57,21 +57,21 @@ const CONFIG = [
         currency0: getBaseSepoliaToken("ETH"),
         currency1: getBaseSepoliaToken("USDC"),
         currencyLiquidity: getBaseSepoliaToken("ETH-USDC"),
-        id: "0x4dbbf714a0331c8171687b03f6e84976424a73d8955d22f462656a6532c93d85",
+        id: "0x8a3dcc870d81e599dbc212ef5da1f76d229fa7d3b085d8ba33f4c9419b0b79b8",
       },
       {
         name: 'DAI-USDC',
         currency0: getBaseSepoliaToken("DAI"),
         currency1: getBaseSepoliaToken("USDC"),
         currencyLiquidity: getBaseSepoliaToken("DAI-USDC"),
-        id: "0xee477197580fd920133835850b5d683e493d20e824d878e9e1ca4602d25157a3",
+        id: "0xec90af283207ebc0c6bb1d1678a6721b1d68d40009bdac2931b8a582335c7802",
       },
       {
         name: 'ETH-OP',
         currency0: getBaseSepoliaToken("ETH"),
         currency1: getBaseSepoliaToken("OP"),
         currencyLiquidity: getBaseSepoliaToken("ETH-OP"),
-        id: "0xd84ddb01c276135c899e04bef2d0f5eff5f170e822e128b64b57dfba1315c5a5",
+        id: "0x15b8224b42969f338efd221d969748cac4b8565b2b252ce06e076c1be1ab4163",
       },
     ],
   },
@@ -81,8 +81,8 @@ const ALL_TOKENS = [
   getZoraToken("ETH"),
   getZoraToken("USDzC"),
 
-  getBaseToken("ETH"),
-  getBaseToken("USDC"),
+  // getBaseToken("ETH"),
+  // getBaseToken("USDC"),
 
   getBaseSepoliaToken("ETH"),
   getBaseSepoliaToken("USDC"),

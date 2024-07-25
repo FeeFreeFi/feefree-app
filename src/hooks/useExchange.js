@@ -1,12 +1,12 @@
 import { getTxMeta } from "@/utils/chain"
 import {
   CHAIN_ID_ZORA,
-  CHAIN_ID_BASE,
+  // CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   getZoraToken,
-  getBaseToken,
+  // getBaseToken,
   getBaseSepoliaToken,
   isNative,
 } from "./useCurrency"
@@ -25,19 +25,19 @@ const CONFIG = [
       },
     ],
   },
-  {
-    chainId: CHAIN_ID_BASE,
-    pairs: [
-      {
-        currency0: getBaseToken("ETH"),
-        currency1: getBaseToken("ETH+"),
-      },
-      {
-        currency0: getBaseToken("USDC"),
-        currency1: getBaseToken("USDC+"),
-      },
-    ],
-  },
+  // {
+  //   chainId: CHAIN_ID_BASE,
+  //   pairs: [
+  //     {
+  //       currency0: getBaseToken("ETH"),
+  //       currency1: getBaseToken("ETH+"),
+  //     },
+  //     {
+  //       currency0: getBaseToken("USDC"),
+  //       currency1: getBaseToken("USDC+"),
+  //     },
+  //   ],
+  // },
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     pairs: [
