@@ -16,14 +16,15 @@ let cachedProvider = null
 
 const toHex = value => `0x${value.toString(16)}`
 
-const replaceWalletClient = (chainId = undefined, account = undefined) => {
-  const id = chainId || chainIdRef.value
+const replaceWalletClient = (chainId, account) => {
+  chainId = chainId || chainIdRef.value
   walletClient = createWalletClient({
-    chain: getChain(id),
+    chain: getChain(chainId),
     account: account || accountRef.value,
     transport: custom(cachedProvider),
   })
-  if (isZkEVM(id)) {
+
+  if (isZkEVM(chainId)) {
     walletClient = walletClient.extend(eip712WalletActions())
   }
 }
@@ -65,7 +66,7 @@ const init = async (provider, walletName, account, chainId, targetChainId) => {
   accountRef.value = account
 
   updateBalance()
-  replaceWalletClient()
+  replaceWalletClient(chainId, account)
 }
 
 const clear = () => {
@@ -99,7 +100,7 @@ const checkChain = chainId => {
   return true
 }
 
-const update = async (chainId = 0, account = '') => {
+const update = async (chainId, account = '') => {
   if (!account) {
     [account] =  await getAccounts(cachedProvider)
   }
@@ -109,7 +110,7 @@ const update = async (chainId = 0, account = '') => {
   chainIdRef.value = chainId
 
   updateBalance()
-  replaceWalletClient()
+  replaceWalletClient(chainId, account)
 }
 
 const onConnect = async (connectInfo) => {

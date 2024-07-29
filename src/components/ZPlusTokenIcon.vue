@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <ZTokenIcon :token="token" />
+    <ZTokenIcon :class="tokenClass" :token="token" />
     <IconPlus v-if="isPlus" class="absolute top-[-4px] right-[-4px]" />
   </div>
 </template>
@@ -18,6 +18,10 @@ const props = defineProps({
      */
     type: Object,
     required: true,
+  },
+  tokenClass: {
+    type: String,
+    default: '',
   },
 })
 

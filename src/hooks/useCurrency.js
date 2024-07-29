@@ -19,11 +19,13 @@ const CONFIG = {
   ],
   [CHAIN_ID_BASE]: [
     { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
-    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0x7370ECc5eE30152da5F1F4B9056DE2691627E59b" },
+    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0x7395160D0b882c5C8123Ed612fa355eE61259da5" },
     { name: "USD Coin", symbol: "USDC", key: "USDC", decimals: 6, dp: 4, address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" },
-    { name: "USDC+", symbol: "USDC+", key: "USDC", decimals: 6, dp: 4, address: "0x8a48D78a090D25E9aB276bA3b3f8408b215eF045" },
+    { name: "USDC+", symbol: "USDC+", key: "USDC", decimals: 6, dp: 4, address: "0x2cF1F206C55C75bbB621b961Bd0fA17AEbbcD32F" },
+    { name: "Dai Stablecoin", symbol: "DAI", key: "DAI", decimals: 18, dp: 4, address: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb" },
+    { name: "DAI+", symbol: "DAI+", key: "DAI", decimals: 18, dp: 4, address: "0x14a760e4D05a04bFbd6e5cB9114626ACDb342ca8" },
 
-    { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0x0501B40a851b75597cB83Bd702B646C74287d881" },
+    { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0x60d7D35232D178BaE9B082210B2A12C004127c70" },
   ],
   [CHAIN_ID_BASE_SEPOLIA]: [
     { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
