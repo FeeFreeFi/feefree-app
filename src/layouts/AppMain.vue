@@ -8,6 +8,7 @@
 import { watch, onMounted, onBeforeUnmount } from "vue"
 import { account, autoConnect } from "@/hooks/useWallet"
 import { findProvider } from "@/hooks/useProviders"
+import { visibility } from "@/hooks/usePage"
 import { recentWallet } from "@/hooks/useConnecting"
 import { login, refreshToken } from "@/hooks/useLogin"
 import { clearAuth, isMatchAccount, getAccessToken, auth, loadAuth } from "@/hooks/useAuth"
@@ -49,8 +50,14 @@ const loadProfile = async () => {
 }
 
 const watchAccount = () => {
-  const stopWatch = watch(account, newAccount => {
-    newAccount && login()
+  const stopWatch = watch([account, visibility], ([newAccount, newVisibility], [oldAccount])=> {
+    if (newAccount) {
+      if (newAccount !== oldAccount) {
+        clearAuth()
+      }
+
+      newVisibility && !auth.value && login()
+    }
   })
 
   onBeforeUnmount(stopWatch)

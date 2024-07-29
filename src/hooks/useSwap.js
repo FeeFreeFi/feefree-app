@@ -4,13 +4,13 @@ import { getTxMeta } from "@/utils/chain"
 import { getStamp } from "@/utils/date"
 import {
   CHAIN_ID_ZORA,
-  // CHAIN_ID_BASE,
+  CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   isNative,
   getZoraToken,
-  // getBaseToken,
+  getBaseToken,
   getBaseSepoliaToken,
 } from "./useCurrency"
 import { getPrice } from "./usePrices"
@@ -37,18 +37,18 @@ const CONFIG = [
       },
     ],
   },
-  // {
-  //   chainId: CHAIN_ID_BASE,
-  //   pools: [
-  //     {
-  //       name: 'ETH-USDC',
-  //       currency0: getBaseToken("ETH"),
-  //       currency1: getBaseToken("USDC"),
-  //       currencyLiquidity: getBaseToken("ETH-USDC"),
-  //       id: "0xb2a10047a5ff1d8823670d36a0ef35fecca00cb388757d7d8948c4bff9873b17",
-  //     },
-  //   ],
-  // },
+  {
+    chainId: CHAIN_ID_BASE,
+    pools: [
+      {
+        name: 'ETH-USDC',
+        currency0: getBaseToken("ETH"),
+        currency1: getBaseToken("USDC"),
+        currencyLiquidity: getBaseToken("ETH-USDC"),
+        id: "0x9532d36802d2394beedee1165fe1c0cb008a19cf3eab78410b7b2ea2cd885880",
+      },
+    ],
+  },
   {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     pools: [
@@ -81,8 +81,8 @@ const ALL_TOKENS = [
   getZoraToken("ETH"),
   getZoraToken("USDzC"),
 
-  // getBaseToken("ETH"),
-  // getBaseToken("USDC"),
+  getBaseToken("ETH"),
+  getBaseToken("USDC"),
 
   getBaseSepoliaToken("ETH"),
   getBaseSepoliaToken("USDC"),

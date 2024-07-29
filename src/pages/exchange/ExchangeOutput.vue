@@ -11,7 +11,7 @@
       <div class="py-3 px-4 sm:px-6 flex-y-center justify-between bg-card rounded-lg">
         <ZTokenBalance v-if="amountOut" class="!font-medium text-base" :token="inputToken" :balance="amountOut" :show-symbol="false" />
         <n-text v-else class="font-medium text-base" depth="1">0.0</n-text>
-        <TokenSelectorTrigger :token="inputToken" :disabled="!isSupported" @select="onTriggerSelect" />
+        <TokenSelectorTrigger :token="outputToken" :disabled="!isSupported" @select="onTriggerSelect" />
       </div>
       <div v-if="isSupported && amountOut" class="sm:h-[52px] py-3 px-4 sm:px-6 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between bg-card rounded-lg">
         <TokenPrice :input-token="inputToken" :output-token="outputToken" :price="1" />
