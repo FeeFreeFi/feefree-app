@@ -5,12 +5,14 @@ import { getStamp } from "@/utils/date"
 import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
+  CHAIN_ID_SCROLL,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   isNative,
   getZoraToken,
   getBaseToken,
+  getScrollToken,
   getBaseSepoliaToken,
 } from "./useCurrency"
 import { getPrice } from "./usePrices"
@@ -50,6 +52,18 @@ const CONFIG = [
     ],
   },
   {
+    chainId: CHAIN_ID_SCROLL,
+    pools: [
+      {
+        name: 'ETH-USDC',
+        currency0: getScrollToken("ETH"),
+        currency1: getScrollToken("USDC"),
+        currencyLiquidity: getScrollToken("ETH-USDC"),
+        id: "0x869a780ad43922adb0be93b2c2c460e4eec9ede0b6155ca609e4fcdaecd3aa3e",
+      },
+    ],
+  },
+  {
     chainId: CHAIN_ID_BASE_SEPOLIA,
     pools: [
       {
@@ -83,6 +97,9 @@ const ALL_TOKENS = [
 
   getBaseToken("ETH"),
   getBaseToken("USDC"),
+
+  getScrollToken("ETH"),
+  getScrollToken("USDC"),
 
   getBaseSepoliaToken("ETH"),
   getBaseSepoliaToken("USDC"),
