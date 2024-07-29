@@ -2,6 +2,7 @@ import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
   CHAIN_ID_BASE_SEPOLIA,
+  CHAIN_ID_SCROLL,
 } from "@/config"
 import { getTxMeta } from "@/utils/chain"
 
@@ -26,6 +27,18 @@ const CONFIG = {
     { name: "DAI+", symbol: "DAI+", key: "DAI", decimals: 18, dp: 4, address: "0x14a760e4D05a04bFbd6e5cB9114626ACDb342ca8" },
 
     { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0x60d7D35232D178BaE9B082210B2A12C004127c70" },
+  ],
+  [CHAIN_ID_SCROLL]: [
+    { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
+    { name: "ETH+", symbol: "ETH+", key: "ETH", decimals: 18, dp: 4, address: "0x4cB98eeAf8A8728b36Afc1d937aCAAbF7cd534fa" },
+    { name: "USD Coin", symbol: "USDC", key: "USDC", decimals: 6, dp: 4, address: "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4" },
+    { name: "USDC+", symbol: "USDC+", key: "USDC", decimals: 6, dp: 4, address: "0x06adA72df617A8C9f0b75A0FE038dA22121b20aB" },
+    { name: "Tether USD", symbol: "USDT", key: "USDT", decimals: 6, dp: 4, address: "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df" },
+    { name: "USDT+", symbol: "USDT+", key: "USDT", decimals: 6, dp: 4, address: "0xD806f3A04b15e769cC7Ab936c3F5D684953F48f4" },
+    { name: "Dai Stablecoin", symbol: "DAI", key: "DAI", decimals: 18, dp: 4, address: "0xcA77eB3fEFe3725Dc33bccB54eDEFc3D9f764f97" },
+    { name: "DAI+", symbol: "DAI+", key: "DAI", decimals: 18, dp: 4, address: "0xbEdE9eCC614238cfb250F8843616220274D9eF6f" },
+
+    { name: "ETH-USDC", symbol: "ETH-USDC", key: "", decimals: 18, dp: 4, address: "0x69767863438400E8d222865AA60E9Efbd28f04EC" },
   ],
   [CHAIN_ID_BASE_SEPOLIA]: [
     { name: "ETH", symbol: "ETH", key: "ETH", decimals: 18, dp: 4, address: ADDRESS_ZERO },
@@ -295,4 +308,5 @@ export const resolveTokenMeta = chainId => {
 
 export const getZoraToken = resolveTokenMeta(CHAIN_ID_ZORA)
 export const getBaseToken = resolveTokenMeta(CHAIN_ID_BASE)
+export const getScrollToken = resolveTokenMeta(CHAIN_ID_SCROLL)
 export const getBaseSepoliaToken = resolveTokenMeta(CHAIN_ID_BASE_SEPOLIA)

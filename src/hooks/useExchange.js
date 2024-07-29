@@ -2,11 +2,13 @@ import { getTxMeta } from "@/utils/chain"
 import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
+  CHAIN_ID_SCROLL,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   getZoraToken,
   getBaseToken,
+  getScrollToken,
   getBaseSepoliaToken,
   isNative,
 } from "./useCurrency"
@@ -39,6 +41,27 @@ const CONFIG = [
       {
         currency0: getBaseToken("DAI"),
         currency1: getBaseToken("DAI+"),
+      },
+    ],
+  },
+  {
+    chainId: CHAIN_ID_SCROLL,
+    pairs: [
+      {
+        currency0: getScrollToken("ETH"),
+        currency1: getScrollToken("ETH+"),
+      },
+      {
+        currency0: getScrollToken("USDC"),
+        currency1: getScrollToken("USDC+"),
+      },
+      {
+        currency0: getScrollToken("USDT"),
+        currency1: getScrollToken("USDT+"),
+      },
+      {
+        currency0: getScrollToken("DAI"),
+        currency1: getScrollToken("DAI+"),
       },
     ],
   },
