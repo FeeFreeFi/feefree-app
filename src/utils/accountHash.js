@@ -13,7 +13,7 @@ const getAccountHash = account => {
 /**
  * @param {string} account
  */
-const getAccountUid = account => {
+const getAccountId = account => {
   return getAccountHash(account).slice(0, 8)
 }
 
@@ -28,8 +28,8 @@ const getAccountReferral = account => {
  * @param {string} account
  * @param {string} id
  */
-export const isSelfAccount = (account, uid) => {
-  return getAccountUid(account) === uid
+export const isSelfAccount = (account, id) => {
+  return getAccountId(account) === id
 }
 
 /**

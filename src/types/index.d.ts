@@ -149,7 +149,7 @@ export interface SignatureData {
 }
 
 export interface Profile {
-  uid: string;
+  id: string;
   account: string;
   nickname: string;
   score: number;
@@ -163,7 +163,7 @@ export interface JwtToken {
 }
 
 export interface Auth {
+  id: string;
   accessToken: JwtToken;
   refreshToken: JwtToken;
-  uid: string;
 }
