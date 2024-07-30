@@ -2,6 +2,7 @@ import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
   CHAIN_ID_SCROLL,
+  CHAIN_ID_LINEA,
   CHAIN_ID_ZKSYNC,
   CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
@@ -9,6 +10,7 @@ import {
   zora,
   base,
   scroll,
+  linea,
   zkSync,
   baseSepolia,
 } from "viem/chains"
@@ -17,6 +19,7 @@ const CHAINS = Object.freeze([
   zora,
   base,
   scroll,
+  linea,
   zkSync,
   baseSepolia,
 ])
@@ -51,6 +54,17 @@ const CHAIN_EXTRAS = [
     extraRpcUrls: [
       "https://scroll.drpc.org",
       "https://rpc.ankr.com/scroll",
+    ],
+    gasType: "maxFeePerGas",
+    isZkEVM: true,
+  },
+  {
+    id: CHAIN_ID_LINEA,
+    name: "Linea",
+    symbol: "ETH",
+    extraRpcUrls: [
+      "https://linea.drpc.org",
+      "https://1rpc.io/linea",
     ],
     gasType: "maxFeePerGas",
     isZkEVM: true,

@@ -8,7 +8,7 @@ import { isSelfAccount } from "@/utils/accountHash"
 /**
  *
  * @param {string} token
- * @returns {{valid:boolean, exp?:number, uid?:string}}
+ * @returns {{valid:boolean, exp?:number, id?:string}}
  */
 const parseJwt = token => {
   try {
@@ -17,7 +17,7 @@ const parseJwt = token => {
     return {
       valid: payload.iss === JWT_ISSUER,
       exp: payload.exp,
-      uid: payload.uid,
+      id: payload.id,
     }
   } catch {
     return { valid: false }
@@ -77,14 +77,14 @@ const parseAuth = (accessToken, refreshToken) => {
   const now = getStamp()
   const expired1 = res1.exp <= now
   const expired2 = res2.exp <= now
-  if (!res1.valid || !res2.valid || res1.uid !== res2.uid || (expired1 && expired2)) {
+  if (!res1.valid || !res2.valid || res1.id !== res2.id || (expired1 && expired2)) {
     return null
   }
 
   return {
     accessToken: expired1 ? null : { value: accessToken, exp: res1.exp },
     refreshToken: expired2 ? null : { value: refreshToken, exp: res2.exp },
-    uid: res1.uid,
+    id: res1.id,
   }
 }
 
@@ -107,5 +107,5 @@ export const clearAuth = () => {
 }
 
 export const isMatchAccount = account => {
-  return authRef.value && isSelfAccount(account, authRef.value.uid)
+  return authRef.value && isSelfAccount(account, authRef.value.id)
 }
