@@ -19,7 +19,7 @@ import { useNotification } from "naive-ui"
 import wait from "@/utils/wait"
 import { getProviders } from "@/hooks/useProviders"
 import { connect } from "@/hooks/useWallet"
-import { selectedChainId } from "@/hooks/useSelectedChain"
+import { appChainId } from "@/hooks/useAppState"
 import { connecting, reset, connectingWallet, recentWallet, setRecent } from "@/hooks/useConnecting"
 import ZModalView from '@/components/ZModalView.vue'
 import WalletItem from "./WalletItem.vue"
@@ -43,7 +43,7 @@ const onConnect = async wallet => {
   try {
     connecting(wallet)
     await wait(300)
-    const success = await connect(wallet.provider, wallet.info, selectedChainId.value)
+    const success = await connect(wallet.provider, wallet.info, appChainId.value)
     if (success) {
       setRecent(wallet.info.name)
       props.onClose()

@@ -1,7 +1,7 @@
 import { getChainName } from './useChains'
 import { getPublicClient, waitForTransactionReceipt } from './useClient'
 import { allowance, approve } from './useCurrency'
-import { exchange, isExchangeToken } from './useExchange'
+import { exchange, isExchangeToken } from './useSwap'
 import { mint } from './useNft'
 import { getRouterAddress } from './useRouter'
 import { addLiquidity, removeLiquidity, swap } from './useSwap'
@@ -32,7 +32,7 @@ export const doSwitchNetwork = async (notification, switching, chainId) => {
 }
 
 /**
- * @param {string} checking
+ * @param {import('vue').Ref<boolean>} checking
  * @param {() => Promise} check
  */
 export const doCheckApproval = async (checking, check) => {
@@ -192,7 +192,7 @@ export const doExchange = async (action, loading, inputToken, outputToken, amoun
     action.value = {
       show: true,
       state: "initial",
-      title: `Exchanging`,
+      title: `Swaping`,
       data: { inputToken, outputToken, amountIn: amount, amountOut: amount, fee },
     }
     loading.value = true
@@ -215,7 +215,7 @@ export const doExchange = async (action, loading, inputToken, outputToken, amoun
     action.value = {
       ...action.value,
       state: "success",
-      title: `Exchange success`,
+      title: `Swap success`,
     }
 
     return true
@@ -224,7 +224,7 @@ export const doExchange = async (action, loading, inputToken, outputToken, amoun
     action.value = {
       ...action.value,
       state: "fail",
-      title: `Exchange fail`,
+      title: `Swap fail`,
       error: err.shortMessage || err.details || err.message,
     }
 

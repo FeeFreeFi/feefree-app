@@ -29,6 +29,7 @@ const CHAIN_IDS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, true]))
 const CHAIN_EXTRAS = [
   {
     id: CHAIN_ID_ZORA,
+    key: "zora",
     name: "Zora",
     symbol: "ETH",
     extraRpcUrls: [
@@ -38,6 +39,7 @@ const CHAIN_EXTRAS = [
   },
   {
     id: CHAIN_ID_BASE,
+    key: "base",
     name: "Base",
     symbol: "ETH",
     extraRpcUrls: [
@@ -49,6 +51,7 @@ const CHAIN_EXTRAS = [
   },
   {
     id: CHAIN_ID_SCROLL,
+    key: "scroll",
     name: "Scroll",
     symbol: "ETH",
     extraRpcUrls: [
@@ -60,6 +63,7 @@ const CHAIN_EXTRAS = [
   },
   {
     id: CHAIN_ID_LINEA,
+    key: "linea",
     name: "Linea",
     symbol: "ETH",
     extraRpcUrls: [
@@ -71,6 +75,7 @@ const CHAIN_EXTRAS = [
   },
   {
     id: CHAIN_ID_ZKSYNC,
+    key: "zksync",
     name: "zkSync Era",
     symbol: "ETH",
     extraRpcUrls: [
@@ -82,6 +87,7 @@ const CHAIN_EXTRAS = [
   },
   {
     id: CHAIN_ID_BASE_SEPOLIA,
+    key: "base-sepolia",
     name: "Base Sepolia",
     symbol: "ETH",
     extraRpcUrls: [
@@ -160,3 +166,13 @@ export const getExplorerUrl = chainId => {
 
   return url.endsWith("/") ? url.slice(0, -1) : url
 }
+
+/**
+ * @param {string} key
+ */
+export const getChainIdByKey = key => CHAIN_EXTRAS.find(it => it.key === key)?.id || 0
+
+/**
+ * @param {number} chainId
+ */
+export const getChainKey = chainId => CHAIN_EXTRAS_MAP[chainId]?.key || ""

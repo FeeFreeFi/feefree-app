@@ -4,7 +4,7 @@
       <div class="flex w-24">
         <ZToken :token="token" />
       </div>
-      <n-input-number class="flex-1 text-right" v-model:value="amount" :min="0" :max="maxAmount" :bordered="false" placeholder="0.0" :show-button="false" :on-blur="onInputBlur" />
+      <n-input-number class="flex-1 text-right" v-model:value="amount" :min="0" :max="maxAmount" :bordered="false" placeholder="0.0" :input-props="{name: `${token.symbol} amount`}" :show-button="false" :on-blur="onInputBlur" />
     </div>
     <n-divider class="!my-0" />
     <div class="flex-y-center justify-between gap-2">

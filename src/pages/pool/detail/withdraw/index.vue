@@ -36,12 +36,12 @@ import { useRoute } from "vue-router"
 import { useNotification } from "naive-ui"
 import { parseAmount } from "@/utils/bn"
 import { screen } from "@/hooks/useScreen"
-import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { account, updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
 import { getRouterAddress } from "@/hooks/useRouter"
 import { getTokenBalances, quoteRemoveLiquidity, getPool, getSupportedChains } from "@/hooks/useSwap"
 import { createInterval } from "@/hooks/useTimer"
-import { selectedChainId } from "@/hooks/useSelectedChain"
+import { appChainId } from "@/hooks/useAppState"
 import { createPoolState } from "@/hooks/usePoolState"
 import { createPriceState } from "@/hooks/usePrices"
 import { createBalanceStates } from "@/hooks/useBalances"
@@ -132,7 +132,7 @@ const onWithdraw = async () => {
 }
 
 onMounted(() => {
-  const stopWatch = watch(selectedChainId, () => {
+  const stopWatch = watch(appChainId, () => {
     reset()
   })
 

@@ -20,9 +20,9 @@ import { ref, watch, onMounted, onBeforeUnmount } from "vue"
 import { useNotification } from "naive-ui"
 import { PAGE_HOME } from "@/config"
 import { getTokens, send, getFaucetAddress } from "@/hooks/useFaucet"
-import { account, getWalletClient, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { account, getWalletClient, updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
-import { selectedChainId } from "@/hooks/useSelectedChain"
+import { appChainId } from "@/hooks/useAppState"
 import { waitTx } from "@/hooks/useWaitTx"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
@@ -53,7 +53,7 @@ const onSend = async token => {
   }
 
   const { address: tokenAddress, chainId: id, symbol } = token
-  if (id !== selectedChainId.value) {
+  if (id !== appChainId.value) {
     const success = await onSwitchNetwork(id)
     if (!success) {
       return
@@ -85,7 +85,7 @@ const onSend = async token => {
 }
 
 onMounted(() => {
-  const stopWatch = watch([account, selectedChainId], () => {
+  const stopWatch = watch([account, appChainId], () => {
     reset()
     updateNativeBalance()
   })

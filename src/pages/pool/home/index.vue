@@ -8,7 +8,7 @@
       </div>
       <!-- TVL -->
       <div class="flex-center gap-3">
-        <ZChainIcon :chain-id="selectedChainId" class="size-5" />
+        <ZChainIcon :chain-id="appChainId" class="size-5" />
         <n-text class="text-base font-semibold">TVL ${{ toBalance(totalTVL) }}</n-text>
       </div>
     </div>
@@ -24,7 +24,7 @@
           </div>
           <div class="mt-4 sm:mt-6 flex justify-between text-xs">
             <n-text depth="1">TVL</n-text>
-            <n-text>${{ toBalance(poolStates[pool.id].tvl, 0) }}</n-text>
+            <n-text>${{ toBalance(poolStates[pool.id]?.tvl || 0n, 0) }}</n-text>
           </div>
           <div class="mt-6 flex">
             <router-link :to="{ name: PAGE_POOL_OVERVIEW, params: { id: pool.id } }" class="w-full">
@@ -41,7 +41,7 @@
 import { computed } from "vue"
 import { PAGE_POOL_OVERVIEW } from '@/config'
 import { toBalance } from "@/utils/bn"
-import { selectedChainId } from "@/hooks/useSelectedChain"
+import { appChainId, syncRouteChain } from "@/hooks/useAppState"
 import { getPools } from "@/hooks/useSwap"
 import { createPriceState } from "@/hooks/usePrices"
 import { createPoolStates } from "@/hooks/usePoolState"
@@ -52,7 +52,9 @@ import ZPoolIcon from "@/components/ZPoolIcon.vue"
 import PoolName from "@/components/PoolName.vue"
 import poolBg from "@/assets/images/pool-bg.svg"
 
-const pools = computed(() => getPools(selectedChainId.value))
+syncRouteChain()
+
+const pools = computed(() => getPools(appChainId.value))
 const poolIds = computed(() => pools.value.map(p => p.id))
 
 const { states: poolStates, update: updatePoolStates } = createPoolStates(poolIds)

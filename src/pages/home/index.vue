@@ -10,7 +10,7 @@
           <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
           <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading aria-label="Checking for Approval">Checking for Approval</ZButton>
           <ZButton v-else-if="!approved" class="h-10 sm:h-12 w-full" :disabled="approving" :loading="approving" :aria-label="`Unlock ${inputToken.symbol}`" @click="onApproval">Unlock {{ inputToken.symbol }}</ZButton>
-          <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="!quoteData" :loading="swaping" aria-label="Swap" @click="onSwap">Swap</ZButton>
+          <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="!quoteData" :loading="swaping || exchanging" aria-label="Swap" @click="onSwap">Swap</ZButton>
         </ActionButton>
       </div>
       <RecipientAddress class="mt-4" v-model="recipient" :to="containerId" />
@@ -18,28 +18,28 @@
     <TokenSelector v-model:show="showTokenSelector" :current="currentToken" :tokens="allTokens" :on-select="onSelectToken" />
     <ApproveModal v-model="approveAction" />
     <SwapModal v-model="swapAction" />
+    <ExchangeModal v-model="exchangeAction" />
     <ValueChangeModal v-model="valueChangeAction" :on-confirm="swap" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
-import { useRoute } from "vue-router"
 import { useNotification } from "naive-ui"
+import { useRoute, useRouter } from "vue-router"
 import debounce from "lodash-es/debounce"
 import { parseAmount } from "@/utils/bn"
 import uuid from "@/utils/uuid"
-import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { account, updateNativeBalance } from "@/hooks/useWallet"
 import { createBalanceStates2 } from "@/hooks/useBalances"
 import { getPublicClient } from "@/hooks/useClient"
 import { createPriceState } from "@/hooks/usePrices"
-import { isSame } from "@/hooks/useCurrency"
-import { selectedChainId } from "@/hooks/useSelectedChain"
+import { isNative, isSame } from "@/hooks/useCurrency"
+import { appChainId, syncRouteChain } from "@/hooks/useAppState"
 import { createInterval } from "@/hooks/useTimer"
-import { getChainTokens, findPaths, quoteSwap, getSupportedChains, isSupportChain, checkValueChange } from "@/hooks/useSwap"
+import { findSwapOtherToken, findPaths, quoteSwap, getSupportedChains, isSupportChain, checkValueChange, getChainTokens, findExchangeOtherToken, isExchangeToken, isSwapToken } from "@/hooks/useSwap"
 import { getFee, getRouterAddress } from "@/hooks/useRouter"
-import { doApproval, doCheckAllowance, doCheckApproval, doSwap } from "@/hooks/useInteraction"
-import { saveReferral } from "@/hooks/useUser"
+import { doApproval, doCheckAllowance, doCheckApproval, doExchange, doSwap } from "@/hooks/useInteraction"
 import TokenSelector from "@/components/TokenSelector/index.vue"
 import RecipientAddress from "@/components/RecipientAddress/index.vue"
 import ActionButton from "@/components/ActionButton.vue"
@@ -49,27 +49,43 @@ import ReverseButton from "@/components/ReverseButton.vue"
 import SwapInput from "./SwapInput.vue"
 import SwapOutput from "./SwapOutput.vue"
 import SwapModal from "./SwapModal.vue"
+import ExchangeModal from "./ExchangeModal.vue"
 import ValueChangeModal from "./ValueChangeModal.vue"
+import { getChainIdByKey, getChainKey, getNativeCurrency } from "@/hooks/useChains"
 
 const containerId = `#el-${uuid()}`
 const route = useRoute()
+const router = useRouter()
+
+syncRouteChain()
 
 createPriceState()
+
 const notification = useNotification()
 
 const supportedChains = getSupportedChains()
-const isSupported = computed(() => isSupportChain(selectedChainId.value))
+const isSupported = computed(() => isSupportChain(appChainId.value))
 
-const allTokens = computed(() => getChainTokens(selectedChainId.value))
+const allTokens = computed(() => getChainTokens(appChainId.value))
+
+/**
+ * @type {import('vue').Ref<import('@/types').Token>}
+ */
 const inputToken = ref(allTokens.value[0])
+/**
+ * @type {import('vue').Ref<import('@/types').Token>}
+ */
 const outputToken = ref(allTokens.value[1])
-const swapPaths = computed(() => findPaths(inputToken.value, outputToken.value))
+
+const isExchangeMode = computed(() => inputToken.value && outputToken.value && isSame(findExchangeOtherToken(inputToken.value), outputToken.value))
+
+const swapPaths = computed(() => isExchangeMode.value ? null : findPaths(inputToken.value, outputToken.value))
 
 const isForInput = ref(true)
 const currentToken = computed(() => isForInput.value ? inputToken.value : outputToken.value)
 
-const focusTokens = computed(() => [inputToken.value, outputToken.value])
-const { states: balanceStates, update: updateTokenBalances } = createBalanceStates2(account, focusTokens)
+const inputOutputTokens = computed(() => [inputToken.value, outputToken.value])
+const { states: balanceStates, update: updateTokenBalances } = createBalanceStates2(account, inputOutputTokens)
 const inputBalance = computed(() => balanceStates.value[0])
 const outputBalance = computed(() => balanceStates.value[1])
 
@@ -105,7 +121,15 @@ const approved = ref(false)
 const approvalChecking = ref(false)
 const approving = ref(false)
 const checkAllowance = () => doCheckAllowance(approved, inputToken.value, account.value, getRouterAddress(inputToken.value.chainId), amountIn.value)
-const onCheckApproval = () => doCheckApproval(approvalChecking, checkAllowance)
+const onCheckApproval = async () => {
+  if (isExchangeMode.value && isExchangeToken(inputToken.value)) {
+    approvalChecking.value = false
+    approved.value = true
+    return
+  }
+
+  await doCheckApproval(approvalChecking, checkAllowance)
+}
 const onApproval = async () => {
   const spender = getRouterAddress(inputToken.value.chainId)
   const success = await doApproval(approveAction, approving, inputToken.value, spender, amountIn.value)
@@ -117,16 +141,40 @@ const onApproval = async () => {
 
 const swaping = ref(false)
 const swapAction = ref({ show: false })
+const exchanging = ref(false)
+const exchangeAction = ref({ show: false })
 
 const valueChangeAction = ref({ show: false })
 
-const handleReferral = () => {
-  const { referral } = route.query
-  if (!referral) {
-    return
+const handleRoute = () => {
+  let { chain, input, output } = route.query
+
+  let chainId = getChainIdByKey(chain)
+  if (!chainId) {
+    chainId = appChainId.value
+    chain = getChainKey(chainId)
+
+    const tokens = getChainTokens(chainId)
+    inputToken.value = tokens[0]
+    outputToken.value = tokens[1]
+  } else if(!isSupportChain(chainId)) {
+    inputToken.value = null
+    outputToken.value = null
+  } else {
+    const tokens = getChainTokens(chainId)
+    const nativeSymbol = getNativeCurrency(chainId).symbol
+    let token1 = input === nativeSymbol ? tokens[0] : (tokens.find(it => it.address === input) || tokens[0])
+    let token2 = output === nativeSymbol ? tokens[0] : (tokens.find(it => it.address === output) || tokens[0])
+    if (isSame(token1, token2)) {
+      token2 = isSame(token1, tokens[0]) ? tokens[1] : tokens[0]
+    }
+
+    inputToken.value = token1
+    outputToken.value = token2
   }
 
-  saveReferral(referral)
+  updateTokenBalances(true)
+  updateRouteForInputOutput()
 }
 
 const reset = () => {
@@ -134,6 +182,7 @@ const reset = () => {
   approvalChecking.value = false
   approving.value = false
   swaping.value = false
+  exchanging.value = false
 
   inputAmount.value = ""
   recipient.value = ""
@@ -143,6 +192,10 @@ const reset = () => {
 }
 
 const updateQuoteData = async () => {
+  if (isExchangeMode.value) {
+    return
+  }
+
   if (swapPaths.value.length === 0 || !amountIn.value) {
     quoteData.value = null
     return
@@ -173,44 +226,49 @@ const onAmountChange = () => {
     return
   }
 
-  if (swapPaths.value.length === 0) {
-    notification.error({
-      title: "Error",
-      content: `No path for ${inputToken.value.symbol} <=> ${outputToken.value.symbol}`,
-      duration: 3000,
-    })
-    quoteData.value = null
-    return
+  if (isExchangeMode.value) {
+    quoteData.value = { amountIn: amountIn.value, amountOut: amountIn.value }
+  } else {
+    if (swapPaths.value.length === 0) {
+      notification.error({
+        title: "Error",
+        content: `No path for ${inputToken.value.symbol} <=> ${outputToken.value.symbol}`,
+        duration: 3000,
+      })
+      quoteData.value = null
+      return
+    }
+
+    debounceUpdateQuoteData()
   }
 
-  debounceUpdateQuoteData()
   onCheckApproval()
 }
 
 const onSelectToken = async token => {
-  if (isForInput.value) {
-    if (isSame(token, inputToken.value)) {
-      return
-    }
-    if (isSame(token, outputToken.value)) {
-      onReverse()
-      return
-    }
-    inputToken.value = token
-  } else {
-    if (isSame(token, outputToken.value)) {
-      return
-    }
-    if (isSame(token, inputToken.value)) {
-      onReverse()
-      return
-    }
-    outputToken.value = token
+  const targetToken = isForInput.value ? inputToken : outputToken
+  const otherToken = isForInput.value ? outputToken : inputToken
+
+  if (isSame(token, targetToken.value)) {
+    return
+  }
+  if (isSame(token, otherToken.value)) {
+    onReverse()
+    return
+  }
+
+  targetToken.value = token
+
+  if (isExchangeToken(token) || !isSwapToken(token)) {
+    otherToken.value = findExchangeOtherToken(token)
+  } else if (!isSwapToken(otherToken.value)) {
+    otherToken.value = findSwapOtherToken(token)
   }
 
   inputAmount.value = ""
   quoteData.value = null
   updateTokenBalances(true)
+  updateRouteForInputOutput()
 }
 
 const onSelectInputToken = () => {
@@ -232,6 +290,19 @@ const onReverse = () => {
   quoteData.value = null
 
   updateTokenBalances()
+  updateRouteForInputOutput()
+}
+
+const exchange = async () => {
+  const { chainId } = inputToken.value
+  const fee = getFee(chainId)
+  const to = recipient.value || account.value
+  const success = await doExchange(exchangeAction, exchanging, inputToken.value, outputToken.value, amountIn.value, to, fee)
+  if (success) {
+    reset()
+    updateTokenBalances(true)
+    updateNativeBalance()
+  }
 }
 
 const swap = async () => {
@@ -251,6 +322,11 @@ const onSwap = () => {
     return
   }
 
+  if (isExchangeMode.value) {
+    exchange()
+    return
+  }
+
   const data = checkValueChange(inputToken.value, outputToken.value, quoteData.value)
   if (data) {
     valueChangeAction.value = { show: true, data }
@@ -260,21 +336,36 @@ const onSwap = () => {
   swap()
 }
 
-onMounted(() => {
-  handleReferral()
-})
+const onAppChainIdChange = () => {
+  reset()
+
+  inputToken.value = allTokens.value[0] || null
+  outputToken.value = allTokens.value[1] || null
+
+  updateTokenBalances(true)
+  updateRouteForInputOutput()
+}
+
+const updateRouteForInputOutput = () => {
+  const { referral } = route.query
+
+  const [input, output] = inputOutputTokens.value
+  const chain = getChainKey(appChainId.value)
+  const query = {
+    chain,
+    input: input ? (isNative(input.address) ? getNativeCurrency(input.chainId).symbol : input.address) : undefined,
+    output: output ? (isNative(output.address) ? getNativeCurrency(output.chainId).symbol : output.address) : undefined,
+    referral,
+  }
+
+  router.push({ replace: true, name: route.name, query })
+}
 
 onMounted(() => {
-  const stopWatch = watch(selectedChainId, () => {
-    reset()
-
-    inputToken.value = allTokens.value[0] || null
-    outputToken.value = allTokens.value[1] || null
-
-    updateTokenBalances(true)
-  })
-
+  const stopWatch = watch(appChainId, onAppChainIdChange)
   onBeforeUnmount(stopWatch)
+
+  handleRoute()
 })
 
 onMounted(() => {

@@ -1,5 +1,6 @@
 import { ref } from "vue"
 import pMap from "p-map"
+import { uniqWith } from "lodash-es"
 import { getTxMeta } from "@/utils/chain"
 import { getStamp } from "@/utils/date"
 import {
@@ -14,17 +15,17 @@ import {
   getBaseToken,
   getScrollToken,
   getBaseSepoliaToken,
+  isSame,
 } from "./useCurrency"
 import { getPrice } from "./usePrices"
 import { byDecimals, fromValue } from "@/utils/bn"
+import { Q96, Q192 } from "@/utils/uniswap"
 import { getRouterAddress } from "./useRouter"
 import { getPublicClient } from "./useClient"
 
 const cache = ref({})
 
 const DURATION = 600
-const Q96 = 79228162514264337593543950336n
-const Q192 = 6277101735386680763835789423207666416102355444464034512896n
 
 const CONFIG = [
   {
@@ -36,6 +37,16 @@ const CONFIG = [
         currency1: getZoraToken("USDzC"),
         currencyLiquidity: getZoraToken("ETH-USDzC"),
         id: "0x219a2c0f153258a81f975771ac32114e75de77c8bde22cf64d9aed0f20c8c13d",
+      },
+    ],
+    pairs: [
+      {
+        currency0: getZoraToken("ETH"),
+        currency1: getZoraToken("ETH+"),
+      },
+      {
+        currency0: getZoraToken("USDzC"),
+        currency1: getZoraToken("USDzC+"),
       },
     ],
   },
@@ -50,6 +61,20 @@ const CONFIG = [
         id: "0x9532d36802d2394beedee1165fe1c0cb008a19cf3eab78410b7b2ea2cd885880",
       },
     ],
+    pairs: [
+      {
+        currency0: getBaseToken("ETH"),
+        currency1: getBaseToken("ETH+"),
+      },
+      {
+        currency0: getBaseToken("USDC"),
+        currency1: getBaseToken("USDC+"),
+      },
+      {
+        currency0: getBaseToken("DAI"),
+        currency1: getBaseToken("DAI+"),
+      },
+    ],
   },
   {
     chainId: CHAIN_ID_SCROLL,
@@ -60,6 +85,24 @@ const CONFIG = [
         currency1: getScrollToken("USDC"),
         currencyLiquidity: getScrollToken("ETH-USDC"),
         id: "0x869a780ad43922adb0be93b2c2c460e4eec9ede0b6155ca609e4fcdaecd3aa3e",
+      },
+    ],
+    pairs: [
+      {
+        currency0: getScrollToken("ETH"),
+        currency1: getScrollToken("ETH+"),
+      },
+      {
+        currency0: getScrollToken("USDC"),
+        currency1: getScrollToken("USDC+"),
+      },
+      {
+        currency0: getScrollToken("USDT"),
+        currency1: getScrollToken("USDT+"),
+      },
+      {
+        currency0: getScrollToken("DAI"),
+        currency1: getScrollToken("DAI+"),
       },
     ],
   },
@@ -88,10 +131,28 @@ const CONFIG = [
         id: "0x15b8224b42969f338efd221d969748cac4b8565b2b252ce06e076c1be1ab4163",
       },
     ],
+    pairs: [
+      {
+        currency0: getBaseSepoliaToken("ETH"),
+        currency1: getBaseSepoliaToken("ETH+"),
+      },
+      {
+        currency0: getBaseSepoliaToken("USDC"),
+        currency1: getBaseSepoliaToken("USDC+"),
+      },
+      {
+        currency0: getBaseSepoliaToken("DAI"),
+        currency1: getBaseSepoliaToken("DAI+"),
+      },
+      {
+        currency0: getBaseSepoliaToken("OP"),
+        currency1: getBaseSepoliaToken("OP+"),
+      },
+    ],
   },
 ]
 
-const ALL_TOKENS = [
+const SWAP_TOKENS = [
   getZoraToken("ETH"),
   getZoraToken("USDzC"),
 
@@ -107,10 +168,19 @@ const ALL_TOKENS = [
   getBaseSepoliaToken("OP"),
 ]
 
+const EXCHANGE_TOKENS = CONFIG.map(c => c.pairs.map(pair => [pair.currency0, pair.currency1]).flat()).flat()
+
+const ALL_TOKENS = uniqWith(SWAP_TOKENS.concat(EXCHANGE_TOKENS), isSame)
+
 const ALL_POOLS_MAP = Object.fromEntries(CONFIG.map(c => {
   const { chainId, pools, ...rest } = c
   return pools.map(pool => ({ ...pool, chainId, ...rest }))
 }).reduce((sum, item) => sum.concat(item), []).map(item => [item.id, item]))
+
+const ALL_PAIRS_MAP = Object.fromEntries(CONFIG.map(c => [c.chainId, c.pairs]))
+
+const IS_EXCHANGE_TOKENS = Object.fromEntries(CONFIG.map(c => [c.chainId, Object.fromEntries(c.pairs.map(p => [p.currency1.address, true]))]))
+
 const SUPPORTED_CHAINS = CONFIG.map(c => ({ chainId: c.chainId }))
 
 const ABI_ADD_LIQUIDITY = [
@@ -177,6 +247,26 @@ const ABI_SWAP = [
       }
     ],
     outputs: [{ name: "delta", type: "int256" }],
+    stateMutability: "payable"
+  }
+]
+
+const ABI_EXCHANGE = [
+  {
+    type: "function",
+    name: "exchange",
+    inputs: [
+      {
+        name: "params",
+        type: "tuple",
+        components: [
+          { name: "currency", type: "address" },
+          { name: "amountSpecified", type: "int128" },
+          { name: "to", type: "address" }
+        ]
+      }
+    ],
+    outputs: [],
     stateMutability: "payable"
   }
 ]
@@ -430,6 +520,29 @@ export const removeLiquidity = async ({ publicClient, walletClient }, address, c
 }
 
 /**
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
+ * @param {string} address
+ * @param {string} currency
+ * @param {bigint} amountSpecified
+ * @param {string} to
+ * @param {bigint} fee
+ */
+export const exchange = async ({ publicClient, walletClient }, address, currency, amountSpecified, to, fee) => {
+  const account = walletClient.account.address
+  const { request } = await publicClient.simulateContract({
+    account,
+    address,
+    abi: ABI_EXCHANGE,
+    functionName: 'exchange',
+    args: [{ currency, amountSpecified, to }],
+    value: amountSpecified < 0 && isNative(currency) ? -amountSpecified + fee : fee,
+  })
+  const hash = await walletClient.writeContract(request)
+
+  return getTxMeta(hash, publicClient.chain)
+}
+
+/**
  * @param {bigint} sqrtPriceX96
  * @param {bigint} liquidity
  */
@@ -549,7 +662,15 @@ export const isValidPool = poolId => !!ALL_POOLS_MAP[poolId]
 /**
  * @param {number} chainId
  */
-export const getChainTokens = chainId => ALL_TOKENS.filter(t => t.chainId === chainId)
+export const getChainTokens = chainId => ALL_TOKENS.filter(it => it.chainId === chainId)
+
+/**
+ *
+ * @param {import('@/types').Token} token
+ */
+export const findSwapOtherToken = token => {
+  return SWAP_TOKENS.find(t => t.chainId === token.chainId && t.address !== token.address)
+}
 
 /**
  * @param {import('@/types').Token} inputToken
@@ -604,27 +725,6 @@ export const findPaths = (inputToken, outputToken) => {
   return paths
 }
 
-
-/**
- * @param {bigint} sqrtPriceX96
- * @param {bigint} amount1
- */
-export const getAmount0FromSqrtPrice = (sqrtPriceX96, amount1) => {
-  // sqrtPriceX96 = FACTOR * sqrtPriceX96 / Q96
-  // return amount1 * FACTOR2 / sqrtPriceX96 / sqrtPriceX96
-  return BigInt(fromValue(amount1 << 192n).div(sqrtPriceX96 * sqrtPriceX96).dp(0).toString(10))
-}
-
-/**
- * @param {bigint} sqrtPriceX96
- * @param {bigint} amount0
- */
-export const getAmount1FromSqrtPrice = (sqrtPriceX96, amount0) => {
-  // sqrtPriceX96 = FACTOR * sqrtPriceX96 / Q96
-  // return amount0 * sqrtPriceX96 * sqrtPriceX96 / FACTOR2
-  return (sqrtPriceX96 * sqrtPriceX96 * amount0) >> 192n
-}
-
 /**
  * @param {import('@/types').Token} inputToken
  * @param {import('@/types').Token} outputToken
@@ -653,4 +753,37 @@ export const checkValueChange = (inputToken, outputToken, quote) => {
     outputValue,
     percent,
   }
+}
+
+/**
+ * @param {number} chainId
+ */
+export const getExchangePairs = chainId => ALL_PAIRS_MAP[chainId] || []
+
+/**
+ * @param {import('@/types').Token} token
+ */
+export const isExchangeToken = token => !!(IS_EXCHANGE_TOKENS[token.chainId][token.address])
+
+// /**
+//  * @param {import('@/types').Token} token0
+//  * @param {import('@/types').Token} token1
+//  */
+// export const isExchangePair = (token0, token1) => {
+//   const otherToken = findExchangeOtherToken(token0)
+//   return otherToken ? isSame(otherToken, token1) : false
+// }
+
+/**
+ * @param {import('@/types').Token} token
+ */
+export const isSwapToken = token => !!(SWAP_TOKENS.find(it => isSame(it, token)))
+
+/**
+ * @param {import('@/types').Token} token
+ */
+export const findExchangeOtherToken = token => {
+  const pairs = ALL_PAIRS_MAP[token.chainId] || []
+  const pair = pairs.find(p => p.currency0.address === token.address || p.currency1.address === token.address)
+  return pair.currency0.address === token.address ? pair.currency1 : pair.currency0
 }

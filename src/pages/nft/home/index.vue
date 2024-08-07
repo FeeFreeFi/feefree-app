@@ -50,8 +50,8 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { fromValue, toBalance } from "@/utils/bn"
 import { createNftStates, getNftList, getSupportedChains } from "@/hooks/useNft"
-import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
-import { selectedChainId } from "@/hooks/useSelectedChain"
+import { account, updateNativeBalance } from "@/hooks/useWallet"
+import { appChainId, syncRouteChain } from "@/hooks/useAppState"
 import { getNativeCurrency } from "@/hooks/useChains"
 import { createPriceState, getPrice } from "@/hooks/usePrices"
 import { doMint } from "@/hooks/useInteraction"
@@ -63,10 +63,11 @@ import ActionButton from "@/components/ActionButton.vue"
 import MintModal from "./MintModal.vue"
 
 createPriceState()
+syncRouteChain()
 
 const supportedChains = getSupportedChains()
-const nfts = computed(() => getNftList(selectedChainId.value))
-const feeToken = computed(() => getNativeCurrency(selectedChainId.value))
+const nfts = computed(() => getNftList(appChainId.value))
+const feeToken = computed(() => getNativeCurrency(appChainId.value))
 
 const { states: nftStates, update: updateNftStates } = createNftStates(nfts)
 
@@ -102,7 +103,7 @@ const onMint = async (index, nft) => {
 }
 
 onMounted(() => {
-  const stopWatch = watch([account, selectedChainId], () => {
+  const stopWatch = watch([account, appChainId], () => {
     reset()
   })
 
@@ -110,7 +111,7 @@ onMounted(() => {
 })
 
 onMounted(() => {
-  const stopWatch = watch(selectedChainId, () => {
+  const stopWatch = watch(appChainId, () => {
     updateNftStates(true)
   })
 

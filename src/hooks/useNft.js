@@ -27,14 +27,14 @@ const CONFIG = [
     contracts: [
       {
         label: "FFGenesisNFT",
-        address: "0xfDd0874588cAF4Df6E9AE26dACe1906c65292646",
+        address: "0xDA29e0a34d806D2009A2E354B75A0e6C8C76419D",
         name: "FFGenesisNFT",
         symbol: "FFG",
         price: 10000000000000000n,
         free: false,
         image: "FFGenesisNFT.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
+        cap: 10000n,
+        capLabel: "10K",
       },
       {
         label: "FFWeekNFT(202417)",
