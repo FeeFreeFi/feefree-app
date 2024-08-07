@@ -5,11 +5,11 @@ import { balanceOf } from "./useCurrency"
 import { getChain, getChainName, isSupportChain, getDefaultChain, getNativeCurrency, isZkEVM } from "./useChains"
 import { getPublicClient } from "./useClient"
 
-const chainIdRef = ref(0)
+const walletChainIdRef = ref(0)
 const accountRef = ref("")
-const balanceRef = ref(0n)
+const nativeBalanceRef = ref(0n)
 const walletNameRef = ref("")
-const requireSwitchChainRef = ref(false)
+const chainSupportedRef = ref(false)
 
 let walletClient = null
 let cachedProvider = null
@@ -17,7 +17,7 @@ let cachedProvider = null
 const toHex = value => `0x${value.toString(16)}`
 
 const replaceWalletClient = (chainId, account) => {
-  chainId = chainId || chainIdRef.value
+  chainId = chainId || walletChainIdRef.value
   walletClient = createWalletClient({
     chain: getChain(chainId),
     account: account || accountRef.value,
@@ -62,11 +62,7 @@ const init = async (provider, walletName, account, chainId, targetChainId) => {
     return
   }
 
-  chainIdRef.value = chainId
-  accountRef.value = account
-
-  updateBalance()
-  replaceWalletClient(chainId, account)
+  await update(chainId, account)
 }
 
 const clear = () => {
@@ -83,56 +79,58 @@ const clear = () => {
 
 const reset = () => {
   accountRef.value = ""
-  chainIdRef.value = 0
-  balanceRef.value = 0n
+  walletChainIdRef.value = 0
+  nativeBalanceRef.value = 0n
+  chainSupportedRef.value = false
   walletNameRef.value = ""
   walletClient = null
-  requireSwitchChainRef.value = false
 }
 
-const checkChain = chainId => {
+/**
+ * @param {number} chainId
+ * @param {string} account
+ */
+const update = async (chainId, account = '') => {
   if (!isSupportChain(chainId)) {
-    console.log(`chainId "${chainId}" not support`)
     reset()
+    console.warn(`chainId "${chainId}" not support`)
     return false
   }
 
-  return true
-}
-
-const update = async (chainId, account = '') => {
   if (!account) {
     [account] =  await getAccounts(cachedProvider)
   }
-
-  requireSwitchChainRef.value = false
   accountRef.value = account
-  chainIdRef.value = chainId
+  walletChainIdRef.value = chainId
+  chainSupportedRef.value = true
 
-  updateBalance()
+  updateNativeBalance()
   replaceWalletClient(chainId, account)
 }
 
-const onConnect = async (connectInfo) => {
-  let { chainId } = connectInfo
+/**
+ * @param {number} chainId
+ */
+const addChain = async chainId => {
+  const { id, name, nativeCurrency, rpcUrls, blockExplorers } = getChain(chainId)
+  const params = [
+    {
+      chainId: toHex(id),
+      chainName: name,
+      nativeCurrency,
+      rpcUrls: rpcUrls.default.http,
+      blockExplorerUrls: blockExplorers ? Object.values(blockExplorers).map(({ url }) => url) : undefined,
+    },
+  ]
+  await cachedProvider.request({ method: 'wallet_addEthereumChain', params })
+}
 
-  chainId = parseInt(chainId, 16)
-  if (!checkChain(chainId)) {
-    requireSwitchChainRef.value = true
-    return
-  }
-
-  await update(chainId)
+const onConnect = async ({ chainId }) => {
+  await update(parseInt(chainId, 16))
 }
 
 const onChainChanged = async (chainId) => {
-  chainId = parseInt(chainId, 16)
-  if (!checkChain(chainId)) {
-    requireSwitchChainRef.value = true
-    return
-  }
-
-  await update(chainId)
+  await update(parseInt(chainId, 16))
 }
 
 const onAccountsChanged = async (accounts) => {
@@ -142,11 +140,6 @@ const onAccountsChanged = async (accounts) => {
   }
 
   const chainId = await getChainId(cachedProvider)
-  if (!checkChain(chainId)) {
-    requireSwitchChainRef.value = true
-    return
-  }
-
   await update(chainId, accounts[0])
 }
 
@@ -191,23 +184,6 @@ export const disconnect = () => {
 /**
  * @param {number} chainId
  */
-const addChain = async chainId => {
-  const { id, name, nativeCurrency, rpcUrls, blockExplorers } = getChain(chainId)
-  const params = [
-    {
-      chainId: toHex(id),
-      chainName: name,
-      nativeCurrency,
-      rpcUrls: rpcUrls.default.http,
-      blockExplorerUrls: blockExplorers ? Object.values(blockExplorers).map(({ url }) => url) : undefined,
-    },
-  ]
-  await cachedProvider.request({ method: 'wallet_addEthereumChain', params })
-}
-
-/**
- * @param {number} chainId
- */
 export const switchChain = async chainId => {
   if (!cachedProvider) {
     throw new Error("Wallet not connected")
@@ -229,35 +205,35 @@ export const switchChain = async chainId => {
  */
 export const getWalletClient = () => walletClient
 
-export const updateBalance = async () => {
-  if (!chainIdRef.value || !accountRef.value) {
-    balanceRef.value = 0n
+export const updateNativeBalance = async () => {
+  if (!walletChainIdRef.value || !accountRef.value) {
+    nativeBalanceRef.value = 0n
     return
   }
 
-  balanceRef.value = await balanceOf(getPublicClient(chainIdRef.value), "", accountRef.value)
+  nativeBalanceRef.value = await balanceOf(getPublicClient(walletChainIdRef.value), "", accountRef.value)
 }
-
-const readonlyChainId = readonly(chainIdRef)
-const readonlyAccount = readonly(accountRef)
-const readonlyBalance = readonly(balanceRef)
-const readonlyWalletName= readonly(walletNameRef)
-const readonlyRequireSwitchChain = readonly(requireSwitchChainRef)
 
 /**
  * @type {import('vue').ComputedRef<{name: string, symbol: string, decimals: number}> }
  */
-export const nativeCurrency = computed(() => getNativeCurrency(chainIdRef.value))
+export const nativeCurrency = computed(() => getNativeCurrency(walletChainIdRef.value))
 
 /**
  * @type {import('vue').ComputedRef<string> }
  */
-export const chainName = computed(() => getChainName(chainIdRef.value) || walletClient?.chain.name)
+export const chainName = computed(() => getChainName(walletChainIdRef.value) || walletClient?.chain.name)
+
+const readonlyWalletChainId = readonly(walletChainIdRef)
+const readonlyAccount = readonly(accountRef)
+const readonlyNativeBalance = readonly(nativeBalanceRef)
+const readonlyWalletName= readonly(walletNameRef)
+const readonlyChainSupported = readonly(chainSupportedRef)
 
 export {
-  readonlyChainId as chainId,
+  readonlyWalletChainId as walletChainId,
   readonlyAccount as account,
-  readonlyBalance as balance,
+  readonlyNativeBalance as nativeBalance,
   readonlyWalletName as walletName,
-  readonlyRequireSwitchChain as requireSwitchChain,
+  readonlyChainSupported as chainSupported,
 }

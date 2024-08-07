@@ -29,8 +29,8 @@
       <div class="mt-6 px-4 flex justify-center gap-6" v-if="profile">
         <div class="flex-y-center">
           <n-text depth="1">Points:</n-text>
-          <n-text class="ml-2 mr-1">{{ profile.score }}</n-text>
-          <i-my-score class="size-4" />
+          <n-text class="ml-2 mr-1">{{ profile.points }}</n-text>
+          <i-my-points class="size-4" />
         </div>
         <div class="flex-y-center cursor-pointer" @click="onShare">
           <n-text depth="1">Referral:</n-text>
@@ -53,7 +53,8 @@ import shortString from "@/utils/shortString"
 import { getAccountUrl } from "@/utils/chain"
 import { copyText } from "@/utils/clipboard"
 import { logout } from "@/api"
-import { account, chainId, disconnect } from '@/hooks/useWallet'
+import { account, disconnect } from '@/hooks/useWallet'
+import { appChainId } from "@/hooks/useAppState"
 import { getExplorerUrl } from "@/hooks/useChains"
 import { clearAuth } from "@/hooks/useAuth"
 import { profile } from "@/hooks/useUser"
@@ -71,10 +72,12 @@ const props = defineProps({
   },
 })
 
-const accountUrl = computed(() => getAccountUrl(account.value, getExplorerUrl(chainId.value)))
+const accountUrl = computed(() => getAccountUrl(account.value, getExplorerUrl(appChainId.value)))
 const shareUrl = computed(() => {
-  const { protocol, host } = window.location
-  return `${protocol}//${host}/?referral=${profile.value.referral}`
+  const url = new URL(window.location.href)
+  url.searchParams.append("referral", profile.value.referral)
+
+  return url.href
 })
 
 const onShare = async () => {

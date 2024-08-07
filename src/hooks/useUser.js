@@ -33,12 +33,20 @@ export const saveReferral = value => {
   setStorage(CACHE_REFERRAL, value)
 }
 
+/**
+ * @param {string} referral
+ */
 export const canAcceptInvite = referral => {
-  if (!profileRef.value || profileRef.value.inviter) {
+  if (!profileRef.value) {
     return false
   }
 
-  return referral !== profileRef.value.referral
+  const { inviter, invitees, referral: myReferral } = profileRef.value
+  if (inviter || invitees) {
+    return false
+  }
+
+  return referral !== myReferral
 }
 
 export const profile = readonly(profileRef)

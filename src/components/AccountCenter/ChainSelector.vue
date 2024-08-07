@@ -2,8 +2,8 @@
   <div>
     <n-popselect class="w-[240px] max-h-[360px] rounded-lg" trigger="click" :value="current.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
       <ZActionButton class="size-9 relative " aria-label="select chain">
-        <i-ion-warning v-if="requireSwitchChain" class="size-4 text-warning" />
-        <ZChainIcon v-else class="size-6" :chain-id="current.value" />
+        <ZChainIcon v-if="!walletChainId || chainSupported" class="size-6" :chain-id="current.value" />
+        <i-ion-warning v-else class="size-4 text-warning" />
         <div class="absolute right-[2px] bottom-[2px]">
           <DownArrow class="!size-3" />
         </div>
@@ -15,8 +15,8 @@
 <script setup>
 import { ref, computed, h, watch, onMounted, onBeforeUnmount } from "vue"
 import { getChainName, getChains, isSupportChain } from "@/hooks/useChains"
-import { chainId, requireSwitchChain } from "@/hooks/useWallet"
-import { selectedChainId, setSelectedChainId } from "@/hooks/useSelectedChain"
+import { walletChainId, chainSupported } from "@/hooks/useWallet"
+import { appChainId, setAppChainId } from "@/hooks/useAppState"
 import { useNotification } from "naive-ui"
 import ZActionButton from "@/components/ZActionButton.vue"
 import DownArrow from "@/components/Arrow/DownArrow.vue"
@@ -48,34 +48,50 @@ const options = getChains().map(chain => {
   }
 })
 
-const current = computed(() => options.find(it => it.value === selectedChainId.value))
+const current = computed(() => options.find(it => it.value === appChainId.value))
 
 const switching = ref(false)
+
 /**
  * @param {number} chainId
  */
 const onSwitchNetwork = chainId => doSwitchNetwork(notification, switching, chainId)
 
-const onSelect = value => {
-  setSelectedChainId(value)
+/**
+ * @param {number} chainId
+ */
+const onSelect = chainId => {
+  if (appChainId.value !== chainId) {
+    setAppChainId(chainId)
+  }
 
-  if (!chainId.value || chainId.value === value) {
+  if (!walletChainId.value || walletChainId.value === chainId) {
     return
   }
 
-  onSwitchNetwork(value)
+  onSwitchNetwork(chainId)
 }
 
-const onChainChange = (newChainId) => {
+/**
+ * @param {number} newChainId
+ * @param {number} oldChainId
+ */
+const onChainChange = (newChainId, oldChainId) => {
   if (!newChainId || !isSupportChain(newChainId)) {
-      return
-    }
+    return
+  }
 
-    setSelectedChainId(newChainId)
+  if (!oldChainId && newChainId !== appChainId.value) {
+    onSwitchNetwork(appChainId.value)
+  } else {
+    if (appChainId.value !== newChainId) {
+      setAppChainId(newChainId)
+    }
+  }
 }
 
 onMounted(() => {
-  const stopWatch = watch(chainId, onChainChange)
+  const stopWatch = watch(walletChainId, onChainChange)
   onBeforeUnmount(stopWatch)
 })
 </script>

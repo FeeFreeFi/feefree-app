@@ -10,7 +10,6 @@
 import {
   PAGE_HOME,
   PAGE_POOL_HOME,
-  PAGE_EXCHANGE,
   PAGE_NFT_HOME,
   PAGE_FAUCET,
 } from "@/config"
@@ -21,7 +20,6 @@ import NavMenu from "./NavMenu.vue"
 const links = [
   { to: { name: PAGE_HOME }, label: "Home", icon: "home.svg" },
   { to: { name: PAGE_POOL_HOME }, label: "Pool", icon: "pool.svg" },
-  { to: { name: PAGE_EXCHANGE }, label: "Exchange", icon: "exchange.svg" },
   { to: { name: PAGE_NFT_HOME }, label: "NFT", icon: "nft.svg" },
 ]
 </script>

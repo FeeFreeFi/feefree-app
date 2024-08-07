@@ -37,11 +37,12 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
 import { useRoute } from "vue-router"
 import { useNotification } from "naive-ui"
 import { parseAmount, toAmount } from "@/utils/bn"
+import { getAmount0FromAmount1AndSqrtPrice, getAmount1FromAmount0AndSqrtPrice } from "@/utils/uniswap"
 import { screen } from "@/hooks/useScreen"
-import { account, updateBalance as updateNativeBalance } from "@/hooks/useWallet"
+import { account, updateNativeBalance } from "@/hooks/useWallet"
 import { getPublicClient } from "@/hooks/useClient"
 import { getRouterAddress } from "@/hooks/useRouter"
-import { quoteAddLiquidity, getPool, getAmount0FromSqrtPrice, getAmount1FromSqrtPrice, getSupportedChains } from "@/hooks/useSwap"
+import { quoteAddLiquidity, getPool, getSupportedChains } from "@/hooks/useSwap"
 import { createInterval } from "@/hooks/useTimer"
 import { createPoolState } from "@/hooks/usePoolState"
 import { createPriceState } from "@/hooks/usePrices"
@@ -173,7 +174,7 @@ const onAmount0Change = () => {
     return
   }
 
-  const amount = getAmount1FromSqrtPrice(poolState.value.sqrtPriceX96, amount0.value)
+  const amount = getAmount1FromAmount0AndSqrtPrice(amount0.value, poolState.value.sqrtPriceX96)
   inputAmount1.value = toAmount(amount, currency1.decimals, currency1.decimals)
   debounceUpdateQuoteData()
 
@@ -184,7 +185,7 @@ const onAmount1Change = () => {
     return
   }
 
-  const amount = getAmount0FromSqrtPrice(poolState.value.sqrtPriceX96, amount1.value)
+  const amount = getAmount0FromAmount1AndSqrtPrice(amount1.value, poolState.value.sqrtPriceX96)
   inputAmount0.value = toAmount(amount, currency0.decimals, currency0.decimals)
   debounceUpdateQuoteData()
 

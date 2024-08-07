@@ -152,9 +152,10 @@ export interface Profile {
   id: string;
   account: string;
   nickname: string;
-  score: number;
+  points: number;
   referral: string;
   inviter: string;
+  invitees: number;
 }
 
 export interface JwtToken {

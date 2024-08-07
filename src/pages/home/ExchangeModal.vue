@@ -2,13 +2,13 @@
   <ActionModal v-model="modelValue">
     <div class="flex flex-col" v-if="!isFail">
       <div class="flex-center gap-1">
-        <div class="flex-center gap-1 overflow-hidden">
-          <ZTokenIcon :token="data.inputToken" />
+        <div class="flex-center gap-1">
+          <ZPlusTokenIcon :token="data.inputToken" plus-class="!size-[10px]" />
           <ZTokenBalance class="!font-normal text-basic/90" :token="data.inputToken" :balance="data.amountIn" />
         </div>
         <RightArrow />
-        <div class="flex-center gap-1 overflow-hidden">
-          <ZTokenIcon :token="data.outputToken" />
+        <div class="flex-center gap-1">
+          <ZPlusTokenIcon :token="data.outputToken" plus-class="!size-[10px]" />
           <ZTokenBalance class="!font-normal text-basic/90" :token="data.outputToken" :balance="data.amountOut" />
         </div>
       </div>
@@ -22,7 +22,7 @@
 <script setup>
 import { computed } from "vue"
 import ActionModal from "@/components/ActionModal/index.vue"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
+import ZPlusTokenIcon from "@/components/ZPlusTokenIcon.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import RightArrow from "@/components/Arrow/RightArrow.vue"
 

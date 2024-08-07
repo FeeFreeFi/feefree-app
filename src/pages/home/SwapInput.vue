@@ -9,7 +9,7 @@
     </div>
     <div class="p-4 flex flex-col bg-card rounded-lg">
       <div class="mb-2 sm:px-2 flex-y-center gap-2">
-        <n-input-number class="flex-1 swap-amount-input" v-model:value="amount" :min="0" :max="maxAmount" placeholder="0.0" :readonly="!isSupported" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
+        <n-input-number class="flex-1 swap-amount-input" v-model:value="amount" :min="0" :max="maxAmount" placeholder="0.0" :input-props="{name: 'give'}" :readonly="!isSupported" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
         <TokenSelectorTrigger :token="token" :disabled="!isSupported" @select="onTriggerSelect" />
       </div>
       <n-divider class="!my-0" />
@@ -22,8 +22,8 @@
 import { ref, watch, onMounted, onBeforeUnmount, computed } from "vue"
 import { parseAmount, toAmount } from "@/utils/bn"
 import { account } from "@/hooks/useWallet"
-import { isSupportChain } from "@/hooks/useExchange"
-import { selectedChainId } from "@/hooks/useSelectedChain"
+import { isSupportChain } from "@/hooks/useSwap"
+import { appChainId } from "@/hooks/useAppState"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import AmountButtonGroup from "@/components/AmountButtonGroup.vue"
 import TokenSelectorTrigger from "@/components/TokenSelector/TokenSelectorTrigger.vue"
@@ -52,7 +52,7 @@ const amount = ref(parseFloat(modelValue.value) || null)
 const maxAmount = computed(() => account.value && props.token ? toAmount(props.balance, props.token.decimals) : undefined)
 const amountValue = computed(() => props.token ? parseAmount(amount.value || 0, props.token.decimals) : 0n)
 
-const isSupported = computed(() => isSupportChain(selectedChainId.value))
+const isSupported = computed(() => isSupportChain(appChainId.value))
 
 const onInputBlur = () => {
   if (!isSupported.value) {

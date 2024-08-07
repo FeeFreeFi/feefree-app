@@ -8,7 +8,6 @@ import {
   PAGE_POOL_POSITION,
   PAGE_POOL_DEPOSIT,
   PAGE_POOL_WITHDRAW,
-  PAGE_EXCHANGE,
   PAGE_NFT_HOME,
   PAGE_FAUCET,
   PAGE_NOT_FOUND,
@@ -76,12 +75,6 @@ const routes = [
             component: () => import('@/pages/pool/detail/withdraw/index.vue'),
           },
         ]
-      },
-      {
-        path: "exchange",
-        name: PAGE_EXCHANGE,
-        component: () => import('@/pages/exchange/index.vue'),
-        meta: { title: APP_PRODUCT_NAME },
       },
       {
         path: "nft",

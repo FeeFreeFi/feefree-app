@@ -1,9 +1,9 @@
 <template>
   <div class="flex-y-center">
-    <ZTokenIcon :token="inputToken" />
+    <ZPlusTokenIcon :token="inputToken" plus-class="!size-[10px]" />
     <n-text class="ml-1">1 {{ inputToken.symbol }}</n-text>
     <n-text class="mx-2">=</n-text>
-    <ZTokenIcon :token="outputToken" />
+    <ZPlusTokenIcon :token="outputToken" plus-class="!size-[10px]" />
     <n-text class="ml-1">{{ priceValue }} {{ outputToken.symbol }}</n-text>
   </div>
 </template>
@@ -11,7 +11,8 @@
 <script setup>
 import { computed } from "vue"
 import formatPrice from "@/utils/formatPrice"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
+// import ZTokenIcon from "@/components/ZTokenIcon.vue"
+import ZPlusTokenIcon from '@/components/ZPlusTokenIcon.vue'
 
 const props = defineProps({
   inputToken: {

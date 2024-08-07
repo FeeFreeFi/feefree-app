@@ -6,13 +6,16 @@
 
 <script setup>
 import { watch, onMounted, onBeforeUnmount } from "vue"
+import { useRoute } from "vue-router"
 import { account, autoConnect } from "@/hooks/useWallet"
 import { findProvider } from "@/hooks/useProviders"
 import { visibility } from "@/hooks/usePage"
 import { recentWallet } from "@/hooks/useConnecting"
 import { login, refreshToken } from "@/hooks/useLogin"
 import { clearAuth, isMatchAccount, getAccessToken, auth, loadAuth } from "@/hooks/useAuth"
-import { fetchProfile, resetProfile } from "@/hooks/useUser"
+import { fetchProfile, resetProfile, saveReferral } from "@/hooks/useUser"
+
+const route = useRoute()
 
 const doAutoConnect = async () => {
   if (!recentWallet.value) {
@@ -66,6 +69,10 @@ const watchAccount = () => {
 onMounted(() => {
   loadAuth()
   doAutoConnect()
+
+  const { referral } = route.query
+  console.log(`referral: ${referral}`)
+  referral && saveReferral(referral)
 })
 
 onMounted(() => {

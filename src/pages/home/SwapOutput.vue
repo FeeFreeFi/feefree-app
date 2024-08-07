@@ -30,8 +30,8 @@
 <script setup>
 import { computed } from "vue"
 import { byDecimals, fromValue } from "@/utils/bn"
-import { selectedChainId } from "@/hooks/useSelectedChain"
-import { isSupportChain } from "@/hooks/useExchange"
+import { appChainId } from "@/hooks/useAppState"
+import { isSupportChain } from "@/hooks/useSwap"
 import { getFee } from "@/hooks/useRouter"
 import { screen } from "@/hooks/useScreen"
 import { getNativeCurrency } from "@/hooks/useChains"
@@ -73,7 +73,7 @@ const props = defineProps({
 const emit = defineEmits(["select"])
 
 // const showValueChange = ref(true)
-const isSupported = computed(() => isSupportChain(selectedChainId.value))
+const isSupported = computed(() => isSupportChain(appChainId.value))
 
 const fee = computed(() => props.outputToken ? getFee(props.outputToken.chainId) : 0n)
 const gasToken = computed(() => props.outputToken ? getNativeCurrency(props.outputToken.chainId) : null)

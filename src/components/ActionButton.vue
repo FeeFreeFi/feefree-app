@@ -9,7 +9,7 @@
 <script setup>
 import { ref, computed } from "vue"
 import { useNotification } from "naive-ui"
-import { account, chainId as currentChainId } from "@/hooks/useWallet"
+import { account, walletChainId } from "@/hooks/useWallet"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
 import ZButton from "@/components/ZButton.vue"
@@ -36,7 +36,7 @@ const props = defineProps({
 
 const switching = ref(false)
 
-const requireSwitchChain = computed(() => currentChainId.value !== props.chainId)
+const requireSwitchChain = computed(() => walletChainId.value !== props.chainId)
 
 const defaultChainId = computed(() => props.chainId ? props.chainId : props.chains[0].chainId)
 
