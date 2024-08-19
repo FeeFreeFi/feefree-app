@@ -153,6 +153,9 @@ export interface Profile {
   account: string;
   nickname: string;
   points: number;
+  level: number;
+  exp: number;
+  nextExp: number;
   referral: string;
   inviter: string;
   invitees: number;

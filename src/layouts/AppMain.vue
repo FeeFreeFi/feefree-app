@@ -71,7 +71,6 @@ onMounted(() => {
   doAutoConnect()
 
   const { referral } = route.query
-  console.log(`referral: ${referral}`)
   referral && saveReferral(referral)
 })
 
