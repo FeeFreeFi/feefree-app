@@ -1,9 +1,10 @@
 import globals from "globals"
 import pluginJs from "@eslint/js"
 import pluginVue from 'eslint-plugin-vue'
+import pluginJsdoc from 'eslint-plugin-jsdoc'
 
 /**
- * @type {import('eslint').Linter.FlatConfig[]}
+ * @type {import('eslint').Linter.Config[]}
  */
 export default [
   {
@@ -24,4 +25,12 @@ export default [
       "vue/attributes-order": "off",
     },
   },
+  pluginJsdoc.configs['flat/recommended'],
+  {
+    rules: {
+      "jsdoc/require-param-description": "off",
+      "jsdoc/require-returns-description": "off",
+      "jsdoc/require-returns": "off",
+    }
+  }
 ]

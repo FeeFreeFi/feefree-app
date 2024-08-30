@@ -31,7 +31,7 @@ import ZButton from "@/components/ZButton.vue"
 import ViewTransaction from "@/components/ViewTransaction.vue"
 
 /**
- * @type {import('vue').ModelRef<{show:boolean, state: 'initial'|'pending'|'success'|'fail', title:string, data:Object, tx:{hash:string, chainId:number, explorerUrl:string}, error:string}>}
+ * @type {import('vue').ModelRef<{show:boolean, state: 'initial'|'pending'|'success'|'fail', title:string, data:object, tx:{hash:string, chainId:number, explorerUrl:string}, error:string}>}
  */
 const modelValue = defineModel({
   type: Object,

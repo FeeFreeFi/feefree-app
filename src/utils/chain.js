@@ -1,5 +1,5 @@
 /**
- * @param {string} address
+ * @param {string} hash
  * @param {string} explorerUrl
  */
 export const getTransactionUrl = (hash, explorerUrl) => {

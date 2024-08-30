@@ -171,3 +171,13 @@ export interface Auth {
   accessToken: JwtToken;
   refreshToken: JwtToken;
 }
+
+export interface ClaimData {
+  chainId: number;
+  amount: string;
+  nonce: string;
+  proof: string[];
+  root: string;
+  deadline: number;
+  updatedAt: string;
+}
