@@ -4,6 +4,7 @@ import { ref } from "vue"
   * @param {import('vue').Ref} state
   * @param {string} name
   * @param {string} key
+  * @param {*} defaultValue
   */
 const getValue = (state, name, key, defaultValue = undefined) => {
   const cache = state.value[name] || {}
@@ -14,6 +15,7 @@ const getValue = (state, name, key, defaultValue = undefined) => {
  * @param {import('vue').Ref} state
  * @param {string} name
  * @param {string[]} keys
+ * @param {*} defaultValue
  */
 const getValues = (state, name, keys, defaultValue = undefined) => {
   const cache = state.value[name] || {}
@@ -61,7 +63,7 @@ export const createCache = () => {
     getValues: (name, keys, defaultValue = undefined) => getValues(state, name, keys, defaultValue),
     /**
      * @param {string} name
-     * @param {[key:string]: any} values
+     * @param {{[key:string]: any}} values
      */
     setValues: (name, values) => setValues(state, name, values),
     reset: () => reset(state),

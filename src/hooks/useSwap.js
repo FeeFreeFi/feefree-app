@@ -388,7 +388,7 @@ export const quoteSwap = async (publicClient, address, paths, amountSpecified) =
 }
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
  * @param {string} address
  * @param {string[]} paths
  * @param {bigint[]} sqrtPriceX96Limits
@@ -444,7 +444,7 @@ export const quoteAddLiquidity = async (publicClient, address, currency0, curren
 }
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
  * @param {string} address
  * @param {string} currency0
  * @param {string} currency1
@@ -498,7 +498,7 @@ export const quoteRemoveLiquidity = async (publicClient, address, currency0, cur
 }
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
  * @param {string} address
  * @param {string} currency0
  * @param {string} currency1
@@ -520,7 +520,7 @@ export const removeLiquidity = async ({ publicClient, walletClient }, address, c
 }
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
  * @param {string} address
  * @param {string} currency
  * @param {bigint} amountSpecified

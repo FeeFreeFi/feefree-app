@@ -6,38 +6,37 @@ import { BigNumber } from "bignumber.js"
 const toBigInt = value => BigInt(value.toString(10))
 
 /**
- * @param {BigNumber|string|number|BigInt} value
+ * @param {BigNumber|string|number|bigint} value
  */
 export const fromValue = value => new BigNumber(value.toString(10))
 
 /**
- * @param {BigNumber|string|number|BigInt} value
+ * @param {BigNumber|string|number|bigint} value
  * @param {number} decimals
  */
 export const fromDecimals = (value, decimals) => new BigNumber(value.toString(10)).times(10 ** decimals)
 
 /**
- * @param {BigNumber|string|number|BigInt} value
+ * @param {BigNumber|string|number|bigint} value
  * @param {number} decimals
  */
 export const byDecimals = (value, decimals) => new BigNumber(value.toString(10)).div(10 ** decimals)
 
 /**
- * @param {BigNumber|string|number|BigInt} value
+ * @param {BigNumber|string|number|bigint} value
  * @param {number} decimals
  */
 export const parseAmount = (value, decimals) => toBigInt(fromDecimals(value, decimals).dp(0))
 
 /**
- * @param {BigNumber|string|number|BigInt} value
+ * @param {BigNumber|string|number|bigint} value
  * @param {number} decimals
  * @param {number|undefined} dp
  */
 export const toAmount = (value, decimals, dp = undefined) => byDecimals(value, decimals).dp(dp === undefined ? decimals : dp).toString(10)
 
 /**
- * @param {BigNumber|string|number|BigInt} value
- * @param {number} decimals
+ * @param {BigNumber|string|number|bigint} value
  * @param {number|undefined} dp
  */
 export const toBalance = (value, dp = 0) => fromValue(value).dp(dp).toFormat()

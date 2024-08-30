@@ -41,7 +41,7 @@ export const getTokens = () => CONFIG.tokens
 export const getFaucetAddress = () => CONFIG.faucet
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
  * @param {string} address
  * @param {string} token
  * @param {string} to

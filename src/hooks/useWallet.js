@@ -35,6 +35,7 @@ const getChainId = async provider => {
 }
 
 /**
+ * @param {import('viem').EIP1193Provider} provider
  * @returns {Promise<string[]>}
  */
 const getAccounts = async provider => {

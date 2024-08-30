@@ -45,7 +45,7 @@ export const doCheckApproval = async (checking, check) => {
  * @param {import('vue').Ref<boolean>} approved
  * @param {import('@/types').Token} token
  * @param {string} owner
- * @param {address} spender
+ * @param {string} spender
  * @param {bigint} amount
  */
 export const doCheckAllowance = async (approved, token, owner, spender, amount) => {
@@ -58,7 +58,7 @@ export const doCheckAllowance = async (approved, token, owner, spender, amount) 
  * @param {import('vue').Ref<import('@/types').ApprovalAction>} action
  * @param {import('vue').Ref<boolean>} approving
  * @param {import('@/types').Token} token
- * @param {address} spender
+ * @param {string} spender
  * @param {bigint} amount
  */
 export const doApproval = async (action, approving, token, spender, amount) => {

@@ -357,7 +357,7 @@ export const getSupportedChains = () => SUPPORTED_CHAINS
 export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainId === chainId)
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
  * @param {string} address
  * @param {string} to
  * @param {bigint} price

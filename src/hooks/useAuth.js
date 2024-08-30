@@ -93,8 +93,8 @@ export const loadAuth = () => {
 }
 
 /**
- * @param {{accessToken:string, refreshToken:string}}
-*/
+ * @param {{accessToken:string, refreshToken:string}} auth
+ */
 export const setAuth = ({ accessToken, refreshToken }) => {
   authRef.value = parseAuth(accessToken, refreshToken)
 

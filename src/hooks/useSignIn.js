@@ -2,7 +2,7 @@ import { createSiweMessage, generateSiweNonce } from 'viem/siwe'
 import { SIGN_EXPIRE } from '@/config'
 
 /**
- * @param {{walletClient: import('viem').WalletClient}}
+ * @param {{walletClient: import('viem').WalletClient}} client
  * @param {number} chainId
  * @param {string} domain
  * @param {string} uri

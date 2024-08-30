@@ -236,7 +236,7 @@ export const allowance = async (publicClient, address, owner, spender) => {
 }
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient, overrides: Object}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient, overrides: object}} client
  * @param {string} address
  * @param {string} spender
  * @param {bigint} value
@@ -256,7 +256,7 @@ export const approve = async ({ publicClient, walletClient, overrides }, address
 }
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient, overrides: Object}}
+ * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient, overrides: object}} client
  * @param {string} address
  * @param {string} to
  * @param {bigint} value

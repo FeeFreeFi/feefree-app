@@ -13,6 +13,10 @@ const COLORS = [
   "#F19E02", // gold
 ]
 
+/**
+ * @param {number} size
+ * @param {number|number[]} seed
+ */
 const genSvg = (size, seed) => {
   const generator = new MersenneTwister(seed)
 
@@ -29,12 +33,23 @@ const genSvg = (size, seed) => {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}">${rects.join("")}</svg>`
 }
 
+/**
+ * @param {import('mersenne-twister')} generator
+ * @param {string[]} colors
+ */
 function genColor(generator, colors) {
   generator.random()
   const idx = Math.floor(colors.length * generator.random())
   return colors.splice(idx, 1)[0]
 }
 
+/**
+ * @param {import('mersenne-twister')} generator
+ * @param {string[]} colors
+ * @param {number} size
+ * @param {number} i
+ * @param {number} total
+ */
 function genShape(generator, colors, size, i, total) {
   const firstRot = generator.random()
   const angle = Math.PI * 2 * firstRot
@@ -52,6 +67,10 @@ function genShape(generator, colors, size, i, total) {
   return `<rect width="${size}" height="${size}" fill="${fill}" transform="${transform}" />`
 }
 
+/**
+ * @param {string} hex
+ * @param {number} degrees
+ */
 function colorRotate(hex, degrees) {
   const hsl = hexToHSL(hex)
   let hue = hsl.h
@@ -61,6 +80,9 @@ function colorRotate(hex, degrees) {
   return HSLToHex(hsl)
 }
 
+/**
+ * @param {string} hex
+ */
 function hexToHSL(hex) {
   // Convert hex to RGB first
   let r = "0x" + hex[1] + hex[2]
@@ -94,6 +116,9 @@ function hexToHSL(hex) {
   return { h, s, l }
 }
 
+/**
+ * @param {{h:number, s:number, l:number}} hsl
+ */
 function HSLToHex(hsl) {
   let { h, s, l } = hsl
   s /= 100
@@ -144,6 +169,10 @@ function HSLToHex(hsl) {
   return "#" + r + g + b
 }
 
+/**
+ * @param {string} address
+ * @param {number} size
+ */
 const jazzicon = (address, size = 64) => {
   const svg = genSvg(size, parseInt(address.slice(2, 10), 16))
   return `data:image/svg+xml;base64,${btoa(svg)}`
