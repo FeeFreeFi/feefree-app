@@ -14,7 +14,7 @@ const service = createFetch({
 /**
  * @param {import('axios').AxiosRequestConfig} config
  * @param {boolean} withToken
- * @returns {Promise<{code:number, data:any, message:string}>}
+ * @returns {Promise<import('@/types').GenericsResponse>}
  */
 const fetch = async (config, withToken = true) => {
   if (withToken) {
@@ -58,8 +58,29 @@ const fetch = async (config, withToken = true) => {
 }
 
 /**
- * @param {{account:string, chainId:number, nonce:string, timestamp:number, expire:number, signature:string}} data
- * @returns {Promise<{code:number, message:string, data:{accessToken:string, refreshToken:string}}>}
+ * @returns {Promise<import("@/types").PricesResponse>}
+ */
+export const getPrices = () => {
+  return fetch({
+    url: "/general/prices",
+    data: {},
+  }, false)
+}
+
+/**
+ * @param {{referral:string}} data
+ * @returns {Promise<import("@/types").InviterResponse>}
+ */
+export const getInviter = data => {
+  return fetch({
+    url: "/general/inviter",
+    data,
+  }, false)
+}
+
+/**
+ * @param {import("@/types").SignatureData} data
+ * @returns {Promise<import("@/types").LoginResponse>}
  */
 export const login = data => {
   return fetch({
@@ -70,17 +91,17 @@ export const login = data => {
 
 /**
  * @param {{refreshToken:string}} data
- * @returns {Promise<{code:number, message:string, data:{accessToken:string, refreshToken:string}}>}
+ * @returns {Promise<import("@/types").LoginResponse>}
  */
 export const refreshToken = data => {
   return fetch({
-    url: "/sys/refreshToken",
+    url: "/sys/refresh",
     data,
   }, false)
 }
 
 /**
- * @returns {Promise<{code:number, message:string}>}
+ * @returns {Promise<import("@/types").GeneralResponse>}
  */
 export const logout = () => {
   return fetch({
@@ -90,19 +111,9 @@ export const logout = () => {
 }
 
 /**
- * @returns {Promise<{code:number, message:string, data:{[name:string]:[price:number]}}>}
+ * @returns {Promise<import("@/types").ProfileResponse>}
  */
-export const getPrices = () => {
-  return fetch({
-    url: "/general/prices",
-    data: {},
-  }, false)
-}
-
-/**
- * @returns {Promise<{code:number, message:string, data:import('@/types').Profile}>}
- */
-export const getUserProfile = () => {
+export const getProfile = () => {
   return fetch({
     url: "/user/profile",
     data: {},
@@ -110,10 +121,21 @@ export const getUserProfile = () => {
 }
 
 /**
- * @param {{nickname:string}} data
- * @returns {Promise<{code:number, message:string}>}
+ * @param {{referral:string}} data
+ * @returns {Promise<import("@/types").GeneralResponse>}
  */
-export const updateUserInfo = data => {
+export const acceptInvite = data => {
+  return fetch({
+    url: "/user/accept",
+    data,
+  })
+}
+
+/**
+ * @param {{nickname:string}} data
+ * @returns {Promise<import("@/types").GeneralResponse>}
+ */
+export const updateProfile = data => {
   return fetch({
     url: "/user/update",
     data,
@@ -122,54 +144,32 @@ export const updateUserInfo = data => {
 
 /**
  * @param {{page:number, limit:number}} data
- * @returns {Promise<{code:number, message:string, data:{total:number, list:{id:string, account:string, nickname:string, acceptAt:string}[]}}>}
+ * @returns {Promise<import('@/types').FansResponse>}
  */
-export const getInvitedUsers = data => {
+export const getFans = data => {
   return fetch({
-    url: "/user/invited",
+    url: "/user/fans",
     data,
-  })
-}
-
-/**
- * @param {{referral:string}} data
- * @returns {Promise<{code:number, message:string, data:{id:string, account:string, nickname:string}}>}
- */
-export const getInviter = data => {
-  return fetch({
-    url: "/referral/inviter",
-    data,
-  })
-}
-
-/**
- * @param {{referral:string}} data
- * @returns {Promise<{code:number, message:string}>}
- */
-export const acceptInvite = data => {
-  return fetch({
-    url: "/referral/accept",
-    data,
-  })
-}
-
-/**
- * @returns {Promise<{code:number, message:string, data:import('@/types').ClaimData[]}>}
- */
-export const getClaims = () => {
-  return fetch({
-    url: "/claim/list",
-    data: {},
   })
 }
 
 /**
  * @param {{page:number, limit:number}} data
- * @returns {Promise<{code:number, message:string, data:{total:number, list:{chainId:number, transactionHash:string, amount:string, claimedAt:string}[]}[]}>}
+ * @returns {Promise<import("@/types").ClaimsResponse>}
  */
-export const getClaimHistory = data => {
+export const getClaims = data => {
   return fetch({
-    url: "/claim/history",
+    url: "/user/claims",
     data,
+  })
+}
+
+/**
+ * @returns {Promise<import("@/types").RebatesResponse>}
+ */
+export const getRebates = () => {
+  return fetch({
+    url: "/user/rebates",
+    data: {},
   })
 }

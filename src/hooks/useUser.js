@@ -1,4 +1,4 @@
-import { getUserProfile } from "@/api"
+import { getProfile } from "@/api"
 import { CACHE_REFERRAL } from "@/config"
 import { setStorage } from "@/utils/storage"
 import { readonly, ref } from "vue"
@@ -11,7 +11,7 @@ const profileRef = ref(null)
 const referralRef = ref('')
 
 export const fetchProfile = async () => {
-  const res = await getUserProfile()
+  const res = await getProfile()
   if (res.code !== 0) {
     console.log(res.message)
     return false
@@ -41,8 +41,8 @@ export const canAcceptInvite = referral => {
     return false
   }
 
-  const { inviter, invitees, referral: myReferral } = profileRef.value
-  if (inviter || invitees) {
+  const { inviter, fans, referral: myReferral } = profileRef.value
+  if (inviter || fans) {
     return false
   }
 

@@ -3,7 +3,7 @@
     <div class="flex mb-4 justify-between">
       <!-- All Pools -->
       <div class="flex-center gap-3">
-        <i-my-pools class="size-6" />
+        <i-ff-pools class="size-6" />
         <n-text class="text-base font-semibold">All Pools</n-text>
       </div>
       <!-- TVL -->

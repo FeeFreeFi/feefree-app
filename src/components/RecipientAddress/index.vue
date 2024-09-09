@@ -3,7 +3,7 @@
     <div class="flex-y-center justify-between">
       <n-text depth="1">Recipient Address</n-text>
       <div v-if="!modelValue" class="flex-y-center gap-2" :class="[disabled ? 'cursor-not-allowed' : 'cursor-pointer']" aria-label="add recipient" @click="onOpen">
-        <i-my-add class="size-4" />
+        <i-ff-add class="size-4" />
         <n-text type="primary">Add Address</n-text>
       </div>
       <div v-else class="flex-y-center gap-2" :class="[disabled ? 'cursor-not-allowed' : 'cursor-pointer']" aria-label="edit recipient" @click="onOpen">

@@ -29,7 +29,7 @@ export const refreshToken = async () => {
   const res = await _refreshToken({ refreshToken: getRefreshToken() })
   if (res.code !== 0) {
     clearAuth()
-    console.warn(`refreshToken fail`)
+    console.warn(`refresh token fail`)
     return false
   }
 

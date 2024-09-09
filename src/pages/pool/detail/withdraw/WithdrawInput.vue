@@ -3,7 +3,7 @@
     <div class="rounded flex flex-col bg-block">
       <div class="flex-y-center gap-2">
         <n-input-number class="flex-1" v-model:value="amount" :min="0" :max="maxAmount" placeholder="0.0" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
-        <i-my-position class="size-6" />
+        <i-ff-position class="size-6" />
       </div>
       <n-divider class="!my-0" />
       <div class="mt-3 flex-y-center justify-end">

@@ -2,7 +2,7 @@
   <div>
     <n-divider class="!my-0">
       <span :class="[disabled ? 'cursor-not-allowed' : 'cursor-pointer']" @click="onReverse">
-        <i-my-reverse class="size-10 sm:size-14" />
+        <i-ff-reverse class="size-10 sm:size-14" />
       </span>
     </n-divider>
   </div>

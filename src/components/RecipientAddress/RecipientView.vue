@@ -12,7 +12,7 @@
       </div>
       <div v-if="!focus && input && (isSame || !isValid)" class="mt-4 p-3 flex-y-center gap-3 bg-error/10 rounded-lg">
         <div class="self-start flex-y-center h-5">
-          <i-my-error class="size-4" />
+          <i-ff-error class="size-4" />
         </div>
         <div class="flex-1 flex">
           <n-text class="text-sm text-error">{{ isSame ? 'Please enter an address different than the connected wallet address' : 'Invalid Address' }}</n-text>

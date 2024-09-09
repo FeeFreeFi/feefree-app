@@ -13,14 +13,14 @@ const getAccountHash = account => {
 /**
  * @param {string} account
  */
-const getAccountId = account => {
+export const getAccountId = account => {
   return getAccountHash(account).slice(0, 8)
 }
 
 /**
  * @param {string} account
  */
-const getAccountReferral = account => {
+export const getAccountReferral = account => {
   return getAccountHash(account).slice(-8)
 }
 

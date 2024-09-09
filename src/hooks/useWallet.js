@@ -1,5 +1,5 @@
 import { computed, readonly, ref } from "vue"
-import { createWalletClient, custom } from "viem"
+import { createWalletClient, custom, getAddress } from "viem"
 import { eip712WalletActions } from 'viem/zksync'
 import { balanceOf } from "./useCurrency"
 import { getChain, getChainName, isSupportChain, getDefaultChain, getNativeCurrency, isZkEVM } from "./useChains"
@@ -101,6 +101,8 @@ const update = async (chainId, account = '') => {
   if (!account) {
     [account] =  await getAccounts(cachedProvider)
   }
+  account = getAddress(account)
+
   accountRef.value = account
   walletChainIdRef.value = chainId
   chainSupportedRef.value = true

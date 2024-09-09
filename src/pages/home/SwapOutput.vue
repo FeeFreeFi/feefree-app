@@ -17,7 +17,7 @@
         <TokenPrice :input-token="inputToken" :output-token="outputToken" :price="price" />
         <n-divider v-if="screen.lt.sm" class="!my-0" />
         <div class="flex-y-center gap-2">
-          <i-my-fee class="size-4" />
+          <i-ff-fee class="size-4" />
           <div class="flex-y-center gap-1">
             <n-text depth="1">${{ feeValue }}</n-text>
           </div>

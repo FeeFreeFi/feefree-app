@@ -6,7 +6,7 @@
     </div>
     <div class="flex-y-center">
       <span v-if="active">
-        <i-my-spin class="size-4" />
+        <i-ff-spin class="size-4" />
       </span>
       <div v-else-if="recent" class="flex-y-center px-2 py-1 bg-primary/10 rounded">
         <n-text class="text-primary text-xs">Recent</n-text>

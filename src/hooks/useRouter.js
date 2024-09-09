@@ -2,7 +2,6 @@ import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
   CHAIN_ID_SCROLL,
-  CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 
 const CONFIG = [
@@ -22,12 +21,6 @@ const CONFIG = [
     chainId: CHAIN_ID_SCROLL,
     router: "0x0Feec6079D9bDCa93CB97E3DDD925FAc4D90aA00",
     pool: "0xaf9dBb59e83e8C47b5D542FF030C5A3cf427D39a",
-    fee: 10000000000000n,
-  },
-  {
-    chainId: CHAIN_ID_BASE_SEPOLIA,
-    router: "0x0FeeFCeF3d2908e0c3aBe5AD3FbEf63EC1172100",
-    pool: "0xD022fD930efeCc608096C5c984ab6c187b7d55D7",
     fee: 10000000000000n,
   },
 ]

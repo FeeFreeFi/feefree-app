@@ -2,7 +2,7 @@
   <ZContainer class="flex flex-col ">
     <div class="flex mb-4">
       <div class="flex-center gap-3">
-        <i-my-nfts class="size-6" />
+        <i-ff-nfts class="size-6" />
         <n-text class="text-base font-semibold">FeeFree NFTs</n-text>
       </div>
     </div>
