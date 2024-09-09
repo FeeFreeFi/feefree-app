@@ -32,7 +32,7 @@ const props = defineProps({
     /**
      * @type {import('vue').PropType<bigint>}
      */
-     type: BigInt,
+    type: BigInt,
     required: true,
   },
   currency0: {

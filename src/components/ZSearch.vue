@@ -2,7 +2,7 @@
   <div class="z-search h-11 flex-y-center px-4 bg-card rounded">
     <n-input v-model:value="modelValue" :placeholder="placeholder" :bordered="false" size="large">
       <template #prefix>
-        <i-my-search class="size-4" />
+        <i-ff-search class="size-4" />
       </template>
     </n-input>
   </div>

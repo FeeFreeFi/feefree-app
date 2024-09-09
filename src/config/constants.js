@@ -8,7 +8,6 @@ export const CHAIN_ID_POLYGON_ZKEVM = 1101
 export const CHAIN_ID_BASE = 8453
 export const CHAIN_ID_ARBTRUM = 42161
 export const CHAIN_ID_LINEA = 59144
-export const CHAIN_ID_BASE_SEPOLIA = 84532
 export const CHAIN_ID_SCROLL = 534352
 export const CHAIN_ID_ZORA = 7777777
 export const CHAIN_ID_SEPOLIA = 11155111
@@ -25,3 +24,6 @@ export const JWT_ISSUER = "FeeFree"
 export const CACHE_RECENT = "recent"
 export const CACHE_AUTH = "auth"
 export const CACHE_REFERRAL = "referral"
+
+export const DATE_FORMAT_UTC = "MMM D YYYY hh:mm:ss A (Z UTC)"
+export const DATE_FORMAT_DEFAULT = "YYYY-MM-DD HH:mm:ss UTC"

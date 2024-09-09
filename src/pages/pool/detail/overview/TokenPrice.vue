@@ -2,7 +2,7 @@
   <div class="flex-center cursor-pointer" @click="onTogglePrice">
     <ZTokenIcon :token="inputToken" />
     <n-text class="ml-1">1 {{ inputToken.symbol }}</n-text>
-    <i-my-swap class="size-5 mx-3" />
+    <i-ff-swap class="size-5 mx-3" />
     <ZTokenIcon :token="outputToken" />
     <n-text class="ml-1">{{ priceValue }} {{ outputToken.symbol }}</n-text>
   </div>

@@ -15,11 +15,11 @@
             <ZCopyable :text="poolAddress">
               <template #copied>
                 <div aria-label="copied">
-                  <i-my-success class="size-5" />
+                  <i-ff-success class="size-5" />
                 </div>
               </template>
               <div class="cursor-pointer" aria-label="copy">
-                <i-my-copy class="size-5" />
+                <i-ff-copy class="size-4 text-primary/80" />
               </div>
             </ZCopyable>
           </div>
@@ -49,12 +49,11 @@
 import { useRoute } from "vue-router"
 import shortString from "@/utils/shortString"
 import { toBalance } from "@/utils/bn"
-import { getContractUrl } from "@/utils/chain"
 import { getPoolAddress } from "@/hooks/useRouter"
 import { getPool } from "@/hooks/useSwap"
 import { createPriceState } from "@/hooks/usePrices"
 import { createPoolState } from "@/hooks/usePoolState"
-import { getExplorerUrl } from "@/hooks/useChains"
+import { getContractUrl } from "@/hooks/useChains"
 import ZCopyable from "@/components/ZCopyable.vue"
 import PoolName from "@/components/PoolName.vue"
 import ZGhostButton from "@/components/ZGhostButton.vue"
@@ -67,7 +66,7 @@ const pool = getPool(route.params.id)
 const { currency0, currency1 } = pool
 
 const poolAddress = getPoolAddress(pool.chainId)
-const poolUrl = getContractUrl(poolAddress, getExplorerUrl(pool.chainId))
+const poolUrl = getContractUrl(pool.chainId, poolAddress)
 
 const { state: poolState, update: updatePoolState } = createPoolState(route.params.id)
 createPriceState(updatePoolState)

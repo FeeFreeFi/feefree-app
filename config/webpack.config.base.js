@@ -140,14 +140,14 @@ export default {
     Components({
       resolvers: [
         UnpluginIconsResolver({
-          customCollections: ["my"],
+          customCollections: ["ff"],
         }),
         NaiveUiResolver(),
       ],
     }),
     UnpluginIcons({
       customCollections: {
-        my: FileSystemIconLoader(path.resolve(dirs.src, "assets/icons")),
+        ff: FileSystemIconLoader(path.resolve(dirs.src, "assets/icons")),
       },
     }),
     new VueLoaderPlugin(),

@@ -31,9 +31,9 @@ const props = defineProps({
   },
   balance: {
     /**
-     * @type {import('vue').PropType<bigint>}
+     * @type {import('vue').PropType<bigint|string>}
      */
-    type: BigInt,
+    type: [BigInt, String],
     required: true,
   },
   showSymbol: {

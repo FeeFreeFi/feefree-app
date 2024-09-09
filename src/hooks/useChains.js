@@ -4,15 +4,13 @@ import {
   CHAIN_ID_SCROLL,
   CHAIN_ID_LINEA,
   CHAIN_ID_ZKSYNC,
-  CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
 import {
   zora,
   base,
   scroll,
   linea,
-  zkSync,
-  baseSepolia,
+  zksync,
 } from "viem/chains"
 
 const CHAINS = Object.freeze([
@@ -20,8 +18,7 @@ const CHAINS = Object.freeze([
   base,
   scroll,
   linea,
-  zkSync,
-  baseSepolia,
+  zksync,
 ])
 const CHAINS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, chain]))
 const CHAIN_IDS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, true]))
@@ -84,18 +81,6 @@ const CHAIN_EXTRAS = [
     ],
     gasType: "maxFeePerGas",
     isZkEVM: true,
-  },
-  {
-    id: CHAIN_ID_BASE_SEPOLIA,
-    key: "base-sepolia",
-    name: "Base Sepolia",
-    symbol: "ETH",
-    extraRpcUrls: [
-      "https://base-sepolia-rpc.publicnode.com",
-      "https://base-sepolia.blockpi.network/v1/rpc/public",
-    ],
-    gasType: "maxFeePerGas",
-    isZkEVM: false,
   },
 ]
 const CHAIN_EXTRAS_MAP = Object.fromEntries(CHAIN_EXTRAS.map(chain => [chain.id, chain]))
@@ -176,3 +161,45 @@ export const getChainIdByKey = key => CHAIN_EXTRAS.find(it => it.key === key)?.i
  * @param {number} chainId
  */
 export const getChainKey = chainId => CHAIN_EXTRAS_MAP[chainId]?.key || ""
+
+/**
+ * @param {number} chainId
+ * @param {string} hash
+ */
+export const getTransactionUrl = (chainId, hash) => {
+  return `${getExplorerUrl(chainId)}/tx/${hash}`
+}
+
+/**
+ * @param {number} chainId
+ * @param {string} address
+ */
+export const getContractUrl = (chainId, address) => {
+  return `${getExplorerUrl(chainId)}/address/${address}`
+}
+
+/**
+ * @param {number} chainId
+ * @param {string} address
+ */
+export const getTokenUrl = (chainId, address) => {
+  return `${getExplorerUrl(chainId)}/token/${address}`
+}
+
+/**
+ * @param {number} chainId
+ * @param {string} account
+ */
+export const getAccountUrl = (chainId, account) => {
+  return `${getExplorerUrl(chainId)}/address/${account}`
+}
+
+/**
+ * @param {number} chainId
+ * @param {string} hash
+ */
+export const getTxMeta = (chainId, hash) => {
+  const explorerUrl = getTransactionUrl(chainId, hash)
+
+  return { hash, chainId, explorerUrl }
+}

@@ -59,7 +59,6 @@ export const themeOverrides = {
       InternalSelectMenu: {
         optionTextColor: themeVars.textColorBase,
         color: themeVars.colorContainer,
-        // optionColorActive: themeVars.colorCard,
         optionColorActivePending: themeVars.colorCard1,
         optionColorPending: themeVars.colorCard1,
       },
@@ -100,5 +99,9 @@ export const themeOverrides = {
   Scrollbar: {
     color: themeVars.primary40,
     colorHover: themeVars.primary50,
+  },
+  Progress: {
+    fillColor: themeVars.primaryGradient,
+    railColor: themeVars.colorCard,
   },
 }

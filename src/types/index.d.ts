@@ -1,6 +1,7 @@
-import { extend } from "dayjs";
+import { Type } from "@sinclair/typebox"
+import type { Static, TSchema } from "@sinclair/typebox"
 
-export interface Token {
+export type Token = {
   chainId: number;
   address: string;
   symbol: string;
@@ -9,7 +10,7 @@ export interface Token {
   key: string;
 }
 
-export interface Pool {
+export type Pool = {
   chainId: number;
   name: string;
   currency0: Token;
@@ -18,7 +19,7 @@ export interface Pool {
   id: string;
 }
 
-export interface PoolState {
+export type PoolState = {
   sqrtPriceX96: bigint;
   liquidity: bigint;
   balance0: bigint;
@@ -30,7 +31,7 @@ export interface PoolState {
   percent1: string;
 }
 
-export interface Nft {
+export type Nft = {
   chainId: number;
   label: string;
   address: string;
@@ -43,7 +44,7 @@ export interface Nft {
   capLabel: string;
 }
 
-export interface Tx {
+export type Tx = {
   chainId: number;
   hash: string;
   explorerUrl: string;
@@ -110,7 +111,17 @@ export interface MintAction extends ModalAction {
   }
 }
 
-export interface SwapQuoteData {
+export interface ClaimAction extends ModalAction {
+  data: {
+    chainId: number;
+    amount: bigint;
+    nonce: string;
+    proof: string[];
+    root: string;
+  }
+}
+
+export type SwapQuoteData = {
   deltaAmounts: bigint[];
   sqrtPriceX96Afters: bigint[];
   amountIn: bigint;
@@ -119,18 +130,18 @@ export interface SwapQuoteData {
   amountSpecified: bigint;
 }
 
-export interface DepositQuoteData {
+export type DepositQuoteData = {
   amount0Min: bigint;
   amount1Min: bigint;
   liquidity: bigint;
 }
 
-export interface WithdrawQuoteData {
+export type WithdrawQuoteData = {
   amount0: bigint;
   amount1: bigint;
 }
 
-export interface ValueChangedData {
+export type ValueChangedData = {
   inputToken: Token;
   outputToken: Token;
   amountIn: bigint;
@@ -140,44 +151,131 @@ export interface ValueChangedData {
   percent: Number;
 }
 
-export interface SignatureData {
+export type SignatureData = {
   account: string;
   chainId: number;
   nonce: string;
   timestamp: number;
   expire: number;
+  signature: string;
 }
 
-export interface Profile {
-  id: string;
-  account: string;
-  nickname: string;
-  points: number;
-  level: number;
-  exp: number;
-  nextExp: number;
-  referral: string;
-  inviter: string;
-  invitees: number;
-}
-
-export interface JwtToken {
+export type JwtToken = {
   value: String;
   exp: number;
 }
 
-export interface Auth {
+export type Auth = {
   id: string;
   accessToken: JwtToken;
   refreshToken: JwtToken;
 }
 
-export interface ClaimData {
-  chainId: number;
-  amount: string;
-  nonce: string;
-  proof: string[];
-  root: string;
-  deadline: number;
-  updatedAt: string;
-}
+const PricesData = Type.Record(Type.String(), Type.Number())
+export type PricesData = Static<typeof PricesData>
+
+const LoginData = Type.Object({
+  accessToken: Type.String(),
+  refreshToken: Type.String(),
+})
+export type LoginData = Static<typeof LoginData>
+
+const Profile = Type.Object({
+  id: Type.String(),
+  account: Type.String(),
+  nickname: Type.String(),
+  points: Type.Number(),
+  level: Type.Number(),
+  exp: Type.Number(),
+  nextExp: Type.Number(),
+  referral: Type.String(),
+  inviter: Type.String(),
+  fans: Type.Number(),
+})
+export type Profile = Static<typeof Profile>
+
+const Fans = Type.Object({
+  id: Type.String(),
+  account: Type.String(),
+  nickname: Type.String(),
+  level: Type.Integer(),
+  acceptAt: Type.String(),
+})
+const FansList = Type.Array(Fans)
+export type Fans = Static<typeof Fans>
+
+const Inviter = Type.Object({
+  id: Type.String(),
+  account: Type.String(),
+  nickname:Type.String(),
+  fans: Type.Number(),
+})
+export type Inviter = Static<typeof Inviter>
+
+const Rebate = Type.Object({
+  chainId: Type.Number(),
+  amount: Type.Union([Type.BigInt(), Type.String()]),
+  nonce: Type.String(),
+  proof: Type.Array(Type.String()),
+  root: Type.String(),
+  deadline: Type.Number(),
+  updatedAt: Type.String(),
+})
+export type Rebate = Static<typeof Rebate>
+const Rebates = Type.Object({
+  current: Type.Union([Type.BigInt(), Type.String()]),
+  claimed: Type.Union([Type.BigInt(), Type.String()]),
+  available: Type.Union([Type.BigInt(), Type.String()]),
+  list: Type.Array(Rebate),
+})
+
+const GeneralResponse = Type.Object({
+  code: Type.Integer(),
+  message: Type.String(),
+})
+export type GeneralResponse = Static<typeof GeneralResponse>
+
+const GenericsResponse = <T extends TSchema>(data: T) => Type.Composite([
+  GeneralResponse,
+  Type.Object({
+    data,
+  })
+])
+const GenericsResponseSchema = GenericsResponse<TSchema>()
+export type GenericsResponse = Static<typeof GenericsResponseSchema>
+const GenericsOptionalResponse = <T extends TSchema>(data: T) => GenericsResponse(Type.Optional(data))
+
+const LoginResponse = GenericsOptionalResponse<typeof LoginData>()
+export type LoginResponse = Static<typeof LoginResponse>
+
+const PricesResponse = GenericsResponse<typeof PricesData>()
+export type PricesResponse = Static<typeof PricesResponse>
+
+const InviterResponse = GenericsOptionalResponse<typeof Inviter>()
+export type InviterResponse = Static<typeof InviterResponse>
+
+const ProfileResponse = GenericsOptionalResponse<typeof Profile>()
+export type ProfileResponse = Static<typeof ProfileResponse>
+
+const RebatesResponse = GenericsOptionalResponse<typeof Rebates>()
+export type RebatesResponse = Static<typeof RebatesResponse>
+
+const FansResponse = GenericsOptionalResponse<typeof FansList>()
+export type FansResponse = Static<typeof FansResponse>
+
+const PagedData = <T extends TSchema>(data: T) => Type.Object({
+  total: Type.Number(),
+  list: Type.Array(data),
+})
+
+const Claim = Type.Object({
+  chainId: Type.Number(),
+  transactionHash: Type.String(),
+  amount: Type.Union([Type.BigInt(), Type.String()]),
+  claimedAt: Type.Optional(Type.String()),
+})
+export type Claim = Static<typeof Claim>
+
+const PagedClaims = PagedData<typeof Claim>()
+const ClaimsResponse = GenericsOptionalResponse<typeof PagedClaims>()
+export type ClaimsResponse = Static<typeof ClaimsResponse>

@@ -6,6 +6,7 @@ import { mint } from './useNft'
 import { getRouterAddress } from './useRouter'
 import { addLiquidity, removeLiquidity, swap } from './useSwap'
 import { getWalletClient, switchChain } from './useWallet'
+import { claim, getClaimAddress } from './useRebate'
 
 /**
  * @param {import('naive-ui').NotificationProviderInst} notification
@@ -396,6 +397,63 @@ export const doMint = async (action, loading, nft, to) => {
       ...action.value,
       state: "fail",
       title: `Mint fail`,
+      error: err.shortMessage || err.details || err.message,
+    }
+
+    return false
+  }
+}
+
+/**
+ * @param {import('vue').Ref<import('@/types').ClaimAction>} action
+ * @param {import('vue').Ref<boolean>} loading
+ * @param {import('@/types').Rebate} rebate
+ * @param {string} to
+ */
+export const doClaim = async (action, loading, rebate, to) => {
+  const { chainId, amount, nonce, proof, root } = rebate
+  const publicClient = getPublicClient(chainId)
+  const walletClient = getWalletClient()
+  const amountValue = BigInt(amount)
+  const address = getClaimAddress(chainId)
+
+  try {
+    action.value = {
+      show: true,
+      state: "initial",
+      title: `Claiming`,
+      data: { chainId, amount: amountValue, nonce, proof, root },
+    }
+    loading.value = true
+    const tx = await claim(
+      { publicClient, walletClient },
+      address,
+      amountValue,
+      to,
+      nonce,
+      proof,
+    )
+    action.value = {
+      ...action.value,
+      state: "pending",
+      tx,
+    }
+    // TODO parse transaction receipt
+    await waitForTransactionReceipt(tx.chainId, tx.hash)
+    loading.value = false
+    action.value = {
+      ...action.value,
+      state: "success",
+      title: `Claim success`,
+    }
+
+    return true
+  } catch (err) {
+    loading.value = false
+    action.value = {
+      ...action.value,
+      state: "fail",
+      title: `Claim fail`,
       error: err.shortMessage || err.details || err.message,
     }
 

@@ -1,25 +1,23 @@
 import { ref } from "vue"
 import pMap from "p-map"
 import { uniqWith } from "lodash-es"
-import { getTxMeta } from "@/utils/chain"
-import { getStamp } from "@/utils/date"
 import {
   CHAIN_ID_ZORA,
   CHAIN_ID_BASE,
   CHAIN_ID_SCROLL,
-  CHAIN_ID_BASE_SEPOLIA,
 } from "@/config"
+import { getStamp } from "@/utils/date"
+import { byDecimals, fromValue } from "@/utils/bn"
+import { Q96, Q192 } from "@/utils/uniswap"
 import {
   isNative,
   getZoraToken,
   getBaseToken,
   getScrollToken,
-  getBaseSepoliaToken,
   isSame,
 } from "./useCurrency"
 import { getPrice } from "./usePrices"
-import { byDecimals, fromValue } from "@/utils/bn"
-import { Q96, Q192 } from "@/utils/uniswap"
+import { getTxMeta } from "./useChains"
 import { getRouterAddress } from "./useRouter"
 import { getPublicClient } from "./useClient"
 
@@ -106,50 +104,6 @@ const CONFIG = [
       },
     ],
   },
-  {
-    chainId: CHAIN_ID_BASE_SEPOLIA,
-    pools: [
-      {
-        name: 'ETH-USDC',
-        currency0: getBaseSepoliaToken("ETH"),
-        currency1: getBaseSepoliaToken("USDC"),
-        currencyLiquidity: getBaseSepoliaToken("ETH-USDC"),
-        id: "0x8a3dcc870d81e599dbc212ef5da1f76d229fa7d3b085d8ba33f4c9419b0b79b8",
-      },
-      {
-        name: 'DAI-USDC',
-        currency0: getBaseSepoliaToken("DAI"),
-        currency1: getBaseSepoliaToken("USDC"),
-        currencyLiquidity: getBaseSepoliaToken("DAI-USDC"),
-        id: "0xec90af283207ebc0c6bb1d1678a6721b1d68d40009bdac2931b8a582335c7802",
-      },
-      {
-        name: 'ETH-OP',
-        currency0: getBaseSepoliaToken("ETH"),
-        currency1: getBaseSepoliaToken("OP"),
-        currencyLiquidity: getBaseSepoliaToken("ETH-OP"),
-        id: "0x15b8224b42969f338efd221d969748cac4b8565b2b252ce06e076c1be1ab4163",
-      },
-    ],
-    pairs: [
-      {
-        currency0: getBaseSepoliaToken("ETH"),
-        currency1: getBaseSepoliaToken("ETH+"),
-      },
-      {
-        currency0: getBaseSepoliaToken("USDC"),
-        currency1: getBaseSepoliaToken("USDC+"),
-      },
-      {
-        currency0: getBaseSepoliaToken("DAI"),
-        currency1: getBaseSepoliaToken("DAI+"),
-      },
-      {
-        currency0: getBaseSepoliaToken("OP"),
-        currency1: getBaseSepoliaToken("OP+"),
-      },
-    ],
-  },
 ]
 
 const SWAP_TOKENS = [
@@ -161,11 +115,6 @@ const SWAP_TOKENS = [
 
   getScrollToken("ETH"),
   getScrollToken("USDC"),
-
-  getBaseSepoliaToken("ETH"),
-  getBaseSepoliaToken("USDC"),
-  getBaseSepoliaToken("DAI"),
-  getBaseSepoliaToken("OP"),
 ]
 
 const EXCHANGE_TOKENS = CONFIG.map(c => c.pairs.map(pair => [pair.currency0, pair.currency1]).flat()).flat()
@@ -415,7 +364,7 @@ export const swap = async ({ publicClient, walletClient }, address, paths, sqrtP
   })
   const hash = await walletClient.writeContract(request)
 
-  return getTxMeta(hash, publicClient.chain)
+  return getTxMeta(publicClient.chain.id, hash)
 }
 
 /**
@@ -471,7 +420,7 @@ export const addLiquidity = async ({ publicClient, walletClient }, address, curr
   })
   const hash = await walletClient.writeContract(request)
 
-  return getTxMeta(hash, publicClient.chain)
+  return getTxMeta(publicClient.chain.id, hash)
 }
 
 /**
@@ -516,7 +465,7 @@ export const removeLiquidity = async ({ publicClient, walletClient }, address, c
   })
   const hash = await walletClient.writeContract(request)
 
-  return getTxMeta(hash, publicClient.chain)
+  return getTxMeta(publicClient.chain.id, hash)
 }
 
 /**
@@ -539,7 +488,7 @@ export const exchange = async ({ publicClient, walletClient }, address, currency
   })
   const hash = await walletClient.writeContract(request)
 
-  return getTxMeta(hash, publicClient.chain)
+  return getTxMeta(publicClient.chain.id, hash)
 }
 
 /**
@@ -764,15 +713,6 @@ export const getExchangePairs = chainId => ALL_PAIRS_MAP[chainId] || []
  * @param {import('@/types').Token} token
  */
 export const isExchangeToken = token => !!(IS_EXCHANGE_TOKENS[token.chainId][token.address])
-
-// /**
-//  * @param {import('@/types').Token} token0
-//  * @param {import('@/types').Token} token1
-//  */
-// export const isExchangePair = (token0, token1) => {
-//   const otherToken = findExchangeOtherToken(token0)
-//   return otherToken ? isSame(otherToken, token1) : false
-// }
 
 /**
  * @param {import('@/types').Token} token

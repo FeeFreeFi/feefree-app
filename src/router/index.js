@@ -9,7 +9,9 @@ import {
   PAGE_POOL_DEPOSIT,
   PAGE_POOL_WITHDRAW,
   PAGE_NFT_HOME,
-  PAGE_FAUCET,
+  PAGE_PROFILE_HOME,
+  PAGE_PROFILE_REBATE,
+  PAGE_PROFILE_FANS,
   PAGE_NOT_FOUND,
 } from "@/config"
 import { isValidPool } from "@/hooks/useSwap"
@@ -83,9 +85,21 @@ const routes = [
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "faucet",
-        name: PAGE_FAUCET,
-        component: () => import('@/pages/faucet/index.vue'),
+        path: "profile",
+        name: PAGE_PROFILE_HOME,
+        component: () => import('@/pages/profile/home/index.vue'),
+        meta: { title: APP_PRODUCT_NAME },
+      },
+      {
+        path: "profile/rebate",
+        name: PAGE_PROFILE_REBATE,
+        component: () => import('@/pages/profile/rebate/index.vue'),
+        meta: { title: APP_PRODUCT_NAME },
+      },
+      {
+        path: "profile/fans",
+        name: PAGE_PROFILE_FANS,
+        component: () => import('@/pages/profile/fans/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {
