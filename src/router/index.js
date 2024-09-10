@@ -10,6 +10,7 @@ import {
   PAGE_POOL_WITHDRAW,
   PAGE_NFT_HOME,
   PAGE_PROFILE_HOME,
+  PAGE_PROFILE_POINTS,
   PAGE_PROFILE_REBATE,
   PAGE_PROFILE_FANS,
   PAGE_NOT_FOUND,
@@ -88,6 +89,12 @@ const routes = [
         path: "profile",
         name: PAGE_PROFILE_HOME,
         component: () => import('@/pages/profile/home/index.vue'),
+        meta: { title: APP_PRODUCT_NAME },
+      },
+      {
+        path: "profile/points",
+        name: PAGE_PROFILE_POINTS,
+        component: () => import('@/pages/profile/points/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {

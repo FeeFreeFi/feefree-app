@@ -53,13 +53,13 @@
       </div>
       <div class="flex flex-col gap-4">
         <div class="flex gap-4">
-          <div class="flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md">
+          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_POINTS }" @click="onClose">
             <n-text class="text-xs" depth="1">Points</n-text>
             <div class="flex-y-center gap-1">
-              <n-text>{{ profile?.points || 0 }}</n-text>
+              <n-text class="text-primary/80">{{ profile?.points || 0 }}</n-text>
               <i-ff-points class="size-4" />
             </div>
-          </div>
+          </router-link>
           <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_REBATE }" @click="onClose">
             <n-text class="text-xs" depth="1">Rebate</n-text>
             <div class="flex-y-center gap-1">
@@ -103,7 +103,7 @@
 <script setup>
 import { computed } from "vue"
 import { useMessage } from "naive-ui"
-import { PAGE_PROFILE_FANS, PAGE_PROFILE_REBATE } from "@/config"
+import { PAGE_PROFILE_FANS, PAGE_PROFILE_POINTS, PAGE_PROFILE_REBATE } from "@/config"
 import shortString from "@/utils/shortString"
 import { copyText } from "@/utils/clipboard"
 import { getAccountReferral } from "@/utils/accountHash"

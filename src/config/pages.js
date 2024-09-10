@@ -9,6 +9,7 @@ export const PAGE_POOL_WITHDRAW = "pool-withdraw"
 export const PAGE_NFT_HOME = "nft-home"
 
 export const PAGE_PROFILE_HOME = "profile-home"
+export const PAGE_PROFILE_POINTS = "profile-points"
 export const PAGE_PROFILE_REBATE = "profile-rebate"
 export const PAGE_PROFILE_FANS = "profile-fans"
 
