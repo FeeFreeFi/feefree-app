@@ -229,6 +229,31 @@ const Rebates = Type.Object({
   list: Type.Array(Rebate),
 })
 
+const Points = Type.Object({
+  value: Type.Number(),
+  date: Type.String(),
+  reason: Type.Integer(),
+  meta: Type.Union([
+    Type.Object({
+      chainId: Type.Integer(),
+      transactionHash: Type.String(),
+    }),
+    Type.Object({
+      account: Type.String(),
+    }),
+    Type.Object({
+      remark: Type.String(),
+    }),
+    Type.Object({
+      account: Type.String(),
+      chainId: Type.Integer(),
+      transactionHash: Type.String(),
+      reason: Type.Integer(),
+    }),
+  ]),
+})
+export type Points = Static<typeof Points>
+
 const GeneralResponse = Type.Object({
   code: Type.Integer(),
   message: Type.String(),
@@ -279,3 +304,7 @@ export type Claim = Static<typeof Claim>
 const PagedClaims = PagedData<typeof Claim>()
 const ClaimsResponse = GenericsOptionalResponse<typeof PagedClaims>()
 export type ClaimsResponse = Static<typeof ClaimsResponse>
+
+const PagedPoints = PagedData<typeof Points>()
+const PointsResponse = GenericsOptionalResponse<typeof PagedPoints>()
+export type PointsResponse = Static<typeof PointsResponse>

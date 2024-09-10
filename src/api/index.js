@@ -173,3 +173,14 @@ export const getRebates = () => {
     data: {},
   })
 }
+
+/**
+ * @param {{page:number, limit:number}} data
+ * @returns {Promise<import("@/types").PointsResponse>}
+ */
+export const getPoints = data => {
+  return fetch({
+    url: "/user/points",
+    data,
+  })
+}
