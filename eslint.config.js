@@ -32,5 +32,8 @@ export default [
       "jsdoc/require-returns-description": "off",
       "jsdoc/require-returns": "off",
     }
-  }
+  },
+  {
+    ignores: ["src/vendors/*"],
+  },
 ]
