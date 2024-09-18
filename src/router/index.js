@@ -11,7 +11,7 @@ import {
   PAGE_NFT_HOME,
   PAGE_PROFILE_HOME,
   PAGE_PROFILE_POINTS,
-  PAGE_PROFILE_REBATE,
+  PAGE_PROFILE_REWARD,
   PAGE_PROFILE_FANS,
   PAGE_NOT_FOUND,
 } from "@/config"
@@ -98,9 +98,9 @@ const routes = [
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "profile/rebate",
-        name: PAGE_PROFILE_REBATE,
-        component: () => import('@/pages/profile/rebate/index.vue'),
+        path: "profile/reward",
+        name: PAGE_PROFILE_REWARD,
+        component: () => import('@/pages/profile/reward/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {

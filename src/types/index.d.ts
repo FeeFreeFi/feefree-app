@@ -212,7 +212,7 @@ const Inviter = Type.Object({
 })
 export type Inviter = Static<typeof Inviter>
 
-const Rebate = Type.Object({
+const Reward = Type.Object({
   chainId: Type.Number(),
   amount: Type.Union([Type.BigInt(), Type.String()]),
   nonce: Type.String(),
@@ -221,12 +221,12 @@ const Rebate = Type.Object({
   deadline: Type.Number(),
   updatedAt: Type.String(),
 })
-export type Rebate = Static<typeof Rebate>
-const Rebates = Type.Object({
+export type Reward = Static<typeof Reward>
+const Rewards = Type.Object({
   current: Type.Union([Type.BigInt(), Type.String()]),
   claimed: Type.Union([Type.BigInt(), Type.String()]),
   available: Type.Union([Type.BigInt(), Type.String()]),
-  list: Type.Array(Rebate),
+  list: Type.Array(Reward),
 })
 
 const Points = Type.Object({
@@ -282,8 +282,8 @@ export type InviterResponse = Static<typeof InviterResponse>
 const ProfileResponse = GenericsOptionalResponse<typeof Profile>()
 export type ProfileResponse = Static<typeof ProfileResponse>
 
-const RebatesResponse = GenericsOptionalResponse<typeof Rebates>()
-export type RebatesResponse = Static<typeof RebatesResponse>
+const RewardsResponse = GenericsOptionalResponse<typeof Rewards>()
+export type RewardsResponse = Static<typeof RewardsResponse>
 
 const FansResponse = GenericsOptionalResponse<typeof FansList>()
 export type FansResponse = Static<typeof FansResponse>

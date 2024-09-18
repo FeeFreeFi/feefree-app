@@ -61,7 +61,7 @@ export const getClaimAddress = chainId => CONFIG_MAP[chainId]?.address || ''
  * @param {string} nonce
  * @param {string[]} proof
  */
-export const isValidRebate = async (account, chainId, amount, nonce, proof) => {
+export const isValidReward = async (account, chainId, amount, nonce, proof) => {
   const publicClient = getPublicClient(chainId)
   const address = getClaimAddress(chainId)
 

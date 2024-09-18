@@ -165,11 +165,11 @@ export const getClaims = data => {
 }
 
 /**
- * @returns {Promise<import("@/types").RebatesResponse>}
+ * @returns {Promise<import("@/types").RewardsResponse>}
  */
-export const getRebates = () => {
+export const getRewards = () => {
   return fetch({
-    url: "/user/rebates",
+    url: "/user/rewards",
     data: {},
   })
 }
