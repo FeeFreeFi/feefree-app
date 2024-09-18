@@ -43,14 +43,14 @@ defineProps({
   },
   list: {
     /**
-     * @type {import('vue').PropType<(import('@/types').Rebate & {valid:boolean})[]>}
+     * @type {import('vue').PropType<(import('@/types').Reward & {valid:boolean})[]>}
      */
     type: Array,
     required: true,
   },
   onClaim: {
     /**
-     * @type {import('vue').PropType<(item:import('@/types').Rebate) => Promise>}
+     * @type {import('vue').PropType<(item:import('@/types').Reward) => Promise>}
      */
     type: Function,
     required: true,

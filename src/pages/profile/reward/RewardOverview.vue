@@ -4,7 +4,7 @@
       <n-text class="text-xs" depth="1">Current</n-text>
       <div v-if="account" class="flex-y-center gap-1">
         <ZTokenBalance class="!font-normal" :token="ETH" :dp="8" :balance="current" />
-        <i-ff-rebate class="size-4" />
+        <i-ff-reward class="size-4" />
       </div>
       <n-text v-else>N/A</n-text>
     </div>
@@ -13,7 +13,7 @@
       <div v-if="account" class="flex-y-center gap-1">
         {{ age }}
         <ZTokenBalance class="!font-normal" :token="ETH" :dp="8" :balance="claimed" />
-        <i-ff-rebate class="size-4" />
+        <i-ff-reward class="size-4" />
       </div>
       <n-text v-else>N/A</n-text>
     </div>

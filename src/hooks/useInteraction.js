@@ -6,7 +6,7 @@ import { mint } from './useNft'
 import { getRouterAddress } from './useRouter'
 import { addLiquidity, removeLiquidity, swap } from './useSwap'
 import { getWalletClient, switchChain } from './useWallet'
-import { claim, getClaimAddress } from './useRebate'
+import { claim, getClaimAddress } from './useReward'
 
 /**
  * @param {import('naive-ui').NotificationProviderInst} notification
@@ -407,11 +407,11 @@ export const doMint = async (action, loading, nft, to) => {
 /**
  * @param {import('vue').Ref<import('@/types').ClaimAction>} action
  * @param {import('vue').Ref<boolean>} loading
- * @param {import('@/types').Rebate} rebate
+ * @param {import('@/types').Reward} reward
  * @param {string} to
  */
-export const doClaim = async (action, loading, rebate, to) => {
-  const { chainId, amount, nonce, proof, root } = rebate
+export const doClaim = async (action, loading, reward, to) => {
+  const { chainId, amount, nonce, proof, root } = reward
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
   const amountValue = BigInt(amount)
