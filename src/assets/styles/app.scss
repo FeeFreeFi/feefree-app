@@ -2,24 +2,6 @@ body {
   @apply bg-body;
 }
 
-.site-bg {
-  &:before {
-    content: '';
-    display: block;
-    position: fixed;
-    pointer-events: none;
-    user-select: none;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    background-image: url('../images/site-bg.webp');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-}
-
 .n-scrollbar > .n-scrollbar-rail.n-scrollbar-rail--vertical,
 .n-scrollbar + .n-scrollbar-rail.n-scrollbar-rail--vertical {
   right: 0 !important;

@@ -9,7 +9,7 @@
       </div>
       <div>
         <router-link class="no-underline" :to="{ name: PAGE_HOME }">
-          <ZGhostButton class="w-36" aria-label="Back">Back</ZGhostButton>
+          <ZGhostButton class="w-36" aria-label="Home">Home</ZGhostButton>
         </router-link>
       </div>
     </div>

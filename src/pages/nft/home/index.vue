@@ -20,23 +20,23 @@
           <div class="mt-3 sm:mt-4 flex justify-between text-xs">
             <n-text depth="1">Minted:</n-text>
             <div class="flex">
-              <n-text>{{ toBalance(nftStates[index]) }}/{{ item.capLabel }}</n-text>
+              <n-text>{{ toBalance(balances[index]) }}/{{ toBalanceWithUnit(item.cap, 0) }}</n-text>
             </div>
           </div>
           <!-- Price -->
           <div class="mt-2 sm:mt-3 flex justify-between text-xs">
             <n-text depth="1">Price:</n-text>
-            <div class="flex" v-if="item.free">
-              <n-text class="text-primary">Free</n-text>
+            <div class="flex" v-if="item.price">
+              <ZTokenBalance class="ml-1" :token="feeToken" :balance="BigInt(item.price)" :dp="9" />
+              <n-text>(${{ getFeeValue(item.price) }})</n-text>
             </div>
             <div class="flex" v-else>
-              <ZTokenBalance class="ml-1" :token="feeToken" :balance="item.price" :dp="9" />
-              <n-text>(${{ getFeeValue(item.price) }})</n-text>
+              <n-text class="text-primary">Free</n-text>
             </div>
           </div>
           <div class="mt-4 sm:mt-6 flex">
             <ActionButton class="w-full" btn-class="!h-10" :chain-id="item.chainId" :chains="supportedChains">
-              <ZButton class="h-10 w-full" :disabled="minting" :loading="operatingIndex === index" :aria-label="item.free ? 'Free Mint' : 'Mint'" @click="() => onMint(index, item)">{{ item.free ? "Free Mint" : "Mint" }}</ZButton>
+              <ZButton class="h-10 w-full" :disabled="minting" :loading="operatingIndex === index" :aria-label="item.price ? 'Mint' : 'Free Mint'" @click="() => onMint(index, item)">{{ item.price ? "Mint" : "Free Mint" }}</ZButton>
             </ActionButton>
           </div>
         </div>
@@ -47,38 +47,42 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
-import { fromValue, toBalance } from "@/utils/bn"
-import { createNftStates, getNftList, getSupportedChains } from "@/hooks/useNft"
+import { ref, computed, watch, onMounted } from "vue"
+import { States } from "@/config"
+import { fromValue, toBalance, toBalanceWithUnit } from "@/utils/bn"
+import { createNftStates, fetchNfts, getNfts, getSupportedChains, mint } from "@/hooks/useNft"
 import { account, updateNativeBalance } from "@/hooks/useWallet"
 import { appChainId, syncRouteChain } from "@/hooks/useAppState"
 import { getNativeCurrency } from "@/hooks/useChains"
-import { createPriceState, getPrice } from "@/hooks/usePrices"
-import { doMint } from "@/hooks/useInteraction"
+import { getPrice } from "@/hooks/usePrices"
+import { doSend } from "@/hooks/useInteraction"
 import ZContainer from "@/components/ZContainer.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import ZButton from "@/components/ZButton.vue"
-import NftImage from "@/components/NftImage.vue"
 import ActionButton from "@/components/ActionButton.vue"
+import NftImage from "./NftImage.vue"
 import MintModal from "./MintModal.vue"
+import { configReady } from "@/hooks/useConfig"
 
-createPriceState()
-syncRouteChain()
+/** @type {import('vue').Ref<{chainId:number}[]>} */
+const supportedChains = ref([])
 
-const supportedChains = getSupportedChains()
-const nfts = computed(() => getNftList(appChainId.value))
+/** @type {import('vue').Ref<import('@/types').Nft[]>} */
+const nfts = ref([])
 const feeToken = computed(() => getNativeCurrency(appChainId.value))
+const balances = ref(nfts.value.map(() => 0n))
 
-const { states: nftStates, update: updateNftStates } = createNftStates(nfts)
+/** @type {import('vue').Ref<() => Promise<void>>} */
+const debounceUpdateNfts = ref(null)
 
 /**
- * @param {bigint} value
+ * @param {bigint|number|string} value
  */
 const getFeeValue = value => {
   return fromValue(getPrice(feeToken.value.symbol)).times(value).div(1e18).dp(4).toNumber()
 }
 
-const mintAction = ref({ show: false })
+const mintAction = ref({ show: false, state: States.INITIAL, title: "Mint" })
 const minting = ref(false)
 const operatingIndex = ref(-1)
 
@@ -93,28 +97,35 @@ const reset = () => {
  */
 const onMint = async (index, nft) => {
   operatingIndex.value = index
-  const succuess = await doMint(mintAction, minting, nft, account.value)
+
+  mintAction.value.data = { chainId: nft.chainId, nft }
+  const success = await doSend(mintAction, minting, "Mint", () => mint(nft))
+
   operatingIndex.value = -1
 
-  if (succuess) {
+  if (success) {
     updateNativeBalance()
-    updateNftStates(true)
+    debounceUpdateNfts.value && debounceUpdateNfts.value()
   }
 }
 
-onMounted(() => {
-  const stopWatch = watch([account, appChainId], () => {
-    reset()
-  })
+const onAppChainIdChange = () => {
+  nfts.value = getNfts(appChainId.value)
 
-  onBeforeUnmount(stopWatch)
-})
+  debounceUpdateNfts.value && debounceUpdateNfts.value()
+}
 
-onMounted(() => {
-  const stopWatch = watch(appChainId, () => {
-    updateNftStates(true)
-  })
+onMounted(async () => {
+  syncRouteChain()
 
-  onBeforeUnmount(stopWatch)
+  debounceUpdateNfts.value = createNftStates(nfts, balances)
+
+  await Promise.all([configReady(), fetchNfts()])
+
+  watch([account, appChainId], reset)
+  watch(appChainId, onAppChainIdChange)
+
+  supportedChains.value = getSupportedChains()
+  onAppChainIdChange()
 })
 </script>

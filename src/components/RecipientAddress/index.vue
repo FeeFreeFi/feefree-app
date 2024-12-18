@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="flex-y-center justify-between">
+    <div class="flex-y-center justify-between text-xs">
       <n-text depth="1">Recipient Address</n-text>
-      <div v-if="!modelValue" class="flex-y-center gap-2" :class="[disabled ? 'cursor-not-allowed' : 'cursor-pointer']" aria-label="add recipient" @click="onOpen">
+      <div v-if="!modelValue" class="flex-y-center gap-1" :class="[disabled ? 'cursor-not-allowed' : 'cursor-pointer']" aria-label="add recipient" @click="onOpen">
         <i-ff-add class="size-4" />
         <n-text type="primary">Add Address</n-text>
       </div>

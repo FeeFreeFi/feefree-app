@@ -20,29 +20,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
 import { useMessage } from "naive-ui"
-import { copyText } from "@/utils/clipboard"
-import { getAccountReferral } from "@/utils/accountHash"
 import { account } from "@/hooks/useWallet"
 import { profile } from "@/hooks/useUser"
+import { createShare } from "@/hooks/useShare"
 
 const message = useMessage()
-
-const referral = computed(() => profile.value ? profile.value.referral : getAccountReferral(account.value))
-const shareUrl = computed(() => {
-  const url = new URL(window.location.href)
-  url.searchParams.append("referral", referral.value)
-
-  return url.href
-})
-
-const onShare = async () => {
-  if (!account.value) {
-    return
-  }
-
-  const success = await copyText(shareUrl.value)
-  success && message.success("Referral copied, share and earn points!")
-}
+const { referral, onShare } = createShare(message)
 </script>

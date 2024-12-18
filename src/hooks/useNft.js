@@ -1,440 +1,120 @@
 import pMap from "p-map"
-import debounce from "lodash-es/debounce"
-import { ref, readonly, onMounted, onBeforeUnmount } from "vue"
-import {
-  CHAIN_ID_ZORA,
-  CHAIN_ID_BASE,
-  CHAIN_ID_SCROLL,
-  CHAIN_ID_LINEA,
-  CHAIN_ID_ZKSYNC,
-} from "@/config"
+import { groupBy } from "lodash-es"
+import { ref, watch } from "vue"
+import { getNfts as _getNfts } from "@/api"
+import { mint as _mint, totalSupply as _totalSupply } from "@/contracts/Nft"
+import { getMinted as _getMinted } from "@/contracts/Quoter"
 import { getPublicClient } from "./useClient"
-import { getChain, getTxMeta } from "./useChains"
-import { createInterval } from "./useTimer"
+import { createDebounceUpdate } from "./useTimer"
+import { getWalletClient } from "./useWallet"
+import { createCache } from "./useCache"
+import { getQuoterAddress } from "./useManager"
 
-/**
- * @param {import('@/types').Nft} nft
- */
-const getNftKey = nft => `${nft.chainId}: ${nft.address}`
+/** @type {import('vue').Ref<{[chainId:number]: import('@/types').Nft[]}>} */
+const config = ref(null)
 
-const cache = ref({})
+export const fetchNfts = async () => {
+  if (config.value) {
+    return
+  }
 
-const CONFIG = [
-  {
-    chainId: CHAIN_ID_ZORA,
-    contracts: [
-      {
-        label: "FFGenesisNFT",
-        address: "0xDA29e0a34d806D2009A2E354B75A0e6C8C76419D",
-        name: "FFGenesisNFT",
-        symbol: "FFG",
-        price: 10000000000000000n,
-        free: false,
-        image: "FFGenesisNFT.jpg",
-        cap: 10000n,
-        capLabel: "10K",
-      },
-      {
-        label: "FFWeekNFT(202417)",
-        address: "0x318f574DCb48Aa0ea12a7B0103009514d3A7C271",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-1.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202418)",
-        address: "0x81d0fCD3a651f7ceB3Fb01358aE9E732d5271d5d",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-2.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202429)",
-        address: "0x14CEa96bf423cf47468821bdDF37058Bf1BCB5e5",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-3.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202435)",
-        address: "0x05B3503723e4b0abf1df520536170d37Cb5597AF",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-4.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-    ],
-  },
-  {
-    chainId: CHAIN_ID_BASE,
-    contracts: [
-      {
-        label: "FFGenesisNFT",
-        address: "0x47Fbf1c403eb4366796A363847eB100103b0a829",
-        name: "FFGenesisNFT",
-        symbol: "FFG",
-        price: 10000000000000000n,
-        free: false,
-        image: "FFGenesisNFT.jpg",
-        cap: 10000n,
-        capLabel: "10K",
-      },
-      {
-        label: "FFWeekNFT(202419)",
-        address: "0x17022A3854AE6d8a0BbcC14934CC219123D96a00",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-1.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202420)",
-        address: "0x25BA65303D920744da81A847DB923BfCb9cf56Bc",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-2.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202429)",
-        address: "0x4184b3A9a4b1007865B4Fa5E95FB13f53d04cED9",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-3.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202435)",
-        address: "0xCe24057359E4e62377E8304dC400721b0D0C2D31",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-4.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-    ],
-  },
-  {
-    chainId: CHAIN_ID_SCROLL,
-    contracts: [
-      {
-        label: "FFGenesisNFT",
-        address: "0x6B8fbeadaeBdD3Eb1BB559DebE29cd46c3527cbc",
-        name: "FFGenesisNFT",
-        symbol: "FFG",
-        price: 10000000000000000n,
-        free: false,
-        image: "FFGenesisNFT.jpg",
-        cap: 10000n,
-        capLabel: "10K",
-      },
-      {
-        label: "FFWeekNFT(202419)",
-        address: "0x8574376DBD1c83009dD806Cd8bAe7AE58Df1c3Ab",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-1.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202420)",
-        address: "0x0ea46b69fA168644DFEF492321b9E58c5E304Ec4",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-2.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202429)",
-        address: "0xd96FB475B3A10f2ef62454fDE0e00162aD972166",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-3.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202435)",
-        address: "0xCfAece28407Ad6F4bde8D58Bc2C0ce53C89f8158",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-4.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-    ],
-  },
-  {
-    chainId: CHAIN_ID_LINEA,
-    contracts: [
-      {
-        label: "FFGenesisNFT",
-        address: "0xa803C1D7F10CeEAB2e961A188067fbDF7A5a378a",
-        name: "FFGenesisNFT",
-        symbol: "FFG",
-        price: 10000000000000000n,
-        free: false,
-        image: "FFGenesisNFT.jpg",
-        cap: 10000n,
-        capLabel: "10K",
-      },
-      {
-        label: "FFWeekNFT(202431)",
-        address: "0x6B8fbeadaeBdD3Eb1BB559DebE29cd46c3527cbc",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-1.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202432)",
-        address: "0x8574376DBD1c83009dD806Cd8bAe7AE58Df1c3Ab",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-2.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-    ],
-  },
-  {
-    chainId: CHAIN_ID_ZKSYNC,
-    contracts: [
-      {
-        label: "FFGenesisNFT",
-        address: "0xA64E69c3f579E08849fbbE16B666E6C4D4B8Bfe4",
-        name: "FFGenesisNFT",
-        symbol: "FFG",
-        price: 10000000000000000n,
-        free: false,
-        image: "FFGenesisNFT.jpg",
-        cap: 10000n,
-        capLabel: "10K",
-      },
-      {
-        label: "FFWeekNFT(202419)",
-        address: "0x7C32eFd1e91B05891da19812dB33FbF57581ad9e",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-1.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-      {
-        label: "FFWeekNFT(202420)",
-        address: "0x6acFa71c90d0b47437468F8FD9C475CcC5055F10",
-        name: "FFWeekNFT",
-        symbol: "FFW",
-        price: 0n,
-        free: true,
-        image: "FFWeekNFT-2.jpg",
-        cap: 1000000n,
-        capLabel: "1M",
-      },
-    ],
-  },
-]
-const CONFIG_MAP = Object.fromEntries(CONFIG.map(c => [c.chainId, c]))
-const SUPPORTED_CHAINS = CONFIG.map(c => ({ chainId: c.chainId }))
+  const res = await _getNfts()
+  if (res.code !== 0) {
+    console.log(res.message)
+    return
+  }
 
-const ABI_MINT = [
-  {
-    name: "mint",
-    type: "function",
-    stateMutability: "nonpayable",
-    inputs: [
-      {
-        name: "to",
-				type: "address"
-      }
-    ],
-    outputs: [],
-  },
-]
+  config.value = groupBy(res.data, "chainId")
+}
 
-const ABI_TOTAL_SUPPLY = [
-  {
-    type: 'function',
-    name: 'totalSupply',
-    stateMutability: 'view',
-    inputs: [],
-    outputs: [
-      {
-        type: 'uint256',
-      },
-    ],
-  },
-]
-
-export const getSupportedChains = () => SUPPORTED_CHAINS
+export const getSupportedChains = () => Object.keys(config.value).map(chainId => ({ chainId: parseInt(chainId, 10) }))
 
 /**
  * @param {number} chainId
  */
-export const isSupportChain = chainId => !!SUPPORTED_CHAINS.find(it => it.chainId === chainId)
+export const getNfts = chainId => config.value?.[chainId] || []
 
 /**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
- * @param {string} address
- * @param {string} to
- * @param {bigint} price
- */
-export const mint = async ({ publicClient, walletClient }, address, to, price) => {
-  const account = walletClient.account.address
-  const { request } = await publicClient.simulateContract({
-    account,
-    address,
-    abi: ABI_MINT,
-    functionName: 'mint',
-    args: [to],
-    value: price,
-  })
-  const hash = await walletClient.writeContract(request)
-
-  return getTxMeta(publicClient.chain.id, hash)
-}
-
-/**
- * @param {import('viem').PublicClient} publicClient
- * @param {string} address
+ * @param {import('@/types').Nft} nft
  * @returns {Promise<bigint>}
  */
-export const totalSupply = async (publicClient, address) => {
-  return publicClient.readContract({
-    address,
-    abi: ABI_TOTAL_SUPPLY,
-    functionName: 'totalSupply',
-  })
+const totalSupply = async nft => {
+  const { chainId, address } = nft
+  return _totalSupply(getPublicClient(chainId), address)
 }
 
 /**
- * @param {number} chainId
+ * @param {import('@/types').Nft[]} nfts
  */
-export const getNftList = chainId => (CONFIG_MAP[chainId]?.contracts || []).map(it => ({ ...it, chainId }))
+const getMinted = async nfts => {
+  if (nfts.length === 0) {
+    return []
+  }
 
-/**
- * @param {number} chainId
- * @param {string} address
- * @param {bigint} id
- */
-export const getNftExplorerUrl = (chainId, address, id) => {
-  const { blockExplorers } = getChain(chainId)
-  let url = blockExplorers.default.url
-  url = url.endsWith("/") ? url.slice(0, -1) : url
+  const { chainId } = nfts[0]
+  const quoter = getQuoterAddress(chainId)
+  if (quoter) {
+    const publicClient = getPublicClient(chainId)
+    return _getMinted(publicClient, quoter, nfts.map(it => it.address))
+  }
 
-  return `${url}/token/${address}?a=${id}`
+  return pMap(nfts, totalSupply, { concurrency: 3 })
 }
 
 /**
  * @param {import('@/types').Nft} nft
- * @returns {bigint}
  */
-const getState = nft => {
-  const key = getNftKey(nft)
-  return cache.value[key] || 0n
+const getKey = nft => `${nft.chainId}:${nft.address}`
+
+const cache = createCache()
+
+/**
+ * @param {import('@/types').Nft[]} nfts
+ * @returns {bigint[]}
+ */
+const getValues = nfts => {
+  return nfts.map(nft => nft ? cache.getValue(getKey(nft), 0n) : 0n)
 }
 
 /**
  * @param {import('@/types').Nft[]} nfts
  */
-const getStates = nfts => {
-  return nfts.map(nft => getState(nft))
+const updateValues = async nfts => {
+  const values = await getMinted(nfts)
+  cache.setValues(Object.fromEntries(nfts.map((it, index) => [getKey(it), values[index]])))
 }
 
 /**
- * @param {import('@/types').Nft[]} nfts
+ * @param {import('vue').Ref<import('@/types').Nft[]>} nfts
+ * @param {import('vue').Ref<bigint[]>} states
  */
-const updateStates = async nfts => {
-  const items = await pMap(nfts, async nft => {
-    /**
-     * @type {bigint}
-     */
-    const total = await totalSupply(getPublicClient(nft.chainId), nft.address).catch(() => 0n)
-    return [getNftKey(nft), total]
-  }, { concurrency: 3 })
+export const createNftStates = (nfts, states) => {
+  const getDefaults = () => nfts.value.map(() => 0n)
 
-  const values = Object.fromEntries(items)
-
-  cache.value = {
-    ...cache.value,
-    ...values,
-  }
-}
-
-/**
- * @param {import('vue').ComputedRef<import('@/types').Nft[]>} nfts
- */
-export const createNftStates = nfts => {
-  const states = ref(nfts.value.map(() => 0n))
+  states.value = getDefaults()
 
   const doUpdate = async () => {
-    const list = [...nfts.value]
-    states.value = getStates(list)
-    await updateStates(list)
-    states.value = getStates(list)
-  }
-  const debounceUpdate = debounce(doUpdate, 100, { leading: false, trailing: true })
-  const { start: startUpdate, stop: stopUpdate } = createInterval(debounceUpdate, 60 * 1000)
-
-  const update = (force = false) => {
-    force ? doUpdate() : debounceUpdate()
+    const _nfts = nfts.value
+    states.value = getValues(_nfts)
+    await updateValues(_nfts)
+    states.value = getValues(_nfts)
   }
 
-  onMounted(() => {
-    debounceUpdate()
+  const { debounceUpdate } = createDebounceUpdate(doUpdate, 1000, 120000)
 
-    onBeforeUnmount(() => {
-      debounceUpdate.cancel()
-    })
-  })
+  watch(nfts, doUpdate)
 
-  return {
-    states: readonly(states),
-    update,
-    startUpdate,
-    stopUpdate,
-  }
+  return debounceUpdate
+}
+
+/**
+ * @param {import('@/types').Nft} nft
+ */
+export const mint = async nft => {
+  const { address, chainId, price } = nft
+
+  const publicClient = getPublicClient(chainId)
+  const walletClient = getWalletClient()
+
+  return _mint({ publicClient, walletClient }, address, { value: price })
 }

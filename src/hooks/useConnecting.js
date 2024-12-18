@@ -24,10 +24,8 @@ export const setRecent = (wallet) => {
 
 const connectingWallet = readonly(connectingWalletRef)
 const recentWallet = computed(() => recentRef.value?.wallet || '')
-// const recentAccount = computed(() => recentRef.value?.account || '')
 
 export {
   connectingWallet,
   recentWallet,
-  // recentAccount,
 }

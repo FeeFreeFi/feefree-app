@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col gap-3">
+  <div class="flex flex-col gap-2">
     <div class="flex justify-between gap-2">
-      <n-text depth="1">Receive</n-text>
-      <div class="flex-y-center gap-1 overflow-hidden">
+      <n-text class="text-xs" depth="1">Receive</n-text>
+      <div class="flex-y-center gap-1 overflow-hidden text-xs">
         <n-text depth="1">Balance</n-text>
         <ZTokenBalance class="!font-normal" :token="outputToken" :balance="outputBalance" :show-symbol="false" />
       </div>
@@ -31,8 +31,7 @@
 import { computed } from "vue"
 import { byDecimals, fromValue } from "@/utils/bn"
 import { appChainId } from "@/hooks/useAppState"
-import { isSupportChain } from "@/hooks/useSwap"
-import { getFee } from "@/hooks/useRouter"
+import { isSupportChain } from "@/hooks/useManager"
 import { screen } from "@/hooks/useScreen"
 import { getNativeCurrency } from "@/hooks/useChains"
 import { getPrice } from "@/hooks/usePrices"
@@ -46,14 +45,14 @@ const props = defineProps({
      * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
-    required: true,
+    default: () => null,
   },
   outputToken: {
     /**
      * @type {import('vue').PropType<import('@/types').Token>}
      */
     type: Object,
-    required: true,
+    default: () => null,
   },
   outputBalance: {
     /**
@@ -64,20 +63,25 @@ const props = defineProps({
   },
   quote: {
     /**
-     * @type {import('vue').PropType<import('@/types').SwapQuoteData>}
+     * @type {import('vue').PropType<import('@/types').QuoteSwapData>}
      */
     type: Object,
     default: () => null,
   },
+  fee: {
+    /**
+     * @type {import('vue').PropType<bigint>}
+     */
+    type: BigInt,
+    required: true,
+  },
 })
 const emit = defineEmits(["select"])
 
-// const showValueChange = ref(true)
 const isSupported = computed(() => isSupportChain(appChainId.value))
 
-const fee = computed(() => props.outputToken ? getFee(props.outputToken.chainId) : 0n)
 const gasToken = computed(() => props.outputToken ? getNativeCurrency(props.outputToken.chainId) : null)
-const feeValue = computed(() => gasToken.value ? fromValue(getPrice(gasToken.value.symbol)).times(fee.value).div(1e18).dp(4).toNumber() : 0)
+const feeValue = computed(() => gasToken.value ? fromValue(getPrice(gasToken.value.symbol)).times(props.fee).div(1e18).dp(4).toNumber() : 0)
 const amountIn = computed(() => props.quote?.amountIn || 0n)
 const amountOut = computed(() => props.quote?.amountOut || 0n)
 

@@ -1,18 +1,19 @@
 import {
-  CHAIN_ID_ZORA,
-  CHAIN_ID_BASE,
-  CHAIN_ID_SCROLL,
-  CHAIN_ID_LINEA,
-  CHAIN_ID_ZKSYNC,
-} from "@/config"
-import {
   zora,
   base,
   scroll,
   linea,
   zksync,
 } from "viem/chains"
+import {
+  CHAIN_ID_ZORA,
+  CHAIN_ID_BASE,
+  CHAIN_ID_SCROLL,
+  CHAIN_ID_LINEA,
+  CHAIN_ID_ZKSYNC,
+} from "@/config"
 
+/** @type {import('viem').Chain[]} */
 const CHAINS = Object.freeze([
   zora,
   base,
@@ -21,88 +22,84 @@ const CHAINS = Object.freeze([
   zksync,
 ])
 const CHAINS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, chain]))
-const CHAIN_IDS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, true]))
 
-const CHAIN_EXTRAS = [
-  {
+/** @type {{[chainId:number]: {id:number, key:string, name:string, rpcUrls:string[]}}} */
+const CHAIN_EXTRAS = {
+  [CHAIN_ID_ZORA]: {
     id: CHAIN_ID_ZORA,
     key: "zora",
     name: "Zora",
-    symbol: "ETH",
-    extraRpcUrls: [
+    rpcUrls: [
+      "https://rpc.zora.energy",
+      "https://zora.drpc.org",
     ],
-    gasType: "maxFeePerGas",
-    isZkEVM: false,
   },
-  {
+  [CHAIN_ID_BASE]: {
     id: CHAIN_ID_BASE,
     key: "base",
     name: "Base",
-    symbol: "ETH",
-    extraRpcUrls: [
+    rpcUrls: [
+      "https://mainnet.base.org",
       "https://base.llamarpc.com",
+      "https://base.gateway.tenderly.co",
       "https://base.drpc.org",
+      "https://base-rpc.publicnode.com",
+      "https://base.blockpi.network/v1/rpc/public",
+      "https://base-mainnet.public.blastapi.io",
+      "https://1rpc.io/base",
     ],
-    gasType: "maxFeePerGas",
-    isZkEVM: false,
   },
-  {
+  [CHAIN_ID_SCROLL]: {
     id: CHAIN_ID_SCROLL,
     key: "scroll",
     name: "Scroll",
-    symbol: "ETH",
-    extraRpcUrls: [
-      "https://scroll.drpc.org",
+    rpcUrls: [
+      // "https://scroll.drpc.org",
       "https://rpc.ankr.com/scroll",
+      "https://scroll-rpc.publicnode.com",
+      "https://scroll.blockpi.network/v1/rpc/public",
+      "https://scroll-mainnet.public.blastapi.io",
+      "https://1rpc.io/scroll",
+      "https://rpc.scroll.io",
     ],
-    gasType: "maxFeePerGas",
-    isZkEVM: true,
   },
-  {
+  [CHAIN_ID_LINEA]: {
     id: CHAIN_ID_LINEA,
     key: "linea",
     name: "Linea",
-    symbol: "ETH",
-    extraRpcUrls: [
+    rpcUrls: [
+      "https://rpc.linea.build",
       "https://linea.drpc.org",
+      "https://linea.decubate.com",
+      "https://linea.blockpi.network/v1/rpc/public",
       "https://1rpc.io/linea",
     ],
-    gasType: "maxFeePerGas",
-    isZkEVM: true,
   },
-  {
+  [CHAIN_ID_ZKSYNC]: {
     id: CHAIN_ID_ZKSYNC,
     key: "zksync",
     name: "zkSync Era",
-    symbol: "ETH",
-    extraRpcUrls: [
+    rpcUrls: [
+      "https://mainnet.era.zksync.io",
       "https://zksync.drpc.org",
       "https://zksync-era.blockpi.network/v1/rpc/public",
     ],
-    gasType: "maxFeePerGas",
-    isZkEVM: true,
   },
-]
-const CHAIN_EXTRAS_MAP = Object.fromEntries(CHAIN_EXTRAS.map(chain => [chain.id, chain]))
-
-const RPC_URLS_MAP = Object.fromEntries(CHAINS.map(chain => {
-  const defaultUrl = chain.rpcUrls.default.http[0]
-  return [chain.id, [defaultUrl, ...CHAIN_EXTRAS_MAP[chain.id].extraRpcUrls]]
-}))
+}
 
 /**
  * @param {number} chainId
  */
-const getChainExtra = chainId => CHAIN_EXTRAS_MAP[chainId]
+const getChainExtra = chainId => CHAIN_EXTRAS[chainId]
 
 /**
  * @param {number} chainId
  */
-export const isSupportChain = chainId => CHAIN_IDS_MAP[chainId]
+export const isSupportChain = chainId => !!CHAINS_MAP[chainId]
 
 export const getChains = () => CHAINS
 
-export const getDefaultChain = () => CHAINS[0]
+export const DEFAULT_CHAIN_ID = CHAIN_ID_ZORA
 
 /**
  * @param {number} chainId
@@ -115,27 +112,15 @@ export const getChain = chainId => {
   return CHAINS_MAP[chainId]
 }
 
-export const getRpcUrls = chainId => RPC_URLS_MAP[chainId] || []
+/**
+ * @param {number} chainId
+ */
+export const getRpcUrls = chainId => getChainExtra(chainId)?.rpcUrls || []
 
 /**
  * @param {number} chainId
  */
-export const getChainName = chainId => getChainExtra(chainId).name
-
-/**
- * @param {number} chainId
- */
-export const getGasType = chainId => getChainExtra(chainId).gasType
-
-/**
- * @param {number} chainId
- */
-export const isZkEVM = chainId => getChainExtra(chainId).isZkEVM
-
-/**
- * @param {number} chainId
- */
-export const getChainSymbol = chainId => CHAIN_EXTRAS_MAP[chainId].symbol
+export const getChainName = chainId => getChainExtra(chainId)?.name || ""
 
 /**
  * @param {number} chainId
@@ -155,12 +140,12 @@ export const getExplorerUrl = chainId => {
 /**
  * @param {string} key
  */
-export const getChainIdByKey = key => CHAIN_EXTRAS.find(it => it.key === key)?.id || 0
+export const getChainIdByKey = key => Object.values(CHAIN_EXTRAS).find(it => it.key === key)?.id || 0
 
 /**
  * @param {number} chainId
  */
-export const getChainKey = chainId => CHAIN_EXTRAS_MAP[chainId]?.key || ""
+export const getChainKey = chainId => getChainExtra(chainId)?.key || ""
 
 /**
  * @param {number} chainId
@@ -172,18 +157,27 @@ export const getTransactionUrl = (chainId, hash) => {
 
 /**
  * @param {number} chainId
- * @param {string} address
+ * @param {string} contract
  */
-export const getContractUrl = (chainId, address) => {
-  return `${getExplorerUrl(chainId)}/address/${address}`
+export const getContractUrl = (chainId, contract) => {
+  return `${getExplorerUrl(chainId)}/address/${contract}`
 }
 
 /**
  * @param {number} chainId
- * @param {string} address
+ * @param {string} token
  */
-export const getTokenUrl = (chainId, address) => {
-  return `${getExplorerUrl(chainId)}/token/${address}`
+export const getTokenUrl = (chainId, token) => {
+  return `${getExplorerUrl(chainId)}/token/${token}`
+}
+
+/**
+ * @param {number} chainId
+ * @param {string} token
+ * @param {string} holder
+ */
+export const getHolderUrl = (chainId, token, holder) => {
+  return `${getExplorerUrl(chainId)}/token/${token}${holder ? `?a=${holder}` : ''}`
 }
 
 /**
@@ -196,10 +190,9 @@ export const getAccountUrl = (chainId, account) => {
 
 /**
  * @param {number} chainId
- * @param {string} hash
+ * @param {string} address
+ * @param {bigint} id
  */
-export const getTxMeta = (chainId, hash) => {
-  const explorerUrl = getTransactionUrl(chainId, hash)
-
-  return { hash, chainId, explorerUrl }
+export const getNftUrl = (chainId, address, id) => {
+  return `${getExplorerUrl(chainId)}/token/${address}?a=${id}`
 }

@@ -1,10 +1,10 @@
 <template>
   <ActionModal v-model="modelValue">
-    <div class="flex-center" v-if="!isFail">
-      <n-text depth="1">{{ data.nft.label }}</n-text>
+    <div class="flex-center">
+      <NftImage class="size-16 aspect-square rounded" :src="data.nft.image" :label="data.nft.label" />
     </div>
-    <div v-else class="flex-center">
-      <n-text depth="1">{{ modelValue.error }}</n-text>
+    <div class="mt-3 flex-center">
+      <n-text>{{ data.nft.label }}</n-text>
     </div>
   </ActionModal>
 </template>
@@ -12,17 +12,10 @@
 <script setup>
 import { computed } from "vue"
 import ActionModal from "@/components/ActionModal/index.vue"
+import NftImage from "./NftImage.vue"
 
-/**
- * @type {import('vue').ModelRef<import('@/types').MintAction>}
- */
- const modelValue = defineModel({
-  type: Object,
-  required: true,
-})
+/** @type {import('vue').ModelRef<import('@/types').MintAction>}*/
+const modelValue = defineModel({ type: Object, required: true })
 
-const state = computed(() => modelValue.value.state || "initial")
 const data = computed(() => modelValue.value.data)
-
-const isFail = computed(() => state.value === "fail")
 </script>

@@ -1,13 +1,11 @@
-import { onBeforeUnmount, onMounted, readonly, ref, watch } from "vue"
-import debounce from "lodash-es/debounce"
-import { createInterval } from "./useTimer"
+import { ref, watch } from "vue"
+import { createDebounceUpdate } from "./useTimer"
 import { getPrices } from "@/api"
 
 const pricesRef = ref({})
-const priceChangedRef = ref(0)
-export const priceChanged = readonly(priceChangedRef)
+const nonces = ref(0)
 
-const update = async () => {
+const doUpdate = async () => {
   if (!navigator.onLine) {
     return
   }
@@ -21,13 +19,8 @@ const update = async () => {
     ...pricesRef.value,
     ...res.data,
   }
-  priceChangedRef.value++
+  nonces.value++
 }
-const debounceUpdate = debounce(update, 30 * 1000, { leading: true, trailing: false })
-
-const { start, stop } = createInterval(debounceUpdate, 120 * 1000)
-export const startUpdate = start
-export const stopUpdate = stop
 
 /**
  * @param {string} key
@@ -37,21 +30,13 @@ export const getPrice = key => {
   return pricesRef.value[key] || 0
 }
 
+export const createPriceState = () => {
+  createDebounceUpdate(doUpdate, 30000, 120000, { immediately: true, leading: true, trailing: false })
+}
+
 /**
- * @param {() => {}} onPriceChanged
+ * @param {() => {}} callback
  */
-export const createPriceState = (onPriceChanged = null) => {
-  onMounted(() => {
-    start()
-
-    if (onPriceChanged) {
-      const stopWatch = watch(priceChangedRef, () => {
-        onPriceChanged()
-      })
-
-      onBeforeUnmount(stopWatch)
-    }
-
-    onBeforeUnmount(stop)
-  })
+export const onPriceChanged = callback => {
+  watch(nonces, callback)
 }

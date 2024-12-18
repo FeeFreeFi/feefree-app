@@ -1,5 +1,11 @@
-const sketch = q => {
-  const { createCanvas, resizeCanvas, background, translate, random, map, dist, norm, color, lerpColor, stroke, strokeWeight, line } = q
+import { debounce } from "lodash-es"
+import "./q5"
+
+const sketch = id => {
+  const el = document.querySelector(id)
+  const q = new Q5("ff", el)
+
+  const { createCanvas, resizeCanvas, opacity, background, translate, random, map, dist, norm, color, lerpColor, stroke, strokeWeight, line } = q
 
   const stars = []
   const RANGE = 100
@@ -81,9 +87,18 @@ const sketch = q => {
     }
   }
 
+  const restore = debounce(() => {
+    opacity(1)
+  }, 300, { leading: false, trailing: true })
+
+  const resize = debounce(() => {
+    resizeCanvas(q.windowWidth, q.windowHeight)
+    restore()
+  }, 100, { leading: false, trailing: true })
+
   const windowResized = () => {
-    const { windowWidth, windowHeight } = q
-    resizeCanvas(windowWidth, windowHeight)
+    opacity(0)
+    resize()
   }
 
   q.draw = draw

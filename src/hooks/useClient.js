@@ -1,25 +1,25 @@
 import { createPublicClient, http, fallback } from "viem"
-import { getChain, getGasType, getRpcUrls } from "./useChains"
+import { getChain, getRpcUrls } from "./useChains"
 
+/** @type {{[chainId:number]: import('viem').PublicClient}} */
 const publicClients = {}
 
+/**
+ * @param {string[]} urls
+ */
 const createTransport = urls => {
   return fallback(urls.map(url => http(url, { batch: true, wait: 50 })))
 }
 
 /**
  * @param {number} chainId
- * @returns {import('viem').PublicClient}
  */
 export const getPublicClient = chainId => {
   if (!publicClients[chainId]) {
-    const chain = getChain(chainId)
-    const publicClient = createPublicClient({
-      chain,
-      transport: createTransport(getRpcUrls(chain.id)),
+    publicClients[chainId] = createPublicClient({
+      chain: getChain(chainId),
+      transport: createTransport(getRpcUrls(chainId)),
     })
-
-    publicClients[chainId] = publicClient
   }
 
   return publicClients[chainId]
@@ -50,6 +50,7 @@ export const waitForTransactionReceipt = async (chainId, hash, confirms = 1) => 
     const diff = BigInt(confirms - 1)
     const publicClient = getPublicClient(chainId)
     const unwatch = publicClient.watchBlockNumber({
+      pollingInterval: 2000,
       onBlockNumber: async blockNumber => {
         const receipt = await publicClient.getTransactionReceipt({ hash }).catch(() => false)
         if (!receipt || blockNumber - receipt.blockNumber < diff) {
@@ -61,37 +62,4 @@ export const waitForTransactionReceipt = async (chainId, hash, confirms = 1) => 
       },
     })
   })
-}
-
-/**
- * @param {number} chainId
- */
-export const getGasPrice = async chainId => {
-  const gasType = getGasType(chainId)
-  const publicClient = getPublicClient(chainId)
-  if (gasType === "gasPrice") {
-    return publicClient.getGasPrice()
-  }
-
-  const { maxFeePerGas } = await publicClient.estimateFeesPerGas()
-  return maxFeePerGas
-}
-
-/**
- * @param {number} chainId
- * @param {import('viem').EstimateContractGasParameters} data
- */
-export const estimateGas = async (chainId, data) => {
-  const publicClient = getPublicClient(chainId)
-
-  const [gas, gasPrice] = await Promise.all([
-    publicClient.estimateContractGas(data),
-    getGasPrice(chainId),
-  ])
-
-  return {
-    gas,
-    gasPrice,
-    transactionFee: gas * gasPrice,
-  }
 }

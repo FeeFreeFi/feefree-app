@@ -19,7 +19,7 @@ const notification = useNotification()
 const props = defineProps({
   chainId: {
     type: Number,
-    required: true,
+    default: 0,
   },
   chains: {
     /**
@@ -38,7 +38,9 @@ const switching = ref(false)
 
 const requireSwitchChain = computed(() => walletChainId.value !== props.chainId)
 
-const defaultChainId = computed(() => props.chainId ? props.chainId : props.chains[0].chainId)
+const defaultChainId = computed(() => props.chainId || props.chains[0].chainId)
 
-const onSwitchNetwork = () => doSwitchNetwork(notification, switching, defaultChainId.value)
+const onSwitchNetwork = async () => {
+  switching.value = await doSwitchNetwork(notification, defaultChainId.value)
+}
 </script>

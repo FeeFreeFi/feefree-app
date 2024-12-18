@@ -54,6 +54,10 @@ export const themeOverrides = {
     borderDisabledChecked: `1px solid ${themeVars.primary50}`,
     boxShadowFocus: themeVars.none,
   },
+  Radio: {
+    color: themeVars.transparent,
+    boxShadow: `inset 0 0 0 1px ${themeVars.primaryColor}`,
+  },
   Popselect: {
     peers: {
       InternalSelectMenu: {

@@ -13,15 +13,15 @@
 </template>
 
 <script setup>
-import { ref, computed, h, watch, onMounted, onBeforeUnmount } from "vue"
+import { ref, computed, h, watch, onMounted } from "vue"
+import { useNotification } from "naive-ui"
 import { getChainName, getChains, isSupportChain } from "@/hooks/useChains"
 import { walletChainId, chainSupported } from "@/hooks/useWallet"
 import { appChainId, setAppChainId } from "@/hooks/useAppState"
-import { useNotification } from "naive-ui"
+import { doSwitchNetwork } from "@/hooks/useInteraction"
 import ZActionButton from "@/components/ZActionButton.vue"
 import DownArrow from "@/components/Arrow/DownArrow.vue"
 import ZChainIcon from "@/components/ZChainIcon.vue"
-import { doSwitchNetwork } from "@/hooks/useInteraction"
 
 const notification = useNotification()
 
@@ -55,7 +55,9 @@ const switching = ref(false)
 /**
  * @param {number} chainId
  */
-const onSwitchNetwork = chainId => doSwitchNetwork(notification, switching, chainId)
+const onSwitchNetwork = async chainId => {
+  switching.value = await doSwitchNetwork(notification, chainId)
+}
 
 /**
  * @param {number} chainId
@@ -82,7 +84,7 @@ const onChainChange = (newChainId, oldChainId) => {
   }
 
   if (!oldChainId && newChainId !== appChainId.value) {
-    onSwitchNetwork(appChainId.value)
+    setAppChainId(newChainId)
   } else {
     if (appChainId.value !== newChainId) {
       setAppChainId(newChainId)
@@ -91,7 +93,6 @@ const onChainChange = (newChainId, oldChainId) => {
 }
 
 onMounted(() => {
-  const stopWatch = watch(walletChainId, onChainChange)
-  onBeforeUnmount(stopWatch)
+  watch(walletChainId, onChainChange)
 })
 </script>

@@ -3,12 +3,11 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
-import _ from "lodash-es"
 
 import baseConfig from './webpack.config.base.js'
 import { dirs } from "./environment.js"
 
-const chunks = _.fromPairs(_.map({
+const chunksConfig = {
   viem: [
     'viem',
     'abitype',
@@ -44,14 +43,19 @@ const chunks = _.fromPairs(_.map({
     '@emotion/hash',
     '@juggle/resize-observer',
   ],
-}, (value, key) => {
+}
+
+const chunks = Object.fromEntries(Object.entries(chunksConfig).map(([name, deps]) => {
   const seperator = '[\\/]'
-  const items = value.map(it => it.replace('/', seperator))
+  const items = deps.map(it => it.replace('/', seperator))
   const reg = new RegExp(`${seperator}node_modules${seperator}(${items.join('|')})`)
-  return [key, {
-    name: key,
+
+  const chunk = {
+    name,
     test: module => reg.test(module.resource),
-  }]
+  }
+
+  return [name, chunk]
 }))
 
 // https://webpack.js.org/configuration/

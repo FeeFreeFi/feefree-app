@@ -1,8 +1,8 @@
 import { ref, readonly, watch, onMounted, onBeforeUnmount } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { getChainIdByKey, getChainKey, getDefaultChain } from "./useChains"
+import { getChainIdByKey, getChainKey, DEFAULT_CHAIN_ID } from "./useChains"
 
-const appChainIdRef = ref(getDefaultChain().id)
+const appChainIdRef = ref(DEFAULT_CHAIN_ID)
 
 export const appChainId = readonly(appChainIdRef)
 
@@ -52,13 +52,3 @@ export const syncRouteChain = () => {
   })
 }
 
-export const getRouteUpdater = () => {
-  const router = useRouter()
-  const route = useRoute()
-
-  const update = (query, replace = false) => {
-    router.push({ replace, name: route.name, params: route.params, query: { ...route.query, ...query } })
-  }
-
-  return { update }
-}

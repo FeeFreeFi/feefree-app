@@ -1,6 +1,6 @@
 <template>
   <ZModalWrapper :show="show" :on-close="onClose" modal-class="w-[400px]">
-    <TokenSelectorView :current="current" :tokens="tokens" :on-select="onSelect" :on-close="onClose">
+    <TokenSelectorView :current="current" :on-select="onSelect" :on-close="onClose">
       <template #token="{token}">
         <slot name="token" :token="token" />
       </template>
@@ -16,23 +16,14 @@ const show = defineModel("show", { type: Boolean, default: false })
 
 defineProps({
   current: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
+    /** @type {import('vue').PropType<import('@/types').Token>} */
     type: Object,
-    required: true,
-  },
-  tokens: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token[]>}
-     */
-    type: Array,
-    required: true,
+    default: () => null,
   },
   onSelect: {
     type: Function,
     required: true,
-  }
+  },
 })
 
 const onClose = () => {

@@ -39,7 +39,7 @@
 <script setup>
 import dayjs from "dayjs"
 import shortString from "@/utils/shortString"
-import { ETH } from "@/hooks/useCurrency"
+import { ETH } from "@/utils/ethereum"
 import { screen } from "@/hooks/useScreen"
 import { getChainName, getTransactionUrl } from "@/hooks/useChains"
 import ZPagination from "@/components/ZPagination.vue"

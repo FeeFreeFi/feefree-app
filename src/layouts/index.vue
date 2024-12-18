@@ -1,8 +1,13 @@
 <template>
-  <n-layout class="text-sm bg-transparent" content-class="min-h-full pt-[--x-header-h] pb-[--x-footer-h] lg:pb-0 flex flex-col" position="absolute" :native-scrollbar="false" :scrollbar-props="{class: 'main-scrollbar'}">
+  <n-layout class="text-sm bg-transparent !fixed" content-class="min-h-full flex flex-col" position="absolute" :native-scrollbar="false" :scrollbar-props="{class: 'main-scrollbar'}">
     <AppBackground />
     <AppHeader>
-      <AppLogo />
+      <template #notice>
+        <AppNotice />
+      </template>
+      <template #logo>
+        <AppLogo />
+      </template>
     </AppHeader>
     <AppMain>
       <router-view />
@@ -13,8 +18,9 @@
 
 <script setup>
 import { screen } from "@/hooks/useScreen"
-import AppLogo from "@/components/AppLogo.vue"
 import AppBackground from './AppBackground.vue'
+import AppLogo from "@/components/AppLogo.vue"
+import AppNotice from './AppNotice.vue'
 import AppHeader from './AppHeader.vue'
 import AppMain from './AppMain.vue'
 import AppFooter from './AppFooter.vue'
@@ -23,6 +29,6 @@ import AppFooter from './AppFooter.vue'
 
 <style lang="scss">
 .main-scrollbar > .n-scrollbar-rail {
-  z-index: var(--x-main-scrollbar-z);
+  z-index: 999;
 }
 </style>

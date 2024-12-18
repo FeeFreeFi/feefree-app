@@ -1,23 +1,32 @@
 <template>
   <n-modal class="bg-dialog rounded-lg transition-all" :show="modelValue.show" :mask-closable="false" :auto-focus="false">
-    <ZModalView class="max-w-[400px] w-[calc(100vw-32px)] sm:w-[400px] text-sm transition-all" :on-close="onClose">
-      <div class="px-6 pb-8 flex flex-col gap-4 relative">
-        <div class="flex justify-center">
-          <i-ff-smile v-if="isSuccess" class="size-[72px]" />
-          <i-ff-sad v-else-if="isFail" class="size-[72px]" />
-          <i-ff-swap v-else class="size-[72px]" />
+    <ZModalView class="max-w-[400px] w-[calc(100vw-32px)] sm:w-[400px] text-sm transition-all" :title="modelValue.title" :on-close="onClose">
+      <div class="px-6 pb-6 flex flex-col relative">
+        <div class="flex justify-center self-center size-[48px]">
+          <slot name="icon" :state="state">
+            <i-ff-smile v-if="state == States.SUCCESS" class="size-full" />
+            <i-ff-sad v-else-if="state == States.FAIL" class="size-full" />
+            <i-ff-swap v-else class="size-full" />
+          </slot>
         </div>
-        <div class="flex justify-center">
-          <n-text class="text-lg font-medium">{{ modelValue.title }}</n-text>
+        <div class="min-h-32 flex-center">
+          <div class="flex-1 flex flex-col" v-if="state != States.FAIL">
+            <slot />
+          </div>
+          <div v-else class="flex-center">
+            <n-text class="text-error" depth="1">{{ modelValue.error }}</n-text>
+          </div>
         </div>
-        <div class="min-h-14 flex-center">
-          <slot :data="modelValue.data" :state="modelValue.state" :error="modelValue.error" />
-        </div>
-        <div class="h-12 flex-center">
-          <ViewOnExplorer v-if="isPending" :url="modelValue.tx.explorerUrl" />
-          <ZButton v-else-if="isSuccess" class="h-10 sm:h-12 w-full" @click="onClose">Close</ZButton>
-          <ZButton v-else-if="isFail" class="h-10 sm:h-12 w-full" @click="onClose">Dismiss</ZButton>
-          <n-text v-else class="text-sm" depth="2">Please sign in your wallet</n-text>
+        <div class="flex-center flex-col gap-3 relative">
+          <ZViewUrl v-if="explorerUrl" class="text-sm !gap-1" :url="explorerUrl" :pending="state === States.PENDING" :label="txLabel" />
+          <div v-if="state === States.INITIAL" class="h-9 flex-center">
+            <n-text class="text-sm" depth="2">Please sign in your wallet</n-text>
+          </div>
+          <div v-else-if="state === States.PENDING" class="h-9 flex-center">
+            <n-text class="text-sm" depth="2">Pending</n-text>
+          </div>
+          <ZButton v-else-if="state === States.SUCCESS" class="h-9 w-32" size="small" @click="onClose">OK</ZButton>
+          <ZButton v-else class="h-9 w-32" size="small" @click="onClose">Dismiss</ZButton>
         </div>
       </div>
     </ZModalView>
@@ -26,27 +35,23 @@
 
 <script setup>
 import { computed } from "vue"
+import { States } from "@/config"
 import ZModalView from "@/components/ZModalView.vue"
 import ZButton from "@/components/ZButton.vue"
-import ViewOnExplorer from "@/components/ViewOnExplorer.vue"
+import ZViewUrl from "@/components/ZViewUrl.vue"
+import { getTransactionUrl } from "@/hooks/useChains"
+import shortString from "@/utils/shortString"
 
-/**
- * @type {import('vue').ModelRef<{show:boolean, state: 'initial'|'pending'|'success'|'fail', title:string, data:object, tx:{hash:string, chainId:number, explorerUrl:string}, error:string}>}
- */
-const modelValue = defineModel({
-  type: Object,
-  required: true,
-})
+/** @type {import('vue').ModelRef<import('@/types').ModalAction>} */
+const modelValue = defineModel({ type: Object, required: true })
 
-const state = computed(() => modelValue.value.state || "initial")
-const isPending = computed(() => state.value === "pending")
-const isSuccess = computed(() => state.value === "success")
-const isFail = computed(() => state.value === "fail")
+const tx = computed(() => modelValue.value.tx)
+const state = computed(() => modelValue.value.state)
+
+const explorerUrl = computed(() => tx.value ? getTransactionUrl(tx.value.chainId, tx.value.hash) : "")
+const txLabel = computed(() => tx.value ? shortString(tx.value.hash) : "")
 
 const onClose = () => {
-  modelValue.value = {
-    ...modelValue.value,
-    show: false,
-  }
+  modelValue.value.show = false
 }
 </script>

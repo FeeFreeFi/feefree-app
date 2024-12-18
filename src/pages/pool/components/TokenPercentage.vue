@@ -1,22 +1,23 @@
 <template>
   <div class="flex-y-center justify-between">
-    <div class="flex-y-center gap-2">
+    <a class="flex-y-center gap-2 no-underline" :href="url" target="_blank" aria-label="token holder">
       <ZTokenIcon :token="token" />
       <ZTokenBalance :token="token" :balance="balance" :dp="dp" />
-    </div>
+    </a>
     <n-text depth="1">{{ percent }}</n-text>
   </div>
 </template>
 
 <script setup>
+import { computed } from "vue"
+import { isNative } from "@/utils/ethereum"
 import ZTokenIcon from "@/components/ZTokenIcon.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
+import { getAccountUrl, getHolderUrl } from "@/hooks/useChains"
 
-defineProps({
+const props = defineProps({
   token: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
+    /** @type {import('vue').PropType<import('@/types').Token>} */
     type: Object,
     required: true,
   },
@@ -35,5 +36,14 @@ defineProps({
     type: Number,
     default: 3,
   },
+  holder: {
+    type: String,
+    required: true,
+  },
+})
+
+const url = computed(() => {
+  const { token, holder } = props
+  return isNative(token.address) ? getAccountUrl(token.chainId, holder) : getHolderUrl(token.chainId, token.address, holder)
 })
 </script>

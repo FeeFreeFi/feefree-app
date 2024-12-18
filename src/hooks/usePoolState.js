@@ -1,79 +1,52 @@
-import { ref, onMounted, onBeforeUnmount, readonly, watch } from "vue"
-import debounce from "lodash-es/debounce"
-import { getPoolState, getPoolStates, updatePoolState, updatePoolStates } from "./useSwap"
-import { createInterval } from "./useTimer"
+import { watch } from "vue"
+import { createDebounceUpdate } from "./useTimer"
+import { getPoolData, getPoolDatas, updatePoolDatas } from "./usePool"
 
 /**
- * @param {string} id
+ * @param {import('vue').Ref<import('@/types').PoolMeta>} pool
+ * @param {import('vue').Ref<import('@/types').PoolData>} state
  */
-export const createPoolState = id => {
-  const state = ref(getPoolState(id))
+export const createPoolState = (pool, state) => {
+  state.value = getPoolData(pool.value)
 
   const doUpdate = async () => {
-    state.value = getPoolState(id)
-    await updatePoolState(id)
-    state.value = getPoolState(id)
+    state.value = getPoolData(pool.value)
+    const items = [pool.value].filter(Boolean)
+    if (items.length === 0) {
+      return
+    }
+
+    await updatePoolDatas(items)
+    state.value = getPoolData(pool.value)
   }
-  const debounceUpdate = debounce(doUpdate, 100, { leading: false, trailing: true })
-  const { start: startUpdate, stop: stopUpdate } = createInterval(debounceUpdate, 60 * 1000)
 
-  const update = (force = false) => {
-    force ? doUpdate() : debounceUpdate()
-  }
+  watch(pool, doUpdate)
 
-  onMounted(() => {
-    startUpdate()
+  const { debounceUpdate } =  createDebounceUpdate(doUpdate, 1000, 60000)
 
-    onBeforeUnmount(stopUpdate)
-  })
-
-  return {
-    state: readonly(state),
-    update,
-    startUpdate,
-    stopUpdate,
-  }
+  return debounceUpdate
 }
 
 /**
- * @param {import('vue').Ref<string[]>} ids
+ * @param {import('vue').Ref<import('@/types').PoolMeta[]>} pools
+ * @param {import('vue').Ref<{[id:string]: import('@/types').PoolData}>} states
  */
-export const createPoolStates = ids => {
-  const states = ref(getPoolStates(ids.value))
+export const createPoolStates = (pools, states) => {
+  states.value = getPoolDatas(pools.value)
 
   const doUpdate = async () => {
-    const poolIds = ids.value
-    states.value = getPoolStates(poolIds)
-    await updatePoolStates(poolIds)
-    states.value = getPoolStates(poolIds)
-  }
-  const debounceUpdate = debounce(doUpdate, 100, { leading: false, trailing: true })
-  const { start: startUpdate, stop: stopUpdate } = createInterval(debounceUpdate, 60 * 1000)
+    states.value = getPoolDatas(pools.value)
+    const items = pools.value.filter(Boolean)
+    if (items.length === 0) {
+      return
+    }
 
-  const update = (force = false) => {
-    force ? doUpdate() : debounceUpdate()
+    await updatePoolDatas(items)
+    states.value = getPoolDatas(pools.value)
   }
 
-  onMounted(() => {
-    startUpdate()
+  watch(pools, doUpdate)
 
-    onBeforeUnmount(stopUpdate)
-  })
-
-  onMounted(() => {
-    const stopWatch = watch(ids, () => {
-      states.value = getPoolStates(ids.value)
-      debounceUpdate.cancel()
-      debounceUpdate()
-    })
-
-    onBeforeUnmount(stopWatch)
-  })
-
-  return {
-    states: readonly(states),
-    update,
-    startUpdate,
-    stopUpdate,
-  }
+  return createDebounceUpdate(doUpdate, 1000, 60000)
 }
+

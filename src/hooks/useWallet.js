@@ -1,8 +1,8 @@
 import { computed, readonly, ref } from "vue"
 import { createWalletClient, custom, getAddress } from "viem"
-import { eip712WalletActions } from 'viem/zksync'
-import { balanceOf } from "./useCurrency"
-import { getChain, getChainName, isSupportChain, getDefaultChain, getNativeCurrency, isZkEVM } from "./useChains"
+import { ADDRESS_ZERO } from "@/utils/ethereum"
+import { balanceOf } from "@/contracts/ERC20"
+import { getChain, getChainName, isSupportChain, DEFAULT_CHAIN_ID, getNativeCurrency } from "./useChains"
 import { getPublicClient } from "./useClient"
 
 const walletChainIdRef = ref(0)
@@ -23,10 +23,6 @@ const replaceWalletClient = (chainId, account) => {
     account: account || accountRef.value,
     transport: custom(cachedProvider),
   })
-
-  if (isZkEVM(chainId)) {
-    walletClient = walletClient.extend(eip712WalletActions())
-  }
 }
 
 const getChainId = async provider => {
@@ -54,10 +50,7 @@ const init = async (provider, walletName, account, chainId, targetChainId) => {
   walletNameRef.value = walletName
 
   if (!isSupportChain(chainId) || (targetChainId && chainId !== targetChainId)) {
-    if (!targetChainId) {
-      const defaultChain = getDefaultChain()
-      targetChainId = defaultChain.id
-    }
+    targetChainId = targetChainId || DEFAULT_CHAIN_ID
     replaceWalletClient(targetChainId, account)
     await switchChain(targetChainId)
     return
@@ -103,12 +96,13 @@ const update = async (chainId, account = '') => {
   }
   account = getAddress(account)
 
+  replaceWalletClient(chainId, account)
+
   accountRef.value = account
   walletChainIdRef.value = chainId
   chainSupportedRef.value = true
 
   updateNativeBalance()
-  replaceWalletClient(chainId, account)
 }
 
 /**
@@ -214,7 +208,7 @@ export const updateNativeBalance = async () => {
     return
   }
 
-  nativeBalanceRef.value = await balanceOf(getPublicClient(walletChainIdRef.value), "", accountRef.value)
+  nativeBalanceRef.value = await balanceOf(getPublicClient(walletChainIdRef.value), ADDRESS_ZERO, accountRef.value)
 }
 
 /**

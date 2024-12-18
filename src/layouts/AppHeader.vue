@@ -1,8 +1,9 @@
 <template>
-  <header class="fixed w-full h-[--x-header-h] bg-header/80 backdrop-blur-sm top-0 left-0 z-[--x-header-z]">
-    <div class="h-full max-w-[--x-content-max-w] mx-auto px-4 sm:px-6 grid items-center grid-cols-[auto_1fr_auto]">
+  <header class="sticky top-0 bg-header/80 backdrop-blur-sm z-[99]">
+    <slot name="notice" />
+    <div class="h-16 max-w-[--x-content-max-w] mx-auto px-4 sm:px-6 grid items-center grid-cols-[auto_1fr_auto]">
       <div>
-        <slot />
+        <slot name="logo" />
       </div>
       <div>
         <div class="hidden lg:flex" v-if="screen.lg">

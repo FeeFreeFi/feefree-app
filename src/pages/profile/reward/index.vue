@@ -22,10 +22,10 @@ import pMap from "p-map"
 import { getClaims, getRewards } from "@/api"
 import wait from "@/utils/wait"
 import { profile } from "@/hooks/useUser"
-import { doClaim, doSwitchNetwork } from "@/hooks/useInteraction"
+import { doSend, doSwitchNetwork } from "@/hooks/useInteraction"
 import { appChainId } from "@/hooks/useAppState"
 import { account } from "@/hooks/useWallet"
-import { isValidReward } from "@/hooks/useReward"
+import { claim, isValidReward } from "@/hooks/useReward"
 import ZBack from "@/components/ZBack.vue"
 import ClaimModal from "./ClaimModal.vue"
 import RewardOverview from "./RewardOverview.vue"
@@ -62,7 +62,9 @@ const switching = ref(false)
 /**
  * @param {number} chainId
  */
- const onSwitchNetwork = chainId => doSwitchNetwork(notification, switching, chainId)
+const onSwitchNetwork = async chainId => {
+  switching.value = await doSwitchNetwork(notification, chainId)
+}
 
 const fetchRewards = async () => {
   const res = await getRewards()
@@ -118,7 +120,8 @@ const fetchData = async () => {
 const checkRewardsValid = async () => {
   const { list } = rewards.value
   const valids = await pMap(list, async item => {
-    return isValidReward(account.value, item.chainId, item.amount, item.nonce, item.proof)
+    const { chainId, address, amount, nonce, proof } = item
+    return isValidReward(chainId, address, account.value, amount, nonce, proof)
   }, { concurrency: 3 })
 
   rewards.value = {
@@ -131,10 +134,10 @@ const checkRewardsValid = async () => {
 }
 
 /**
- * @param {import('@/types').Reward} item
+ * @param {import('@/types').Reward} reward
  */
-const onClaim = async item => {
-  const { chainId } = item
+const onClaim = async reward => {
+  const { chainId } = reward
   if (chainId !== appChainId.value) {
     const success = await onSwitchNetwork(chainId)
     if (!success) {
@@ -143,7 +146,9 @@ const onClaim = async item => {
     await wait(1000)
   }
 
-  const success = await doClaim(claimAction, claiming, item, account.value)
+  claimAction.value.data = { chainId, reward }
+  const success = await doSend(claimAction, claiming, "Claim", () => claim(reward))
+
   if (success) {
     checkRewardsValid()
   }

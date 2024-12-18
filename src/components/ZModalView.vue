@@ -3,7 +3,7 @@
     <div class="absolute top-0 left-0 w-full">
       <img class="absolute w-full top-0 translate-x-center pointer-events-none" :src="gradientBg" loading="lazy" alt="dialog gradient background">
     </div>
-    <div class="p-4 flex-y-center justify-between">
+    <div v-if="hasTitle" class="p-4 flex-y-center justify-between">
       <span class="size-6" />
       <slot name="title">
         <div v-if="title" class="h-7 flex-1 text-center" :class="titleClass">
@@ -12,6 +12,7 @@
       </slot>
       <CloseButton :on-close="onClose" />
     </div>
+    <CloseButton v-else class="absolute top-4 right-4 z-[1]" :on-close="onClose" />
     <div class="flex-1 relative overflow-hidden" :class="contentClass">
       <slot />
     </div>
@@ -19,17 +20,18 @@
 </template>
 
 <script setup>
-import gradientBg from '@/assets/images/dialog-gradient-bg.svg'
+import { computed, useSlots } from 'vue'
 import CloseButton from '@/components/CloseButton.vue'
+import gradientBg from '@/assets/images/dialog-gradient-bg.svg'
 
-defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
+const props = defineProps({
   onClose: {
     type: Function,
     required: true,
+  },
+  title: {
+    type: String,
+    default: '',
   },
   titleClass: {
     type: String,
@@ -40,4 +42,8 @@ defineProps({
     default: '',
   },
 })
+
+const slots = useSlots()
+
+const hasTitle = computed(() => !!props.title || !!slots.title)
 </script>

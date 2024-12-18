@@ -30,7 +30,7 @@
           <n-text class="w-14" :depth="1">Balance</n-text>
           <div class="flex-y-center gap-2">
             <ZTokenBalance :token="nativeCurrency" :dp="6" :balance="nativeBalance" />
-            <ViewOnExplorer class="shrink-0 !gap-1 text-xs" :url="accountUrl" label="View" />
+            <ZViewUrl class="shrink-0 !gap-1 text-xs" :url="accountUrl" :label="false" />
           </div>
         </div>
         <div class="flex-y-center gap-2">
@@ -53,14 +53,14 @@
       </div>
       <div class="flex flex-col gap-4">
         <div class="flex gap-4">
-          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_POINTS }" @click="onClose">
+          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_POINTS }">
             <n-text class="text-xs" depth="1">Points</n-text>
             <div class="flex-y-center gap-1">
               <n-text class="text-primary/80">{{ profile?.points || 0 }}</n-text>
               <i-ff-points class="size-4" />
             </div>
           </router-link>
-          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_REWARD }" @click="onClose">
+          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_REWARD }">
             <n-text class="text-xs" depth="1">Reward</n-text>
             <div class="flex-y-center gap-1">
               <ZTokenBalance class="!font-normal text-primary/80" :token="nativeCurrency" :dp="8" :balance="BigInt(profile?.reward || 0)" />
@@ -75,7 +75,7 @@
               <n-text>{{ profile?.inviter || "N/A" }}</n-text>
             </div>
           </div>
-          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_FANS }" @click="onClose">
+          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_FANS }">
             <n-text class="text-xs" depth="1">Fans</n-text>
             <div class="flex-y-center gap-1">
               <n-text class="text-primary/80">{{ profile?.fans || 0 }}</n-text>
@@ -105,24 +105,23 @@ import { computed } from "vue"
 import { useMessage } from "naive-ui"
 import { PAGE_PROFILE_FANS, PAGE_PROFILE_POINTS, PAGE_PROFILE_REWARD } from "@/config"
 import shortString from "@/utils/shortString"
-import { copyText } from "@/utils/clipboard"
-import { getAccountReferral } from "@/utils/accountHash"
 import { logout } from "@/api"
 import { account, nativeBalance, nativeCurrency, disconnect } from '@/hooks/useWallet'
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { appChainId } from "@/hooks/useAppState"
 import { getAccountUrl } from "@/hooks/useChains"
-import { clearAuth } from "@/hooks/useAuth"
+import { clearAuth, getAccessToken } from "@/hooks/useAuth"
 import { profile } from "@/hooks/useUser"
 import ZCopyable from "@/components/ZCopyable.vue"
 import ZButton from '@/components/ZButton.vue'
-import ViewOnExplorer from "@/components/ViewOnExplorer.vue"
+import ZViewUrl from "@/components/ZViewUrl.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import ZBack from "@/components/ZBack.vue"
+import { createShare } from "@/hooks/useShare"
 
 const message = useMessage()
 
-const referral = computed(() => profile.value ? profile.value.referral : getAccountReferral(account.value))
+const { referral, onShare } = createShare(message)
 
 const percentage = computed(() => {
   if (!profile.value) {
@@ -134,20 +133,9 @@ const percentage = computed(() => {
 })
 
 const accountUrl = computed(() => getAccountUrl(appChainId.value, account.value))
-const shareUrl = computed(() => {
-  const url = new URL(window.location.href)
-  url.searchParams.append("referral", referral.value)
-
-  return url.href
-})
-
-const onShare = async () => {
-  const success = await copyText(shareUrl.value)
-  success && message.success("Referral copied, share and earn points!")
-}
 
 const onLogout = () => {
   disconnect()
-  logout().finally(clearAuth)
+  getAccessToken() && logout().finally(clearAuth)
 }
 </script>

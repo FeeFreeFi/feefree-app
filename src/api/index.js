@@ -1,22 +1,26 @@
 import { createFetch } from "ofetch"
+import { decode } from "cbor-x/decode"
 import { API_BASE } from "@/config"
 import { clearAuth, getAccessToken, getRefreshToken } from "@/hooks/useAuth"
 import { refreshToken as _refreshToken, login as _login } from "@/hooks/useLogin"
+
+const ACCEPT = "application/x-buffer"
 
 const service = createFetch({
   defaults: {
     baseURL: API_BASE,
     timeout: 10000,
     method: "POST",
+    headers: { Accept: ACCEPT },
   },
 })
 
 /**
- * @param {import('axios').AxiosRequestConfig} config
+ * @param {{url:string, data?:unknown, headers?:unknown}} options
  * @param {boolean} withToken
- * @returns {Promise<import('@/types').GenericsResponse>}
+ * @returns {Promise<import('@/types').GeneralResponse>}
  */
-const fetch = async (config, withToken = true) => {
+const fetch = async (options, withToken = true) => {
   if (withToken) {
     if (!getAccessToken()) {
       if (getRefreshToken()) {
@@ -28,33 +32,37 @@ const fetch = async (config, withToken = true) => {
 
     const accessToken = getAccessToken()
     if (accessToken) {
-      config = {
-        ...config,
+      options = {
+        ...options,
         headers: {
-          ...config.headers,
+          ...options.headers,
           Authorization: `Bearer ${accessToken}`
         }
       }
     }
   }
 
-  const { url, data, headers, ...rest } = config
+  const { url, data = {}, headers } = options
 
-  const res = await service(url, {
+  let result = await service(url, {
     headers,
     body: data,
-    ...rest,
   }).catch(err => {
     console.error(err)
     return { code: -1, message: err.message || err }
   })
 
-  if (res.code === 401) {
+  if (result instanceof Blob && result.type === ACCEPT) {
+    const buffer = await result.arrayBuffer()
+    result = decode(new Uint8Array(buffer))
+  }
+
+  if (result.code === 401) {
     clearAuth()
     setTimeout(_login, 0)
   }
 
-  return res
+  return result
 }
 
 /**
@@ -63,7 +71,6 @@ const fetch = async (config, withToken = true) => {
 export const getPrices = () => {
   return fetch({
     url: "/general/prices",
-    data: {},
   }, false)
 }
 
@@ -75,6 +82,51 @@ export const getInviter = data => {
   return fetch({
     url: "/general/inviter",
     data,
+  }, false)
+}
+
+/**
+ * @returns {Promise<import("@/types").ManagersResponse>}
+ */
+export const getManagers = () => {
+  return fetch({
+    url: "/general/managers",
+  }, false)
+}
+
+/**
+ * @returns {Promise<import("@/types").TokensResponse>}
+ */
+export const getTokens = () => {
+  return fetch({
+    url: "/general/tokens",
+  }, false)
+}
+
+/**
+ * @returns {Promise<import("@/types").PoolsResponse>}
+ */
+export const getPools = () => {
+  return fetch({
+    url: "/general/pools",
+  }, false)
+}
+
+/**
+ * @returns {Promise<import("@/types").NftsResponse>}
+ */
+export const getNfts = () => {
+  return fetch({
+    url: "/general/nfts",
+  }, false)
+}
+
+/**
+ * @returns {Promise<import("@/types").NoticeResponse>}
+ */
+export const getNotice = () => {
+  return fetch({
+    url: "/general/notice",
   }, false)
 }
 
@@ -106,7 +158,6 @@ export const refreshToken = data => {
 export const logout = () => {
   return fetch({
     url: "/sys/logout",
-    data: {},
   })
 }
 
@@ -116,7 +167,6 @@ export const logout = () => {
 export const getProfile = () => {
   return fetch({
     url: "/user/profile",
-    data: {},
   })
 }
 
@@ -170,7 +220,6 @@ export const getClaims = data => {
 export const getRewards = () => {
   return fetch({
     url: "/user/rewards",
-    data: {},
   })
 }
 

@@ -11,7 +11,6 @@
     <div class="flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md">
       <n-text class="text-xs" depth="1">Claimed</n-text>
       <div v-if="account" class="flex-y-center gap-1">
-        {{ age }}
         <ZTokenBalance class="!font-normal" :token="ETH" :dp="8" :balance="claimed" />
         <i-ff-reward class="size-4" />
       </div>
@@ -21,8 +20,8 @@
 </template>
 
 <script setup>
+import { ETH } from "@/utils/ethereum"
 import { account } from "@/hooks/useWallet"
-import { ETH } from "@/hooks/useCurrency"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 
 defineProps({

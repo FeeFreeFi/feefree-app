@@ -5,8 +5,9 @@
 </template>
 
 <script setup>
-import { watch, onMounted, onBeforeUnmount } from "vue"
+import { watch, onBeforeMount, onMounted, onBeforeUnmount } from "vue"
 import { useRoute } from "vue-router"
+import { useNotification } from "naive-ui"
 import { account, autoConnect } from "@/hooks/useWallet"
 import { findProvider } from "@/hooks/useProviders"
 import { visibility } from "@/hooks/usePage"
@@ -14,8 +15,21 @@ import { recentWallet } from "@/hooks/useConnecting"
 import { login, refreshToken } from "@/hooks/useLogin"
 import { clearAuth, isMatchAccount, getAccessToken, auth, loadAuth } from "@/hooks/useAuth"
 import { fetchProfile, resetProfile, saveReferral } from "@/hooks/useUser"
+import { fetchConfig } from "@/hooks/useConfig"
+import { createPriceState } from "@/hooks/usePrices"
 
 const route = useRoute()
+const notification = useNotification()
+
+const doLogin = async () => {
+  await login().catch(err => {
+    notification.error({
+      title: `Login`,
+      content: err.shortMessage || err.details || err.message,
+      duration: 5000,
+    })
+  })
+}
 
 const doAutoConnect = async () => {
   if (!recentWallet.value) {
@@ -49,22 +63,25 @@ const loadProfile = async () => {
   }
 
   clearAuth()
-  login()
+  doLogin()
 }
 
 const watchAccount = () => {
-  const stopWatch = watch([account, visibility], ([newAccount, newVisibility], [oldAccount])=> {
+  watch([account, visibility], ([newAccount, newVisibility], [oldAccount])=> {
     if (newAccount) {
       if (newAccount !== oldAccount) {
         clearAuth()
       }
 
-      newVisibility && !auth.value && login()
+      newVisibility && !auth.value && doLogin()
     }
   })
-
-  onBeforeUnmount(stopWatch)
 }
+
+onBeforeMount(() => {
+  fetchConfig()
+  createPriceState()
+})
 
 onMounted(() => {
   loadAuth()

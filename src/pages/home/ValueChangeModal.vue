@@ -7,12 +7,12 @@
           <n-text class="text-base font-medium">Value Change Reminder</n-text>
         </div>
       </template>
-      <div class="px-6 pt-4 pb-8 flex flex-col gap-8 relative">
+      <div class="px-6 pt-2 pb-6 flex flex-col gap-8 relative">
         <div class="flex flex-col gap-2" v-if="data">
           <div class="h-12 flex-y-center justify-between px-4 py-3 bg-card/40">
             <div class="flex gap-2">
               <ZTokenIcon :token="data.inputToken" />
-              <ZTokenSymbol class="!font-normal" :symbol="data.outputToken.symbol" />
+              <n-text class="text-sm">{{ data.inputToken.symbol }}</n-text>
             </div>
             <div class="flex gap-1">
               <ZTokenBalance class="!font-normal text-basic/90" :token="data.inputToken" :balance="data.amountIn" :show-symbol="screen.sm" />
@@ -20,12 +20,12 @@
             </div>
           </div>
           <div class="flex-center">
-            <i-mdi-chevron-double-down class="size-6 mx-2 text-basic" />
+            <i-mdi-chevron-double-down class="size-6 mx-2 text-primary" />
           </div>
           <div class="h-12 flex-y-center justify-between px-4 py-3 bg-card/40">
             <div class="flex gap-2">
               <ZTokenIcon :token="data.outputToken" />
-              <ZTokenSymbol class="!font-normal" :symbol="data.outputToken.symbol" />
+              <n-text class="text-sm">{{ data.outputToken.symbol }}</n-text>
             </div>
             <div class="flex gap-1">
               <ZTokenBalance class="!font-normal text-basic/90" :token="data.outputToken" :balance="data.amountOut" :show-symbol="screen.sm" />
@@ -51,7 +51,6 @@ import ZButton from "@/components/ZButton.vue"
 import ZGhostButton from "@/components/ZGhostButton.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import ZTokenIcon from "@/components/ZTokenIcon.vue"
-import ZTokenSymbol from "@/components/ZTokenSymbol.vue"
 
 /**
  * @type {import('vue').ModelRef<{show:boolean, data:import('@/types').ValueChangedData}>}

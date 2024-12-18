@@ -1,5 +1,16 @@
 import { BigNumber } from "bignumber.js"
 
+const UNITS = [
+  { value: 1e12, name: "T" },
+  { value: 1e9, name: "B" },
+  { value: 1e6, name: "M" },
+]
+
+/**
+ * @param {bigint} value
+ */
+export const toBytes32 = value => `0x${value.toString(16).padStart(64, "0")}`
+
 /**
  * @param {BigNumber|string|number} value
  */
@@ -31,15 +42,26 @@ export const parseAmount = (value, decimals) => toBigInt(fromDecimals(value, dec
 /**
  * @param {BigNumber|string|number|bigint} value
  * @param {number} decimals
- * @param {number|undefined} dp
+ * @param {number} dp
  */
 export const toAmount = (value, decimals, dp = undefined) => byDecimals(value, decimals).dp(dp === undefined ? decimals : dp).toString(10)
 
 /**
  * @param {BigNumber|string|number|bigint} value
- * @param {number|undefined} dp
+ * @param {number} dp
  */
 export const toBalance = (value, dp = 0) => fromValue(value).dp(dp).toFormat()
+
+/**
+ * @param {BigNumber|string|number|bigint} value
+ * @param {number} decimals
+ * @param {number} dp
+ */
+export const toBalanceWithUnit = (value, decimals, dp = 6) => {
+  const amount = byDecimals(value, decimals)
+  const unit = UNITS.find(it => amount.gte(it.value))
+  return unit ? `${toBalance(amount.div(unit.value), dp)}${unit.name}` : toBalance(amount, dp)
+}
 
 /**
  * @param {BigNumber} values
