@@ -1,9 +1,15 @@
 {
-  "private": true,
   "name": "feefree-app",
   "productName": "FeeFree",
   "version": "0.6.0",
   "description": "To build a Robinhood-style DEX in the blockchain industry, enabling participation in DeFi for everyone worldwide!",
+  "author": "FeeFreeFi",
+  "license": "MIT",
+  "homepage": "https://app.feefree.fi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/feefreefi/feefree-app"
+  },
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config config/webpack.config.dev.js",
