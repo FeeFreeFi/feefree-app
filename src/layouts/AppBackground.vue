@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none opacity-0 transition-opacity duration-1000" :class="[show ? 'opacity-100' : '']" :id="id.slice(1)" />
+  <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none opacity-0 transition-opacity duration-1000 bg-[#0a0a0ab2]" :class="[show ? 'opacity-100' : '']" :id="id.slice(1)" />
 </template>
 
 <script setup>

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.6.2 (2024-12-19)
+
+### Features
+
+- `Background`: Change the dynamic background from meteors to [snowflakes](https://github.com/hcodes/snowflakes).
+
 ## 0.6.1 (2024-12-19)
 
 ### Features

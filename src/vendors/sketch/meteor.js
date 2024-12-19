@@ -1,7 +1,7 @@
 import { debounce } from "lodash-es"
-import "./q5"
+import "../lib/q5"
 
-const sketch = id => {
+const meteor = id => {
   const el = document.querySelector(id)
   const q = new Q5("ff", el)
 
@@ -107,4 +107,4 @@ const sketch = id => {
   setup()
 }
 
-export default sketch
+export default meteor
