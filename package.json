@@ -1,7 +1,7 @@
 {
   "name": "feefree-app",
   "productName": "FeeFree",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "To build a Robinhood-style DEX in the blockchain industry, enabling participation in DeFi for everyone worldwide!",
   "author": "FeeFreeFi",
   "license": "MIT",
