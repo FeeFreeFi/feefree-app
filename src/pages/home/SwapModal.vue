@@ -3,12 +3,12 @@
     <div class="flex-center flex-col gap-3">
       <div class="flex-center gap-1 overflow-hidden">
         <ZTokenIcon :token="data.inputToken" />
-        <ZTokenBalance class="!font-normal text-basic/90" :token="data.inputToken" :balance="data.amountIn" />
+        <ZTokenBalance class="!font-normal" :token="data.inputToken" :balance="data.amountIn" :sign="false" />
       </div>
       <i-mdi-chevron-double-down class="size-5 text-primary" />
       <div class="flex-center gap-1 overflow-hidden">
         <ZTokenIcon :token="data.outputToken" />
-        <ZTokenBalance class="!font-normal text-basic/90" :token="data.outputToken" :balance="data.amountOut" />
+        <ZTokenBalance class="!font-normal" :token="data.outputToken" :balance="data.amountOut" :sign="true" />
       </div>
     </div>
   </ActionModal>
