@@ -9,7 +9,7 @@
     <div class="grid gap-y-4 sm:gap-y-8 grid-cols-1 sm:grid-cols-2 sm:gap-x-8 md:grid-cols-2 md:gap-x-32 lg:grid-cols-3 lg:gap-x-14 xl:grid-cols-4 xl:gap-x-8 2xl:grid-cols-5 2xl:gap-x-4 justify-items-center">
       <div class="relative w-full max-w-[400px] sm:w-[272px] flex flex-col bg-card rounded-lg" v-for="item, index in nfts" :key="index">
         <div class="w-full aspect-square">
-          <NftImage class="aspect-square rounded-t-lg" :src="item.image" :label="item.label" />
+          <NftImage :src="item.image" :label="item.label" :chain-id="item.chainId" />
         </div>
         <div class="flex flex-col px-4 sm:px-6 pb-6 pt-4">
           <!-- NFT name -->

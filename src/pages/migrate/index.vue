@@ -10,6 +10,7 @@
       <div v-if="poolOld" class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg">
         <div class="relative w-full h-[78px] flex justify-center overflow-hidden rounded-t-lg">
           <img class="w-[311px] h-[78px] max-w-max pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
+          <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="poolOld.chainId" />
         </div>
         <div class="absolute left-4 sm:left-6 top-[65px]">
           <ZPoolIcon :pool="poolOld" />
@@ -35,6 +36,7 @@
       <div class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg">
         <div class="relative w-full h-[78px] flex justify-center overflow-hidden rounded-t-lg">
           <img class="w-[311px] h-[78px] max-w-max pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
+          <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="poolLegacy.chainId" />
         </div>
         <div class="absolute left-4 sm:left-6 top-[65px]">
           <ZPoolIcon :pool="poolLegacy" />
@@ -60,6 +62,7 @@
       <div v-for="token in config.tokens" :key="token.address" class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg">
         <div class="relative w-full h-[78px] flex justify-center overflow-hidden rounded-t-lg">
           <img class="w-[311px] h-[78px] max-w-max pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Item background">
+          <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="token.chainId" />
         </div>
         <div class="absolute left-4 sm:left-6 top-[65px]">
           <ZTokenIcon class="!size-6" :token="token" />
@@ -104,6 +107,7 @@ import ActionButton from "@/components/ActionButton.vue"
 import ZTokenIcon from "@/components/ZTokenIcon.vue"
 import poolBg from "@/assets/images/pool-bg.svg"
 import { createLiquidityState } from "@/hooks/useLiquidityState"
+import ZChainIcon from "@/components/ZChainIcon.vue"
 
 const notification = useNotification()
 

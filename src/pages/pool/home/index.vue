@@ -23,6 +23,7 @@
       <div class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg" v-for="pool in pools" :key="pool.id">
         <div class="relative w-full h-[78px] flex justify-center overflow-hidden rounded-t-lg">
           <img class="w-[311px] h-[78px] max-w-max pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
+          <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="pool.chainId" />
         </div>
         <div class="absolute left-4 sm:left-6 top-[65px]">
           <ZPoolIcon :pool="pool" />
