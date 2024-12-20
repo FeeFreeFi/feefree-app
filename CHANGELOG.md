@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.6.3 (2024-12-20)
+
+### Fixes
+
+- `NFT`: Corrected NFT type declaration.
+
+### Features
+
+- `Chain icon`: Add chain icon for Pool, Nft, etc.
+- `Token balance`: Highlight token balance changes.
+
 ## 0.6.2 (2024-12-19)
 
 ### Features
