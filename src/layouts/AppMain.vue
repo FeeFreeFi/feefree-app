@@ -38,7 +38,7 @@ const doAutoConnect = async () => {
   }
 
   const walletName = recentWallet.value
-  const provider = findProvider(walletName)
+  const provider = walletName ? findProvider(walletName) : null
   if (!provider) {
     watchAccount()
     return

@@ -129,6 +129,7 @@ export type SignatureData = {
   timestamp: number;
   expire: number;
   signature: string;
+  uri: string;
 }
 
 export type JwtToken = {

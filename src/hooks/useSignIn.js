@@ -32,5 +32,6 @@ export const signIn = async ({ walletClient }, chainId, domain, uri) => {
     timestamp,
     expire,
     signature,
+    uri,
   }
 }
