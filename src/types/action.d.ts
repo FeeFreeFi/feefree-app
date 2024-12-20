@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox"
-import type { Reward, Token } from "./type.d"
-import type { PoolMeta, LockData, Tx, Nft } from "./common.d"
+import type { Reward, Token, Nft } from "./type.d"
+import type { PoolMeta, LockData, Tx } from "./common.d"
 
 export interface ModalAction {
   show: boolean;

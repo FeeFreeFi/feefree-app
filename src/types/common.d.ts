@@ -83,19 +83,6 @@ export type PoolData = {
   percent1: string;
 }
 
-// export type Nft = {
-//   chainId: number;
-//   label: string;
-//   address: string;
-//   name: string;
-//   symbol: string;
-//   price: bigint;
-//   free: boolean,
-//   image: string;
-//   cap: bigint;
-//   capLabel: string;
-// }
-
 export type Tx = {
   chainId: number;
   hash: string;
