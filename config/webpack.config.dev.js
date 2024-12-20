@@ -15,6 +15,9 @@ const devServer = {
     overlay: false,
   },
   historyApiFallback: true,
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+  },
   proxy: [
     {
       context: ['/api'],
