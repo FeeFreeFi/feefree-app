@@ -1,16 +1,15 @@
 import { login as _login, refreshToken as _refreshToken } from "@/api"
-import { getWalletClient } from "./useWallet"
+import { getWalletClient, walletInfo} from "./useWallet"
 import { signIn } from "./useSignIn"
 import { setAuth, clearAuth, getRefreshToken } from "./useAuth"
 
 export const login = async () => {
-  const { host, protocol } = window.location
-  const domain = host
-  const uri = `${protocol}//${domain}/`
+  const { origin } = walletInfo.value
+  const { host } = new URL(origin)
 
   const walletClient = getWalletClient()
   const chainId = await walletClient.getChainId()
-  const signData = await signIn({ walletClient }, chainId, domain, uri).catch(err => {
+  const signData = await signIn({ walletClient }, chainId, host, origin).catch(err => {
     throw new Error("Login fail", { cause: err.shortMessage || err.details || err.message })
   })
   if (!signData) {

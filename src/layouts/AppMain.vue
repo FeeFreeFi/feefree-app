@@ -8,8 +8,9 @@
 import { watch, onBeforeMount, onMounted, onBeforeUnmount } from "vue"
 import { useRoute } from "vue-router"
 import { useNotification } from "naive-ui"
+import wait from "@/utils/wait"
 import { account, autoConnect } from "@/hooks/useWallet"
-import { findProvider } from "@/hooks/useProviders"
+import { findWallet } from "@/hooks/useWalletDetector"
 import { visibility } from "@/hooks/usePage"
 import { recentWallet } from "@/hooks/useConnecting"
 import { login, refreshToken } from "@/hooks/useLogin"
@@ -17,6 +18,7 @@ import { clearAuth, isMatchAccount, getAccessToken, auth, loadAuth } from "@/hoo
 import { fetchProfile, resetProfile, saveReferral } from "@/hooks/useUser"
 import { fetchConfig } from "@/hooks/useConfig"
 import { createPriceState } from "@/hooks/usePrices"
+import { loadSafeWallet } from "@/hooks/useSafeWallet"
 
 const route = useRoute()
 const notification = useNotification()
@@ -32,19 +34,16 @@ const doLogin = async () => {
 }
 
 const doAutoConnect = async () => {
-  if (!recentWallet.value) {
+  await wait(100)
+
+  const name = recentWallet.value || "Safe"
+  const wallet = findWallet(name)
+  if (!wallet) {
     watchAccount()
     return
   }
 
-  const walletName = recentWallet.value
-  const provider = walletName ? findProvider(walletName) : null
-  if (!provider) {
-    watchAccount()
-    return
-  }
-
-  const success = await autoConnect(provider, walletName)
+  const success = await autoConnect(wallet)
   watchAccount()
 
   success && loadProfile()
@@ -81,6 +80,7 @@ const watchAccount = () => {
 onBeforeMount(() => {
   fetchConfig()
   createPriceState()
+  loadSafeWallet()
 })
 
 onMounted(() => {

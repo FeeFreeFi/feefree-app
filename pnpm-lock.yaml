@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@safe-global/safe-apps-provider':
+        specifier: ^0.18.5
+        version: 0.18.5(typescript@5.7.2)
+      '@safe-global/safe-apps-sdk':
+        specifier: ^9.1.0
+        version: 9.1.0(typescript@5.7.2)
       '@scure/base':
         specifier: ^1.2.1
         version: 1.2.1
@@ -1293,6 +1299,16 @@ packages:
     peerDependenciesMeta:
       rollup:
         optional: true
+
+  '@safe-global/safe-apps-provider@0.18.5':
+    resolution: {integrity: sha512-9v9wjBi3TwLsEJ3C2ujYoexp3pFJ0omDLH/GX91e2QB+uwCKTBYyhxFSrTQ9qzoyQd+bfsk4gjOGW87QcJhf7g==}
+
+  '@safe-global/safe-apps-sdk@9.1.0':
+    resolution: {integrity: sha512-N5p/ulfnnA2Pi2M3YeWjULeWbjo7ei22JwU/IXnhoHzKq3pYCN6ynL9mJBOlvDVv892EgLPCWCOwQk/uBT2v0Q==}
+
+  '@safe-global/safe-gateway-typescript-sdk@3.22.4':
+    resolution: {integrity: sha512-Z7Z8w3GEJdJ/paF+NK23VN4AwqWPadq0AeRYjYLjIBiPWpRB2UO/FKq7ONABEq0YFgNPklazIV4IExQU1gavXA==}
+    engines: {node: '>=16'}
 
   '@scure/base@1.2.1':
     resolution: {integrity: sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==}
@@ -5778,6 +5794,28 @@ snapshots:
       '@types/estree': 1.0.6
       estree-walker: 2.0.2
       picomatch: 4.0.2
+
+  '@safe-global/safe-apps-provider@0.18.5(typescript@5.7.2)':
+    dependencies:
+      '@safe-global/safe-apps-sdk': 9.1.0(typescript@5.7.2)
+      events: 3.3.0
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
+
+  '@safe-global/safe-apps-sdk@9.1.0(typescript@5.7.2)':
+    dependencies:
+      '@safe-global/safe-gateway-typescript-sdk': 3.22.4
+      viem: 2.21.55(typescript@5.7.2)
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
+
+  '@safe-global/safe-gateway-typescript-sdk@3.22.4': {}
 
   '@scure/base@1.2.1': {}
 

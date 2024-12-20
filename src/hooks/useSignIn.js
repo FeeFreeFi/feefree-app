@@ -5,9 +5,9 @@ import { SIGN_EXPIRE } from '@/config'
  * @param {{walletClient: import('viem').WalletClient}} client
  * @param {number} chainId
  * @param {string} domain
- * @param {string} uri
+ * @param {string} origin
  */
-export const signIn = async ({ walletClient }, chainId, domain, uri) => {
+export const signIn = async ({ walletClient }, chainId, domain, origin) => {
   const account = walletClient.account.address
   const nonce = generateSiweNonce()
   const timestamp = Date.now()
@@ -19,7 +19,7 @@ export const signIn = async ({ walletClient }, chainId, domain, uri) => {
     chainId,
     nonce,
     domain,
-    uri,
+    uri: origin,
     issuedAt: new Date(timestamp),
     expirationTime: new Date(timestamp + expire),
   })
@@ -32,6 +32,6 @@ export const signIn = async ({ walletClient }, chainId, domain, uri) => {
     timestamp,
     expire,
     signature,
-    uri,
+    origin,
   }
 }

@@ -8,14 +8,31 @@ import { getPublicClient } from "./useClient"
 const walletChainIdRef = ref(0)
 const accountRef = ref("")
 const nativeBalanceRef = ref(0n)
-const walletNameRef = ref("")
 const chainSupportedRef = ref(false)
 
+/**
+ * @type {import('vue').Ref<import('@/types').WalletInfo>}
+ */
+const walletInfoRef = ref(null)
+
+/**
+ * @type {import('viem').WalletClient}
+ */
 let walletClient = null
+/**
+ * @type {import('viem').EIP1193Provider}
+ */
 let cachedProvider = null
 
+/**
+ * @param {number} value
+ */
 const toHex = value => `0x${value.toString(16)}`
 
+/**
+ * @param {number} chainId
+ * @param {string} account
+ */
 const replaceWalletClient = (chainId, account) => {
   chainId = chainId || walletChainIdRef.value
   walletClient = createWalletClient({
@@ -25,6 +42,9 @@ const replaceWalletClient = (chainId, account) => {
   })
 }
 
+/**
+ * @param {import('viem').EIP1193Provider} provider
+ */
 const getChainId = async provider => {
   const chainId = await provider.request({ method: 'eth_chainId' })
   return parseInt(chainId, 16)
@@ -38,7 +58,14 @@ const getAccounts = async provider => {
   return provider.request({ method: 'eth_accounts' })
 }
 
-const init = async (provider, walletName, account, chainId, targetChainId) => {
+/**
+ * @param {import('viem').EIP1193Provider} provider
+ * @param {import('@/types').WalletInfo} info
+ * @param {string} account
+ * @param {number} chainId
+ * @param {number} targetChainId
+ */
+const init = async (provider, info, account, chainId, targetChainId) => {
   if (cachedProvider !== provider) {
     provider.on("connect", onConnect)
     provider.on("chainChanged", onChainChanged)
@@ -47,7 +74,7 @@ const init = async (provider, walletName, account, chainId, targetChainId) => {
     cachedProvider = provider
   }
 
-  walletNameRef.value = walletName
+  walletInfoRef.value = info
 
   if (!isSupportChain(chainId) || (targetChainId && chainId !== targetChainId)) {
     targetChainId = targetChainId || DEFAULT_CHAIN_ID
@@ -76,7 +103,7 @@ const reset = () => {
   walletChainIdRef.value = 0
   nativeBalanceRef.value = 0n
   chainSupportedRef.value = false
-  walletNameRef.value = ""
+  walletInfoRef.value = null
   walletClient = null
 }
 
@@ -122,14 +149,23 @@ const addChain = async chainId => {
   await cachedProvider.request({ method: 'wallet_addEthereumChain', params })
 }
 
+/**
+ * @param {{chainId:number}} e
+ */
 const onConnect = async ({ chainId }) => {
   await update(parseInt(chainId, 16))
 }
 
+/**
+ * @param {number} chainId
+ */
 const onChainChanged = async (chainId) => {
   await update(parseInt(chainId, 16))
 }
 
+/**
+ * @param {string[]} accounts
+ */
 const onAccountsChanged = async (accounts) => {
   if (!accounts || accounts.length === 0) {
     reset()
@@ -145,12 +181,12 @@ const onDisconnect = () => {
 }
 
 /**
- * @param {*} provider
- * @param {string} walletName
+ * @param {{provider:import('viem').EIP1193Provider, info: import('@/types').WalletInfo}} wallet
  * @param {number} targetChainId
  */
-export const connect = async (provider, walletName, targetChainId = undefined) => {
-  const accounts = await provider.request({ method: 'eth_requestAccounts' })
+export const connect = async (wallet, targetChainId = undefined) => {
+  const { provider, info } = wallet
+  const accounts = info.name === "Safe" ? await provider.request({ method: 'eth_accounts' }) : await provider.request({ method: 'eth_requestAccounts' })
   if (!accounts) {
     return false
   }
@@ -160,18 +196,21 @@ export const connect = async (provider, walletName, targetChainId = undefined) =
   }
 
   const chainId = await getChainId(provider)
-  await init(provider, walletName, accounts[0], chainId, targetChainId)
+  await init(provider, info, accounts[0], chainId, targetChainId)
 
   return true
 }
 
-export const autoConnect = async (provider, walletName) => {
-  const accounts = await getAccounts(provider)
+/**
+ * @param {{provider:import('viem').EIP1193Provider, info: import('@/types').WalletInfo}} wallet
+ */
+export const autoConnect = async wallet => {
+  const accounts = await getAccounts(wallet.provider)
   if (accounts.length === 0) {
     return false
   }
 
-  return connect(provider, walletName)
+  return connect(wallet)
 }
 
 export const disconnect = () => {
@@ -224,13 +263,15 @@ export const chainName = computed(() => getChainName(walletChainIdRef.value) || 
 const readonlyWalletChainId = readonly(walletChainIdRef)
 const readonlyAccount = readonly(accountRef)
 const readonlyNativeBalance = readonly(nativeBalanceRef)
-const readonlyWalletName= readonly(walletNameRef)
 const readonlyChainSupported = readonly(chainSupportedRef)
+const readonlyWalletInfo = readonly(walletInfoRef)
+
+export const walletName= computed(() => walletInfoRef.value?.name)
 
 export {
   readonlyWalletChainId as walletChainId,
   readonlyAccount as account,
   readonlyNativeBalance as nativeBalance,
-  readonlyWalletName as walletName,
   readonlyChainSupported as chainSupported,
+  readonlyWalletInfo as walletInfo,
 }

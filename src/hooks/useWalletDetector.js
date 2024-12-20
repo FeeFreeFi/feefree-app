@@ -1,19 +1,27 @@
 import { ref } from "vue"
 import uuid from "@/utils/uuid"
 
-const providersRef = ref({})
+/**
+ * @type {import('vue').Ref<{[uuid:string]:{provider:import('viem').EIP1193Provider, info:import('@/types').WalletInfo}}>}
+ */
+const walletsRef = ref({})
 
-export const getProviders = () => {
-  const items = Object.values(providersRef.value)
-  return items.length > 0 ? items : [getInjectedProvider()].filter(Boolean)
+export const getWallets = (includeHidden = false) => {
+  const items = Object.values(walletsRef.value)
+  return items.length > 0 ? (includeHidden ? items : items.filter(it => !it.hidden)) : [getInjectedWallet()].filter(Boolean)
 }
 
-export const findProvider = name => {
-  const providers = getProviders()
-  const item = providers.find(it => it.info.name === name)
-  return item?.provider
+/**
+ * @param {string} name
+ */
+export const findWallet = name => {
+  const wallets = getWallets(true)
+  return wallets.find(it => it.info.name === name)
 }
 
+/**
+ * @param {import('viem').EIP1193Provider} provider
+ */
 const getProviderMeta = provider => {
   if (provider.isApexWallet)
     return {
@@ -206,35 +214,54 @@ const getProviderMeta = provider => {
   }
 }
 
-const getInjectedProvider = () => {
-  if (!window.ethereum) {
+const getInjectedWallet = () => {
+  /** @type {import('viem').EIP1193Provider} */
+  const provider = window.ethereum
+  if (!provider) {
     return
   }
 
-  const { name, icon } = getProviderMeta(window.ethereum)
+  const { name, icon } = getProviderMeta(provider)
   return {
     info: {
       uuid: uuid(16),
       name,
       icon: `/static/wallets/${icon}`,
+      hidden: false,
     },
-    provider: window.ethereum,
+    provider,
   }
 }
 
-const onAnnounceProvider = e => {
-  const { info, provider } = e.detail
-  if (!providersRef.value[info.uuid]) {
-    providersRef.value = {
-      ...providersRef.value,
-      [info.uuid]: { info, provider },
+/**
+ * @param {import("@/types").WalletInfo} info
+ * @param {import('viem').EIP1193Provider} provider
+ */
+export const addWallet = (info, provider) => {
+  const { uuid, origin } = info
+  if (!walletsRef.value[uuid]) {
+    walletsRef.value = {
+      ...walletsRef.value,
+      [uuid]: {
+        info: { ...info, origin: origin || window.location.origin },
+        provider
+      },
     }
   }
 }
 
-const install = () => {
+/**
+ * @param {*} e
+ */
+const onAnnounceProvider = e => {
+  const { info, provider } = e.detail
+  const { uuid, name, icon } = info
+  addWallet({ uuid, name, icon, hidden: false } , provider)
+}
+
+const detect = () => {
   window.addEventListener("eip6963:announceProvider", onAnnounceProvider)
   window.dispatchEvent(new Event("eip6963:requestProvider"))
 }
 
-export default install
+export default detect

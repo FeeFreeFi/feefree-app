@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.6.4 (2024-12-20)
+
+### Features
+
+- `Wallet`: Automatically connect the Blockscout wallet when [FeeFree](https://explorer.zora.energy/apps/feefree) is opened in Blockscout.
+
 ## 0.6.3 (2024-12-20)
 
 ### Fixes

@@ -1,7 +1,7 @@
 {
   "name": "feefree-app",
   "productName": "FeeFree",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "To build a Robinhood-style DEX in the blockchain industry, enabling participation in DeFi for everyone worldwide!",
   "author": "FeeFreeFi",
   "license": "MIT",
@@ -19,6 +19,8 @@
     "lint": "eslint -f friendly src"
   },
   "dependencies": {
+    "@safe-global/safe-apps-provider": "^0.18.5",
+    "@safe-global/safe-apps-sdk": "^9.1.0",
     "@scure/base": "^1.2.1",
     "bignumber.js": "^9.1.2",
     "cbor-x": "^1.6.0",

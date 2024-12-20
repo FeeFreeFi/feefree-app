@@ -129,7 +129,7 @@ export type SignatureData = {
   timestamp: number;
   expire: number;
   signature: string;
-  uri: string;
+  origin: string;
 }
 
 export type JwtToken = {
@@ -141,4 +141,12 @@ export type Auth = {
   id: string;
   accessToken: JwtToken;
   refreshToken: JwtToken;
+}
+
+export type WalletInfo = {
+  uuid: string;
+  name: string;
+  icon?: string;
+  origin?: string;
+  hidden: boolean;
 }

@@ -10,7 +10,7 @@ import App from './App.vue'
 import router from '@/router'
 import usePage from "@/hooks/usePage"
 import useScreen from "@/hooks/useScreen"
-import useProviders from "@/hooks/useProviders"
+import useWalletDetector from "@/hooks/useWalletDetector"
 import errorHandle from '@/utils/errorHandle'
 
 dayjs.extend(relativeTime)
@@ -18,7 +18,7 @@ dayjs.extend(utc)
 
 usePage()
 useScreen()
-useProviders()
+useWalletDetector()
 
 const app = createApp(App)
 app.use(router)
