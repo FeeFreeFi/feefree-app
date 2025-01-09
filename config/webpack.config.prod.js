@@ -7,7 +7,7 @@ import TerserPlugin from 'terser-webpack-plugin'
 import baseConfig from './webpack.config.base.js'
 import { dirs } from "./environment.js"
 
-const chunkConfig = {
+const chunksConfig = {
   viem: [
     'viem',
     'abitype',
@@ -45,7 +45,7 @@ const chunkConfig = {
   ],
 }
 
-const chunks = Object.fromEntries(Object.entries(chunkConfig).map(([name, deps]) => {
+const chunks = Object.fromEntries(Object.entries(chunksConfig).map(([name, deps]) => {
   const seperator = '[\\/]'
   const items = deps.map(it => it.replace('/', seperator))
   const reg = new RegExp(`${seperator}node_modules${seperator}(${items.join('|')})`)
@@ -57,6 +57,8 @@ const chunks = Object.fromEntries(Object.entries(chunkConfig).map(([name, deps])
 
   return [name, chunk]
 }))
+
+// https://webpack.js.org/configuration/
 
 /**
  * @type {import('webpack').Configuration}

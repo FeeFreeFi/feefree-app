@@ -125,7 +125,7 @@ export default {
         ]
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpe?g|svg)(\?.*)?$/,
         type: 'asset',
         parser: {
           dataUrlCondition: {

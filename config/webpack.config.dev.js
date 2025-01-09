@@ -1,4 +1,5 @@
 import { merge } from 'webpack-merge'
+import TsCheckerPlugin from 'fork-ts-checker-webpack-plugin'
 
 import baseConfig from './webpack.config.base.js'
 
@@ -32,13 +33,13 @@ const devServer = {
 const devConfig = {
   mode: 'development',
   devtool: 'eval-source-map',
+  plugins: [
+    new TsCheckerPlugin(),
+  ],
   performance: {
     hints: false,
   },
-  devServer,
-  cache: {
-    type: "filesystem",
-  },
+  cache: { type: "memory" },
   optimization: {
     splitChunks: {
       chunks: 'all',
@@ -51,6 +52,10 @@ const devConfig = {
         },
       },
     },
+  },
+  devServer,
+  watchOptions: {
+    ignored: /node_modules/,
   },
 }
 
