@@ -1,10 +1,17 @@
 # CHANGELOG
 
+## 0.7.0 (2025-01-09)
+
+### Breaking changes
+- `TypeScript`: Migrate code to typescript
+
+
 ## 0.6.4 (2024-12-20)
 
 ### Features
 
 - `Wallet`: Automatically connect the Blockscout wallet when [FeeFree](https://explorer.zora.energy/apps/feefree) is opened in Blockscout.
+
 
 ## 0.6.3 (2024-12-20)
 
@@ -17,17 +24,20 @@
 - `Chain icon`: Add chain icon for Pool, Nft, etc.
 - `Token balance`: Highlight token balance changes.
 
+
 ## 0.6.2 (2024-12-19)
 
 ### Features
 
 - `Background`: Change the dynamic background from meteors to [snowflakes](https://github.com/hcodes/snowflakes).
 
+
 ## 0.6.1 (2024-12-19)
 
 ### Features
 
 - `FFWeekNFT`: Launch Christmas-themed weekly [NFT(202452)](https://app.feefree.fi/nft).
+
 
 ## 0.6.0 (2024-12-18)
 
