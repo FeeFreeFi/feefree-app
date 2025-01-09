@@ -40,7 +40,7 @@ import ZModalView from "@/components/ZModalView.vue"
 import ZButton from "@/components/ZButton.vue"
 import ZViewUrl from "@/components/ZViewUrl.vue"
 import { getTransactionUrl } from "@/hooks/useChains"
-import shortString from "@/utils/shortString"
+import { shortString } from "@/utils"
 
 /** @type {import('vue').ModelRef<import('@/types').ModalAction>} */
 const modelValue = defineModel({ type: Object, required: true })

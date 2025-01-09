@@ -29,7 +29,7 @@
 
 <script setup>
 import { computed } from "vue"
-import { byDecimals, fromValue } from "@/utils/bn"
+import { byDecimals, fromValue } from "@/utils"
 import { appChainId } from "@/hooks/useAppState"
 import { isSupportChain } from "@/hooks/useManager"
 import { screen } from "@/hooks/useScreen"

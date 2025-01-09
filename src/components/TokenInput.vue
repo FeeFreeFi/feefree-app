@@ -20,7 +20,7 @@
 
 <script setup>
 import { ref, watch, onMounted, computed } from "vue"
-import { parseAmount, toAmount } from "@/utils/bn"
+import { parseAmount, toAmount } from "@/utils"
 import { account } from "@/hooks/useWallet"
 import { appChainId } from "@/hooks/useAppState"
 import { isSupportChain } from "@/hooks/useManager"

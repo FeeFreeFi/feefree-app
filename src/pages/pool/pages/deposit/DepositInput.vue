@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, watch, onMounted, computed } from "vue"
-import { fromValue, parseAmount, toAmount } from "@/utils/bn"
+import { fromValue, parseAmount, toAmount } from "@/utils"
 import { account } from "@/hooks/useWallet"
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'

@@ -11,7 +11,7 @@
 
 <script setup>
 import { computed } from "vue"
-import { fromValue } from "@/utils/bn"
+import { fromValue } from "@/utils"
 import { account } from "@/hooks/useWallet"
 import RightArrow from "@/components/Arrow/RightArrow.vue"
 

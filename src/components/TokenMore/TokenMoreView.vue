@@ -75,8 +75,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from "vue"
 import { useNotification } from "naive-ui"
-import shortString from "@/utils/shortString"
-import formatPrice from "@/utils/formatPrice"
+import { shortString, formatPrice, isNative } from "@/utils"
 import { account, getWalletClient, walletChainId } from "@/hooks/useWallet"
 import { balanceOf, totalSupply } from "@/hooks/useToken"
 import { getAccountUrl, getHolderUrl } from "@/hooks/useChains"
@@ -88,7 +87,6 @@ import ZViewUrl from "@/components/ZViewUrl.vue"
 import { open as openWalletConnector } from "@/hooks/useWalletConnector"
 import { doSwitchNetwork } from "@/hooks/useInteraction"
 import { getPrice } from "@/hooks/usePrices"
-import { isNative } from "@/utils/ethereum"
 
 const notification = useNotification()
 

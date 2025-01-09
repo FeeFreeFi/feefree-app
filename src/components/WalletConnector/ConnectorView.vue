@@ -16,7 +16,7 @@
 <script setup>
 import { computed } from "vue"
 import { useNotification } from "naive-ui"
-import wait from "@/utils/wait"
+import { wait } from "@/utils"
 import { getWallets } from "@/hooks/useWalletDetector"
 import { connect } from "@/hooks/useWallet"
 import { appChainId } from "@/hooks/useAppState"

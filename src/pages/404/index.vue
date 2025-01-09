@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { PAGE_HOME } from '@/config'
 import ZGhostButton from '@/components/ZGhostButton.vue'
 import notFoundBg from "@/assets/images/not-found-bg.svg"

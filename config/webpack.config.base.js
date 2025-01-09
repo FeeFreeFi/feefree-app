@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import webpack from "webpack"
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -15,13 +15,15 @@ import { getDefinition, dirs, appMeta } from './environment.js'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+const customIconNamespace = "ff"
+
 // https://webpack.js.org/configuration/
 /**
  * @type {import('webpack').Configuration}
  */
 export default {
   entry: {
-    index: path.join(dirs.src, 'index.js'),
+    index: path.join(dirs.src, 'index.ts'),
   },
   output: {
     filename: '[name].[contenthash:8].js',
@@ -32,37 +34,55 @@ export default {
     alias: {
       '@': dirs.src,
     },
-    extensions: ['.js', '.vue', '.json', '.css']
+    extensions: ['.ts', '.js', '.vue', '.json', '.css', '.scss'],
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        resolve: {
-          fullySpecified: false,
-        },
-        include: /node_modules/,
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        resolve: {
-          fullySpecified: false,
-        },
-        exclude: /node_modules/,
-      },
-      {
         test: /\.vue$/,
-        use: {
-          loader: 'vue-loader',
-          options: {
-            sourceMap: true,
-            compilerOptions: {
-              whitespace: 'preserve',
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'vue-loader',
+            options: {
+              sourceMap: true,
+              compilerOptions: {
+                whitespace: 'preserve',
+              },
+              extractCSS: isProduction,
+            }
+          },
+        ],
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              appendTsSuffixTo: [/\.vue$/],
             },
-            extractCSS: isProduction,
+          },
+        ],
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            },
           }
-        }
+        ],
+        resolve: {
+          fullySpecified: false,
+        },
       },
       {
         test: /\.scss$/,
@@ -109,7 +129,7 @@ export default {
         type: 'asset',
         parser: {
           dataUrlCondition: {
-            maxSize: 10000,
+            maxSize: 10 * 1024,
           },
         },
         generator: {
@@ -121,7 +141,7 @@ export default {
         type: 'asset/resource',
         parser: {
           dataUrlCondition: {
-            maxSize: 10000,
+            maxSize: 10 * 1024,
           },
         },
         generator: {
@@ -131,23 +151,25 @@ export default {
     ]
   },
   plugins: [
+    new webpack.ProgressPlugin(),
     new webpack.DefinePlugin(getDefinition(!isProduction)),
     new ESLintPlugin({
       configType: "flat",
-      extensions: ['js', 'vue'],
+      extensions: ['ts', 'js', 'vue'],
       formatter,
     }),
     Components({
+      dts: "src/types/components.d.ts",
       resolvers: [
         UnpluginIconsResolver({
-          customCollections: ["ff"],
+          customCollections: [customIconNamespace],
         }),
         NaiveUiResolver(),
       ],
     }),
     UnpluginIcons({
       customCollections: {
-        ff: FileSystemIconLoader(path.resolve(dirs.src, "assets/icons")),
+        [customIconNamespace]: FileSystemIconLoader(path.resolve(dirs.src, "assets/icons")),
       },
     }),
     new VueLoaderPlugin(),

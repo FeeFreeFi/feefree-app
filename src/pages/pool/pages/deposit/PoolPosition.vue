@@ -17,7 +17,7 @@
 
 <script setup>
 import { computed } from "vue"
-import { fromValue } from "@/utils/bn"
+import { fromValue } from "@/utils"
 import TokenPrice from "./TokenPrice.vue"
 
 const props = defineProps({

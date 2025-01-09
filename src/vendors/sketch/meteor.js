@@ -3,7 +3,7 @@ import "../lib/q5"
 
 const meteor = id => {
   const el = document.querySelector(id)
-  const q = new Q5("ff", el)
+  const q = new window.Q5("ff", el)
 
   const { createCanvas, resizeCanvas, opacity, background, translate, random, map, dist, norm, color, lerpColor, stroke, strokeWeight, line } = q
 

@@ -1,7 +1,7 @@
 import "../lib/snowflakes"
 
 const snowflake = id => {
-  new Snowflakes({
+  new window.Snowflakes({
     color: 'white',
     container: document.querySelector(id),
     minSize: 8,

@@ -85,7 +85,7 @@
 
 <script setup>
 import dayjs from "dayjs"
-import shortString from "@/utils/shortString"
+import { shortString } from "@/utils"
 import { screen } from "@/hooks/useScreen"
 import { appChainId } from "@/hooks/useAppState"
 import { getAccountUrl, getTransactionUrl } from "@/hooks/useChains"

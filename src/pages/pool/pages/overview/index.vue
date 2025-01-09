@@ -20,19 +20,18 @@
 <script setup>
 import { onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { toBalance } from "@/utils/bn"
+import { PAGE_NOT_FOUND } from "@/config"
+import { toBalance, decodePoolId } from "@/utils"
 import { configReady } from "@/hooks/useConfig"
 import { fetchPoolMeta } from "@/hooks/usePool"
 import { getPoolData } from "@/hooks/usePool"
 import { getPoolAddress, isSupportChain } from "@/hooks/useManager"
 import { onPriceChanged } from "@/hooks/usePrices"
+import { createPoolState } from "@/hooks/usePoolState"
 import PoolHeader from "./PoolHeader.vue"
 import PoolPrice from "./PoolPrice.vue"
 import ItemBox from "../../components/ItemBox.vue"
 import AssetsDetail from "../../components/AssetsDetail.vue"
-import { createPoolState } from "@/hooks/usePoolState"
-import { decodePoolId } from "@/utils/poolId"
-import { PAGE_NOT_FOUND } from "@/config"
 
 const route = useRoute()
 const router = useRouter()

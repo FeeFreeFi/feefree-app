@@ -6,7 +6,7 @@
         <n-text class="font-medium text-base">My Position</n-text>
       </div>
     </div>
-    <div v-if="!hasPosition" class="flex flex-col gap-4">
+    <div v-if="hasPosition" class="flex flex-col gap-4">
       <div class="flex flex-col md:flex-row gap-4">
         <!-- Total Liquidity -->
         <ItemBox class="flex-1" label="Total Liquidity">
@@ -36,26 +36,25 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { toBalance } from "@/utils/bn"
+import { PAGE_NOT_FOUND } from "@/config"
+import { toBalance, decodePoolId } from "@/utils"
 import { screen } from "@/hooks/useScreen"
 import { onPriceChanged } from "@/hooks/usePrices"
 import { account, updateNativeBalance } from "@/hooks/useWallet"
 import { fetchPoolMeta, getPoolData, getPositionData } from "@/hooks/usePool"
 import { configReady } from "@/hooks/useConfig"
 import { createLiquidityState } from "@/hooks/useLiquidityState"
+import { createPoolState } from "@/hooks/usePoolState"
+import { getLockDatas, unlock } from "@/hooks/useTimelock"
+import { doSend } from "@/hooks/useInteraction"
+import { isSupportChain } from "@/hooks/useManager"
 import ZPoolIcon from "@/components/ZPoolIcon.vue"
 import ZBalance from "@/components/ZBalance.vue"
 import ItemBox from "../../components/ItemBox.vue"
 import AssetsDetail from "../../components/AssetsDetail.vue"
 import NoPosition from "./NoPosition.vue"
-import { createPoolState } from "@/hooks/usePoolState"
-import { getLockDatas, unlock } from "@/hooks/useTimelock"
-import { decodePoolId } from "@/utils/poolId"
 import LockedLiquidity from "./LockedLiquidity.vue"
 import UnlockModal from "./UnlockModal.vue"
-import { doSend } from "@/hooks/useInteraction"
-import { isSupportChain } from "@/hooks/useManager"
-import { PAGE_NOT_FOUND } from "@/config"
 
 const route = useRoute()
 const router = useRouter()

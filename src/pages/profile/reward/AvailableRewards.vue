@@ -29,7 +29,7 @@
 
 <script setup>
 import dayjs from "dayjs"
-import { ETH } from "@/utils/ethereum"
+import { ETH } from "@/utils"
 import { screen } from "@/hooks/useScreen"
 import { getChainName, getTransactionUrl } from "@/hooks/useChains"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"

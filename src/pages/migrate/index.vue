@@ -90,7 +90,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue"
 import { useNotification } from "naive-ui"
-import wait from "@/utils/wait"
+import { wait } from "@/utils"
 import { appChainId } from "@/hooks/useAppState"
 import { account, updateNativeBalance } from "@/hooks/useWallet"
 import { getMigration, migrateLiquidity, removeLiquidity, unexchange } from "@/hooks/useMigration"

@@ -36,6 +36,22 @@ const devConfig = {
     hints: false,
   },
   devServer,
+  cache: {
+    type: "filesystem",
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          enforce: true,
+        },
+      },
+    },
+  },
 }
 
 export default merge(baseConfig, devConfig)

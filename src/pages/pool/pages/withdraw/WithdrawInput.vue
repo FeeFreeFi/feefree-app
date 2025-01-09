@@ -24,7 +24,7 @@
 <script setup>
 import { ref, watch, onMounted, computed } from "vue"
 import { account } from "@/hooks/useWallet"
-import { fromValue, parseAmount, toAmount } from "@/utils/bn"
+import { fromValue, parseAmount, toAmount } from "@/utils"
 import ZBalance from "@/components/ZBalance.vue"
 import AmountButtonGroup from "@/components/AmountButtonGroup.vue"
 import AmountSlider from "./AmountSlider.vue"

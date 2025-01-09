@@ -1,7 +1,7 @@
 import dotenv from 'dotenv-flow'
 import fs from "fs-extra"
-import path from 'path'
-import { fileURLToPath } from 'url'
+import path from 'node:path'
+import { fileURLToPath, URL } from 'node:url'
 
 dotenv.config()
 

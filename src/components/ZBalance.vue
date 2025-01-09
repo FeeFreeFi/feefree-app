@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { toBalanceWithUnit } from "@/utils/bn"
+import { toBalanceWithUnit } from "@/utils"
 
 defineProps({
   value: {

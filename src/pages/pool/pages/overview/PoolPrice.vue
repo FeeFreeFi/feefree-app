@@ -10,7 +10,7 @@
 
 <script setup>
 import { ref, computed } from "vue"
-import formatPrice from "@/utils/formatPrice"
+import { formatPrice } from "@/utils"
 import ZTokenIcon from "@/components/ZTokenIcon.vue"
 
 const props = defineProps({

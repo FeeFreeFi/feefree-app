@@ -20,7 +20,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue"
-import { isSame } from "@/utils/ethereum"
+import { Patterns } from "@/config"
+import { isSame } from "@/utils"
 import { account } from "@/hooks/useWallet"
 import { createTokenStatesForMap } from "@/hooks/useTokenState"
 import { cacheTokens, fetchToken, getCachedTokens, getTokens } from "@/hooks/useToken"
@@ -29,7 +30,6 @@ import ZModalView from '@/components/ZModalView.vue'
 import ZSearch from '@/components/ZSearch.vue'
 import TokenItem from "./TokenItem.vue"
 import NoToken from "./NoToken.vue"
-import { Patterns } from "@/config"
 
 const props = defineProps({
   current: {

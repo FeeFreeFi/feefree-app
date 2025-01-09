@@ -10,7 +10,7 @@
 
 <script setup>
 import { computed } from "vue"
-import { isNative } from "@/utils/ethereum"
+import { isNative } from "@/utils"
 import ZTokenIcon from "@/components/ZTokenIcon.vue"
 import ZTokenBalance from "@/components/ZTokenBalance.vue"
 import { getAccountUrl, getHolderUrl } from "@/hooks/useChains"

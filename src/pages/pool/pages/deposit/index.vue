@@ -35,8 +35,8 @@
 import { ref, computed, watch, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useNotification } from "naive-ui"
-import { parseAmount, toAmount } from "@/utils/bn"
-import { getAmount0FromAmount1AndSqrtPrice, getAmount1FromAmount0AndSqrtPrice } from "@/utils/uniswap"
+import { PAGE_NOT_FOUND } from "@/config"
+import { parseAmount, toAmount, decodePoolId, getAmount0FromAmount1AndSqrtPrice, getAmount1FromAmount0AndSqrtPrice } from "@/utils"
 import { screen } from "@/hooks/useScreen"
 import { allowance } from "@/hooks/useToken"
 import { account, updateNativeBalance } from "@/hooks/useWallet"
@@ -46,17 +46,15 @@ import { addLiquidity, getManagerAddress, getSupportedChains, isSupportChain, qu
 import { fetchPoolMeta, getPoolData } from "@/hooks/usePool"
 import { configReady } from "@/hooks/useConfig"
 import { onPriceChanged } from "@/hooks/usePrices"
+import { createPoolState } from "@/hooks/usePoolState"
+import { createQuoteState } from "@/hooks/useQuoteState"
+import { createTokenStates } from "@/hooks/useTokenState"
 import ApproveModal from '@/components/ActionModal/ApproveModal.vue'
 import ActionButton from "@/components/ActionButton.vue"
 import ZButton from "@/components/ZButton.vue"
 import PoolPosition from "./PoolPosition.vue"
 import DepositInput from "./DepositInput.vue"
 import DepositModal from './DepositModal.vue'
-import { createPoolState } from "@/hooks/usePoolState"
-import { createQuoteState } from "@/hooks/useQuoteState"
-import { createTokenStates } from "@/hooks/useTokenState"
-import { decodePoolId } from "@/utils/poolId"
-import { PAGE_NOT_FOUND } from "@/config"
 
 const route = useRoute()
 const router = useRouter()

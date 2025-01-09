@@ -25,7 +25,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import shortString from '@/utils/shortString'
+import { shortString } from '@/utils'
 import { getContractUrl } from '@/hooks/useChains'
 import ZCopyable from '@/components/ZCopyable.vue'
 

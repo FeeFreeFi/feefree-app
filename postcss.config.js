@@ -4,14 +4,13 @@ import autoprefixer from "autoprefixer"
 import tailwindcss from "tailwindcss"
 
 // https://github.com/postcss/postcss#usage
-/**
- * @type {import('postcss-load-config').Config}
- */
+
+/** @type {import('postcss-load-config').Config} */
 export default {
   plugins: [
-    postcssImport,
-    postcssPresetEnv,
-    autoprefixer,
-    tailwindcss,
+    postcssImport(),
+    postcssPresetEnv(),
+    autoprefixer(),
+    tailwindcss(),
   ]
 }

@@ -16,8 +16,7 @@
 <script setup>
 import { computed } from "vue"
 import { States } from "@/config"
-import formatPrice from "@/utils/formatPrice"
-import { byDecimals } from "@/utils/bn"
+import { formatPrice, byDecimals } from "@/utils"
 import ActionModal from "@/components/ActionModal/index.vue"
 import TokenItem from "./TokenItem.vue"
 

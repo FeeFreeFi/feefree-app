@@ -4,7 +4,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue"
-import uuid from "@/utils/uuid"
+import { uuid } from "@/utils"
 import sketch from "@/vendors/sketch"
 
 const id = `#el-${uuid()}`

@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref } from "vue"
-import shortString from "@/utils/shortString"
+import { shortString } from "@/utils"
 import { screen } from "@/hooks/useScreen"
 import RecipientView from "./RecipientView.vue"
 

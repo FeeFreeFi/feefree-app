@@ -48,13 +48,13 @@
 <script setup>
 import dayjs from "dayjs"
 import { DATE_FORMAT_DEFAULT } from "@/config"
-import shortString from "@/utils/shortString"
+import { shortString } from "@/utils"
 import { screen } from "@/hooks/useScreen"
+import { getAccountUrl } from "@/hooks/useChains"
+import { appChainId } from "@/hooks/useAppState"
 import ZPagination from "@/components/ZPagination.vue"
 import ZCopyable from "@/components/ZCopyable.vue"
 import NoRecords from "./NoRecords.vue"
-import { getAccountUrl } from "@/hooks/useChains"
-import { appChainId } from "@/hooks/useAppState"
 
 defineProps({
   total: {

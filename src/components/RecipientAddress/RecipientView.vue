@@ -32,7 +32,7 @@
 <script setup>
 import { ref, computed } from "vue"
 import { isAddress } from 'viem'
-import { pasteText } from "@/utils/clipboard"
+import { pasteText } from "@/utils"
 import { account } from "@/hooks/useWallet"
 import ZModalView from '@/components/ZModalView.vue'
 import ZButton from "../ZButton.vue"

@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { fromValue, parseAmount } from "@/utils/bn"
+import { fromValue, parseAmount } from "@/utils"
 import { computed } from "vue"
 
 const props = defineProps({

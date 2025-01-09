@@ -44,7 +44,7 @@
 
 <script setup>
 import { computed } from "vue"
-import formatPrice from "@/utils/formatPrice"
+import { formatPrice } from "@/utils"
 import { screen } from "@/hooks/useScreen"
 import ZModalView from "@/components/ZModalView.vue"
 import ZButton from "@/components/ZButton.vue"

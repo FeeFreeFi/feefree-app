@@ -49,7 +49,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue"
 import { States } from "@/config"
-import { fromValue, toBalance, toBalanceWithUnit } from "@/utils/bn"
+import { fromValue, toBalance, toBalanceWithUnit } from "@/utils"
 import { createNftStates, fetchNfts, getNfts, getSupportedChains, mint } from "@/hooks/useNft"
 import { account, updateNativeBalance } from "@/hooks/useWallet"
 import { appChainId, syncRouteChain } from "@/hooks/useAppState"

@@ -50,14 +50,13 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue"
 import { PAGE_POOL_OVERVIEW } from '@/config'
-import { toBalance } from "@/utils/bn"
+import { toBalance, encodePoolId } from "@/utils"
 import { appChainId, syncRouteChain } from "@/hooks/useAppState"
 import { loadMyPools as _loadMyPools, getPools } from "@/hooks/usePool"
 import { onPriceChanged } from "@/hooks/usePrices"
 import { configReady } from "@/hooks/useConfig"
 import { createPoolStates } from "@/hooks/usePoolState"
 import { account } from "@/hooks/useWallet"
-import { encodePoolId } from "@/utils/poolId"
 import ZContainer from "@/components/ZContainer.vue"
 import ZChainIcon from "@/components/ZChainIcon.vue"
 import ZButton from "@/components/ZButton.vue"

@@ -24,9 +24,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { parseAmount } from "@/utils/bn"
-import uuid from "@/utils/uuid"
-import { isNative, isSame } from "@/utils/ethereum"
+import { parseAmount, uuid, isNative, isSame } from "@/utils"
 import { TOTAL_SUPPLY } from "@/config"
 import { configReady } from "@/hooks/useConfig"
 import { account, updateNativeBalance } from "@/hooks/useWallet"

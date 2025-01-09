@@ -7,7 +7,7 @@
 
 <script setup>
 import { ref, onBeforeUnmount } from "vue"
-import { copyText } from "@/utils/clipboard"
+import { copyText } from "@/utils"
 
 const props = defineProps({
   text: {

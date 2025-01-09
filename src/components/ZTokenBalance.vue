@@ -9,7 +9,7 @@
 
 <script setup>
 import { computed } from "vue"
-import { toBalanceWithUnit } from "@/utils/bn"
+import { toBalanceWithUnit } from "@/utils"
 
 const props = defineProps({
   token: {

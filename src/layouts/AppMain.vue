@@ -8,7 +8,7 @@
 import { watch, onBeforeMount, onMounted, onBeforeUnmount } from "vue"
 import { useRoute } from "vue-router"
 import { useNotification } from "naive-ui"
-import wait from "@/utils/wait"
+import { wait } from "@/utils"
 import { account, autoConnect } from "@/hooks/useWallet"
 import { findWallet } from "@/hooks/useWalletDetector"
 import { visibility } from "@/hooks/usePage"

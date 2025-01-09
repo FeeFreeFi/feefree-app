@@ -4,9 +4,7 @@
 import plugin from 'tailwindcss/plugin'
 import animate from "tailwindcss-animate"
 
-/**
- * @type {import('tailwindcss').Config}
- */
+/** @type {import('tailwindcss').Config} */
 export default {
   // darkMode: 'class',
   content: ['./src/**/*.{html,js,vue}'],
@@ -64,25 +62,6 @@ export default {
         '.translate-y-center': {
           top: "50%",
           transform: "translateY(-50%)",
-        },
-        '.margin-center': {
-          left: "0",
-          right: "0",
-          top: "0",
-          bottom: "0",
-          margin: "auto",
-        },
-        '.margin-x-center': {
-          left: "0",
-          right: "0",
-          "margin-left": "auto",
-          "margin-right": "auto",
-        },
-        '.margin-y-center': {
-          top: "0",
-          bottom: "0",
-          "margin-top": "auto",
-          "margin-bottom": "auto",
         },
         '.flex-center': {
           display: "flex",

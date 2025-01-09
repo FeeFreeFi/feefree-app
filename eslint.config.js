@@ -1,39 +1,37 @@
 import globals from "globals"
-import pluginJs from "@eslint/js"
-import pluginVue from 'eslint-plugin-vue'
-import pluginJsdoc from 'eslint-plugin-jsdoc'
+import eslint from '@eslint/js'
+import tslint from 'typescript-eslint'
+import vueParser from 'vue-eslint-parser'
 
-/**
- * @type {import('eslint').Linter.Config[]}
- */
-export default [
+export default tslint.config(
   {
     languageOptions: {
       globals: {
         ...globals.browser,
         process: true,
-      }
-    }
-  },
-  pluginJs.configs.recommended,
-  ...pluginVue.configs["flat/recommended"],
-  {
-    rules: {
-      'vue/max-attributes-per-line': "off",
-      'vue/singleline-html-element-content-newline': "off",
-      'vue/multi-word-component-names': 'off',
-      "vue/attributes-order": "off",
+      },
     },
   },
-  pluginJsdoc.configs['flat/recommended'],
+  eslint.configs.recommended,
+  tslint.configs.strict,
+  {
+    files: ['*.vue'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tslint.parser,
+        extraFileExtensions: [".vue"],
+      },
+    },
+  },
   {
     rules: {
-      "jsdoc/require-param-description": "off",
-      "jsdoc/require-returns-description": "off",
-      "jsdoc/require-returns": "off",
-    }
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
   },
   {
-    ignores: ["src/vendors/*"],
+    ignores: [
+      "src/vendors",
+    ],
   },
-]
+)

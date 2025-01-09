@@ -16,11 +16,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { PAGE_PROFILE_HOME } from "@/config"
-import jazzicon from "@/utils/jazzicon"
-import shortString from "@/utils/shortString"
-import { byDecimals } from "@/utils/bn"
+import { jazzicon, shortString, byDecimals } from "@/utils"
 import { account, chainSupported, nativeBalance, nativeCurrency } from "@/hooks/useWallet"
 import { open } from "@/hooks/useWalletConnector"
 import { screen } from '@/hooks/useScreen'
