@@ -42,3 +42,11 @@ export const States = {
 export const TOTAL_SUPPLY = 100000000000000000000000000n
 
 export const SLIPPAGE = 50n
+
+export const SAFE_APPS_DOMAINS = [
+  "base.blockscout.com",
+  "scroll.blockscout.com",
+  "zksync.blockscout.com",
+  "explorer.zora.energy",
+  "explorer.linea.build",
+]
