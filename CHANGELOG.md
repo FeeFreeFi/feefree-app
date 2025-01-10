@@ -3,7 +3,7 @@
 ## 0.7.2 (2025-01-10)
 
 ### Styles
-- `Prettier`: Format code using [eslint-config](https://github.com/antfu/eslint-config)
+- `Prettier`: Format code using [@antfu/eslint-config](https://github.com/antfu/eslint-config)
 
 
 ## 0.7.1 (2025-01-09)
