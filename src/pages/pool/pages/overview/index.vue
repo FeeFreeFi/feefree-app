@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 lg:bg-card lg:rounded-20">
-    <div class="lg:p-6 flex flex-col gap-4" v-if="pool">
+    <div v-if="pool" class="lg:p-6 flex flex-col gap-4">
       <!-- Header -->
       <PoolHeader :pool="pool" />
       <!-- Pool Price -->
@@ -18,20 +18,19 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { PAGE_NOT_FOUND } from "@/config"
-import { toBalance, decodePoolId } from "@/utils"
-import { configReady } from "@/hooks/useConfig"
-import { fetchPoolMeta } from "@/hooks/usePool"
-import { getPoolData } from "@/hooks/usePool"
-import { getPoolAddress, isSupportChain } from "@/hooks/useManager"
-import { onPriceChanged } from "@/hooks/usePrices"
-import { createPoolState } from "@/hooks/usePoolState"
-import PoolHeader from "./PoolHeader.vue"
-import PoolPrice from "./PoolPrice.vue"
-import ItemBox from "../../components/ItemBox.vue"
-import AssetsDetail from "../../components/AssetsDetail.vue"
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { PAGE_NOT_FOUND } from '@/config'
+import { toBalance, decodePoolId } from '@/utils'
+import { configReady } from '@/hooks/useConfig'
+import { fetchPoolMeta, getPoolData } from '@/hooks/usePool'
+import { getPoolAddress, isSupportChain } from '@/hooks/useManager'
+import { onPriceChanged } from '@/hooks/usePrices'
+import { createPoolState } from '@/hooks/usePoolState'
+import PoolHeader from './PoolHeader.vue'
+import PoolPrice from './PoolPrice.vue'
+import ItemBox from '../../components/ItemBox.vue'
+import AssetsDetail from '../../components/AssetsDetail.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -61,4 +60,3 @@ onMounted(async () => {
   }
 })
 </script>
-

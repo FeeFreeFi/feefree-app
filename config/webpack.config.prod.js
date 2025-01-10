@@ -5,7 +5,7 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 
 import baseConfig from './webpack.config.base.js'
-import { dirs } from "./environment.js"
+import { dirs } from './environment.js'
 
 const chunksConfig = {
   viem: [
@@ -20,7 +20,7 @@ const chunksConfig = {
     '@scure/bip39',
   ],
   naiveui: [
-    "naive-ui",
+    'naive-ui',
     '@css-render/plugin-bem',
     '@css-render/vue3-ssr',
     '@types/katex',
@@ -77,7 +77,7 @@ const prodConfig = {
             ignore: ['.*'],
           },
         },
-      ]
+      ],
     }),
   ],
   optimization: {
@@ -99,7 +99,7 @@ const prodConfig = {
         naiveui: {
           ...chunks.naiveui,
           reuseExistingChunk: true,
-          chunks: "all",
+          chunks: 'all',
           minChunks: 1,
           enforce: true,
           priority: 20,
@@ -107,16 +107,16 @@ const prodConfig = {
         viem: {
           ...chunks.viem,
           reuseExistingChunk: true,
-          chunks: "all",
+          chunks: 'all',
           minChunks: 1,
           enforce: true,
           priority: 10,
         },
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name: "vendor",
+          name: 'vendor',
           reuseExistingChunk: true,
-          chunks: "all",
+          chunks: 'all',
           minChunks: 1,
           enforce: true,
           priority: -20,

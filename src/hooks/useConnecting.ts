@@ -1,11 +1,11 @@
-import { ref, readonly, computed } from "vue"
-import { CACHE_RECENT } from "@/config"
-import { getStorage, setStorage } from "@/utils"
-import { Wallet } from "@/types"
+import { ref, readonly, computed } from 'vue'
+import { CACHE_RECENT } from '@/config'
+import { getStorage, setStorage } from '@/utils'
+import type { Wallet } from '@/types'
 
 const connectingWalletRef = ref<Wallet>()
 
-const recentRef = ref<{wallet:string}>(getStorage(CACHE_RECENT))
+const recentRef = ref<{ wallet: string }>(getStorage(CACHE_RECENT))
 
 export const reset = () => {
   connectingWalletRef.value = undefined

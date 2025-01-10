@@ -1,5 +1,5 @@
 import dotenv from 'dotenv-flow'
-import fs from "fs-extra"
+import fs from 'fs-extra'
 import path from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 
@@ -8,9 +8,9 @@ dotenv.config()
 const { API_BASE } = process.env
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
-const root = path.resolve(__dirname, "..")
+const root = path.resolve(__dirname, '..')
 
-const { version, name, productName, description }  = fs.readJsonSync(path.resolve(root, 'package.json'))
+const { version, name, productName, description } = fs.readJsonSync(path.resolve(root, 'package.json'))
 
 const APP_META = {
   APP_NAME: JSON.stringify(name),
@@ -28,9 +28,9 @@ export const getDefinition = (dev = false) => {
     ...APP_META,
   }
 
-  console.log("============== ENV ==============")
-  console.log(Object.entries(env).map(([key, value]) => `${key}: ${JSON.parse(value)}`).join("\n"))
-  console.log("============== ENV ==============")
+  console.log('============== ENV ==============')
+  console.log(Object.entries(env).map(([key, value]) => `${key}: ${JSON.parse(value)}`).join('\n'))
+  console.log('============== ENV ==============')
 
   return {
     'process.env': env,
@@ -42,7 +42,7 @@ export const getDefinition = (dev = false) => {
 
 export const dirs = {
   root,
-  src: path.join(root, "src"),
-  dist: path.join(root, "dist"),
-  public: path.join(root, "public"),
+  src: path.join(root, 'src'),
+  dist: path.join(root, 'dist'),
+  public: path.join(root, 'public'),
 }

@@ -5,7 +5,7 @@
         <DownArrow class="!size-5 transition-all" :class="[show ? '!rotate-180' : '']" />
       </div>
       <div v-else class="flex-1 h-12 flex-center flex-col gap-1">
-        <img class="size-[22px] transition-all" :class="[show ? '' : 'opacity-70 grayscale']" :src="`/static/tabbars/more.svg`" loading="lazy" alt="more">
+        <img class="size-[22px] transition-all" :class="[show ? '' : 'opacity-70 grayscale']" src="/static/tabbars/more.svg" loading="lazy" alt="more">
         <n-text class="text-xs transition-all" :class="[show ? 'text-primary' : 'text-basic-1']">More</n-text>
       </div>
     </template>
@@ -14,10 +14,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { screen } from "@/hooks/useScreen"
-import DownArrow from "@/components/Arrow/DownArrow.vue"
-import NavMemuView from "./NavMemuView.vue"
+import { ref } from 'vue'
+import { screen } from '@/hooks/useScreen'
+import DownArrow from '@/components/Arrow/DownArrow.vue'
+import NavMemuView from './NavMemuView.vue'
 
 const show = ref(false)
 const maskClosable = ref(true)

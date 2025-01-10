@@ -6,8 +6,8 @@
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount } from "vue"
-import { copyText } from "@/utils"
+import { ref, onBeforeUnmount } from 'vue'
+import { copyText } from '@/utils'
 
 const props = defineProps({
   text: {
@@ -17,7 +17,7 @@ const props = defineProps({
   delay: {
     type: Number,
     default: 1000,
-  }
+  },
 })
 
 const copied = ref(false)
@@ -40,7 +40,7 @@ const onClick = async () => {
   }
 
   let text
-  if (typeof props.text === "function") {
+  if (typeof props.text === 'function') {
     text = props.text()
   } else {
     text = props.text
@@ -53,4 +53,3 @@ const onClick = async () => {
 
 onBeforeUnmount(() => delayReset())
 </script>
-

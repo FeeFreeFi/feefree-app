@@ -12,8 +12,6 @@
 import { debounce } from 'lodash-es'
 import { onBeforeUnmount, onMounted } from 'vue'
 
-const modelValue = defineModel({ type: String, required: true })
-
 const props = defineProps({
   placeholder: {
     type: String,
@@ -27,8 +25,10 @@ const props = defineProps({
     /** @type {import('vue').PropType<(value:string) => Promise<void>>} */
     type: Function,
     default: () => {},
-  }
+  },
 })
+
+const modelValue = defineModel({ type: String, required: true })
 
 const debounceSearch = debounce(() => props.onSearch(modelValue.value), props.delay)
 

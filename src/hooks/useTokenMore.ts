@@ -1,7 +1,7 @@
-import type { Token } from "@/types"
-import { readonly, ref } from "vue"
+import type { Token } from '@/types'
+import { readonly, ref } from 'vue'
 
-const stateRef = ref<{show: boolean, token?: Token}>({
+const stateRef = ref<{ show: boolean, token?: Token }>({
   show: false,
   token: undefined,
 })

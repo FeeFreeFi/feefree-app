@@ -10,10 +10,10 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { fromValue } from "@/utils"
-import { account } from "@/hooks/useWallet"
-import RightArrow from "@/components/Arrow/RightArrow.vue"
+import { computed } from 'vue'
+import { fromValue } from '@/utils'
+import { account } from '@/hooks/useWallet'
+import RightArrow from '@/components/Arrow/RightArrow.vue'
 
 const props = defineProps({
   amount: {
@@ -42,7 +42,7 @@ const props = defineProps({
 const currentPercent = computed(() => {
   const { balance, total } = props
   if (balance === 0n || total === 0n) {
-    return "0%"
+    return '0%'
   }
 
   return `${fromValue(balance).times(100).div(total).dp(4).toFormat()}%`
@@ -51,7 +51,7 @@ const currentPercent = computed(() => {
 const afterPercent = computed(() => {
   const { amount, balance, total } = props
   if (balance === 0n || total === 0n || amount === 0n || total <= amount) {
-    return "0%"
+    return '0%'
   }
 
   return `${fromValue(balance - amount).times(100).div(total - amount).dp(4).toFormat()}%`

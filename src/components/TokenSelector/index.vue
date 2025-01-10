@@ -1,7 +1,7 @@
 <template>
   <ZModalWrapper :show="show" :on-close="onClose" modal-class="w-[400px]">
     <TokenSelectorView :current="current" :on-select="onSelect" :on-close="onClose">
-      <template #token="{token}">
+      <template #token="{ token }">
         <slot name="token" :token="token" />
       </template>
     </TokenSelectorView>
@@ -9,10 +9,8 @@
 </template>
 
 <script setup>
-import ZModalWrapper from "@/components/ZModalWrapper.vue"
-import TokenSelectorView from "./TokenSelectorView.vue"
-
-const show = defineModel("show", { type: Boolean, default: false })
+import ZModalWrapper from '@/components/ZModalWrapper.vue'
+import TokenSelectorView from './TokenSelectorView.vue'
 
 defineProps({
   current: {
@@ -25,6 +23,8 @@ defineProps({
     required: true,
   },
 })
+
+const show = defineModel('show', { type: Boolean, default: false })
 
 const onClose = () => {
   show.value = false

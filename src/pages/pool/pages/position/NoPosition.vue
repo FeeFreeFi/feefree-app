@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { PAGE_POOL_DEPOSIT } from "@/config"
-import ZGhostButton from "@/components/ZGhostButton.vue"
-import noPositionBg from "@/assets/images/no-position-bg.svg"
+import { PAGE_POOL_DEPOSIT } from '@/config'
+import ZGhostButton from '@/components/ZGhostButton.vue'
+import noPositionBg from '@/assets/images/no-position-bg.svg'
 </script>

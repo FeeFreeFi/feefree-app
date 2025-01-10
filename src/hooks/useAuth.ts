@@ -1,18 +1,18 @@
-import type { Auth } from "@/types"
-import { readonly, ref } from "vue"
-import { decodeJwt } from "jose"
-import { CACHE_AUTH, JWT_ISSUER } from "@/config"
-import { getStorage, removeStorage, setStorage, getStamp, isExpired, isSelfAccount } from "@/utils"
+import type { Auth } from '@/types'
+import { readonly, ref } from 'vue'
+import { decodeJwt } from 'jose'
+import { CACHE_AUTH, JWT_ISSUER } from '@/config'
+import { getStorage, removeStorage, setStorage, getStamp, isExpired, isSelfAccount } from '@/utils'
 
-type AuthMeta = {
-  accessToken: string;
-  refreshToken: string;
+interface AuthMeta {
+  accessToken: string
+  refreshToken: string
 }
 
-type AuthJwt = {
-  valid: boolean;
-  exp?: number;
-  id?: string;
+interface AuthJwt {
+  valid: boolean
+  exp?: number
+  id?: string
 }
 
 const parseJwt = (token: string) => {
@@ -34,35 +34,20 @@ export const auth = readonly(authRef)
 
 export const getAccessToken = () => {
   if (!authRef.value) {
-    return ""
+    return ''
   }
 
   const { accessToken } = authRef.value
-  return !accessToken || isExpired(accessToken.exp) ? "" : accessToken.value
+  return !accessToken || isExpired(accessToken.exp) ? '' : accessToken.value
 }
 
 export const getRefreshToken = () => {
   if (!authRef.value) {
-    return ""
+    return ''
   }
 
   const { refreshToken } = authRef.value
-  return !refreshToken || isExpired(refreshToken.exp) ? "" : refreshToken.value
-}
-
-const doLoadAuth = () => {
-  const cache = getStorage(CACHE_AUTH)
-  if (!cache) {
-    return
-  }
-
-  const auth = parseAuth(cache as AuthMeta)
-  if (!auth) {
-    removeStorage(CACHE_AUTH)
-    return
-  }
-
-  return auth
+  return !refreshToken || isExpired(refreshToken.exp) ? '' : refreshToken.value
 }
 
 const parseAuth = (authMeta: AuthMeta) => {
@@ -88,14 +73,29 @@ const parseAuth = (authMeta: AuthMeta) => {
   } as Auth
 }
 
+const doLoadAuth = () => {
+  const cache = getStorage(CACHE_AUTH)
+  if (!cache) {
+    return
+  }
+
+  const result = parseAuth(cache as AuthMeta)
+  if (!result) {
+    removeStorage(CACHE_AUTH)
+    return
+  }
+
+  return result
+}
+
 export const loadAuth = () => {
   authRef.value = doLoadAuth()
 }
 
 export const setAuth = (authMeta: AuthMeta) => {
-  const auth = parseAuth(authMeta)
-  if (auth) {
-    authRef.value = auth
+  const result = parseAuth(authMeta)
+  if (result) {
+    authRef.value = result
     const { accessToken, refreshToken } = authMeta
     setStorage(CACHE_AUTH, { accessToken, refreshToken })
   }

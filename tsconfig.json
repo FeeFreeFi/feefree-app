@@ -12,27 +12,23 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "baseUrl": "./",
-    "outDir": "dist",
     "rootDir": "src",
+    "outDir": "dist",
     "paths": {
       "@/*": ["src/*"]
     },
     "types": [
       "web",
-      "naive-ui/volar",
+      "naive-ui/volar"
     ],
     "lib": ["DOM", "ESNext"]
   },
-  "include": [
-    "src/**/*.js",
-    "src/**/*.ts",
-    "src/**/*.vue",
-  ],
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "dist",
     "tests",
     "public",
-    "src/vendors",
+    "src/vendors"
   ]
 }

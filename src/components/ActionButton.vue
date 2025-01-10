@@ -7,14 +7,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
-import { useNotification } from "naive-ui"
-import { account, walletChainId } from "@/hooks/useWallet"
-import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import { doSwitchNetwork } from "@/hooks/useInteraction"
-import ZButton from "@/components/ZButton.vue"
-
-const notification = useNotification()
+import { ref, computed } from 'vue'
+import { useNotification } from 'naive-ui'
+import { account, walletChainId } from '@/hooks/useWallet'
+import { open as openWalletConnector } from '@/hooks/useWalletConnector'
+import { doSwitchNetwork } from '@/hooks/useInteraction'
+import ZButton from '@/components/ZButton.vue'
 
 const props = defineProps({
   chainId: {
@@ -30,9 +28,11 @@ const props = defineProps({
   },
   btnClass: {
     type: String,
-    default: "",
+    default: '',
   },
 })
+
+const notification = useNotification()
 
 const switching = ref(false)
 

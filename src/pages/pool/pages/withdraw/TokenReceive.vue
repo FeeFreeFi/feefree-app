@@ -9,8 +9,8 @@
 </template>
 
 <script setup>
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
 
 defineProps({
   token: {

@@ -1,6 +1,6 @@
-import type { TimerId, Callback } from "@/types"
-import { debounce } from "lodash-es"
-import { onBeforeUnmount } from "vue"
+import type { TimerId, Callback } from '@/types'
+import { debounce } from 'lodash-es'
+import { onBeforeUnmount } from 'vue'
 
 export const createInterval = (fn: Callback, ms: number) => {
   let timerId: TimerId

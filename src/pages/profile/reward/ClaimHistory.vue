@@ -12,7 +12,7 @@
         <n-text v-if="screen.sm" class="flex-1 text-right" :depth="1">Txn hash</n-text>
       </div>
       <div v-if="list.length > 0">
-        <div class="h-9 px-3 flex items-center gap-1 transition-colors hover:bg-card/60" v-for="item, index in list" :key="index">
+        <div v-for="item, index in list" :key="index" class="h-9 px-3 flex items-center gap-1 transition-colors hover:bg-card/60">
           <div class="w-[72px] flex items-center gap-2">
             <ZChainIcon class="size-4" :chain-id="item.chainId" />
             <n-text class="text-xs">{{ getChainName(item.chainId) }}</n-text>
@@ -37,14 +37,14 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs"
-import { shortString, ETH } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import { getChainName, getTransactionUrl } from "@/hooks/useChains"
-import ZPagination from "@/components/ZPagination.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZChainIcon from "@/components/ZChainIcon.vue"
-import NoRecords from "./NoRecords.vue"
+import dayjs from 'dayjs'
+import { shortString, ETH } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import { getChainName, getTransactionUrl } from '@/hooks/useChains'
+import ZPagination from '@/components/ZPagination.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import ZChainIcon from '@/components/ZChainIcon.vue'
+import NoRecords from './NoRecords.vue'
 
 defineProps({
   total: {

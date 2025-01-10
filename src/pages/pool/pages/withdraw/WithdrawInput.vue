@@ -2,7 +2,7 @@
   <div class="p-4 flex flex-col gap-4 bg-card lg:bg-section rounded-lg">
     <div class="rounded flex flex-col bg-block">
       <div class="flex-y-center gap-2">
-        <n-input-number class="flex-1" v-model:value="amount" :min="0" :max="maxAmount" placeholder="0.0" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
+        <n-input-number v-model:value="amount" class="flex-1" :min="0" :max="maxAmount" placeholder="0.0" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
         <i-ff-position class="size-6" />
       </div>
       <n-divider class="!my-0" />
@@ -22,15 +22,13 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue"
-import { account } from "@/hooks/useWallet"
-import { fromValue, parseAmount, toAmount } from "@/utils"
-import ZBalance from "@/components/ZBalance.vue"
-import AmountButtonGroup from "@/components/AmountButtonGroup.vue"
-import AmountSlider from "./AmountSlider.vue"
-import ZPoolIcon from "@/components/ZPoolIcon.vue"
-
-const modelValue = defineModel({ type: String, required: true })
+import { ref, watch, onMounted, computed } from 'vue'
+import { account } from '@/hooks/useWallet'
+import { fromValue, parseAmount, toAmount } from '@/utils'
+import ZBalance from '@/components/ZBalance.vue'
+import AmountButtonGroup from '@/components/AmountButtonGroup.vue'
+import AmountSlider from './AmountSlider.vue'
+import ZPoolIcon from '@/components/ZPoolIcon.vue'
 
 const props = defineProps({
   pool: {
@@ -48,7 +46,10 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(["change"])
+
+const emit = defineEmits(['change'])
+
+const modelValue = defineModel({ type: String, required: true })
 
 const amount = ref(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, 0) : undefined)
@@ -61,17 +62,17 @@ const onInputBlur = () => {
   }
 
   modelValue.value = toAmount(amountValue.value, 0)
-  emit("change")
+  emit('change')
 }
 
 const onSliderChange = value => {
   modelValue.value = toAmount(value, 0)
-  emit("change")
+  emit('change')
 }
 
 const onPickAmount = value => {
   modelValue.value = toAmount(value, 0)
-  emit("change")
+  emit('change')
 }
 
 onMounted(() => {

@@ -1,4 +1,4 @@
-import type { PublicClient, WalletClient, Abi, Address, SendTransactionParameters } from "viem"
+import type { PublicClient, WalletClient, Abi, Address, SendTransactionParameters } from 'viem'
 import { isNative } from '@/utils'
 
 const ABI_NAME: Abi = [
@@ -171,11 +171,6 @@ export const symbol = async (publicClient: PublicClient, address: string) => {
   }) as Promise<string>
 }
 
-/**
- * @param {import('viem').PublicClient} publicClient
- * @param {string} address
- * @returns {Promise<bigint>}
- */
 export const decimals = async (publicClient: PublicClient, address: string) => {
   if (isNative(address)) {
     return publicClient.chain!.nativeCurrency.decimals
@@ -206,7 +201,7 @@ export const metadata = async (publicClient: PublicClient, address: string) => {
 
 export const totalSupply = async (publicClient: PublicClient, address: string) => {
   if (isNative(address)) {
-    throw new Error("native currency does not support totalSupply")
+    throw new Error('native currency does not support totalSupply')
   }
 
   return publicClient.readContract({
@@ -244,7 +239,7 @@ export const allowance = async (publicClient: PublicClient, address: string, own
 
 export const approve = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, spender: string, amount: bigint) => {
   if (isNative(address)) {
-    throw new Error("native currency does not require approval")
+    throw new Error('native currency does not require approval')
   }
 
   const { publicClient, walletClient } = client

@@ -1,4 +1,4 @@
-import { ref, readonly } from "vue"
+import { ref, readonly } from 'vue'
 
 const visibilityRef = ref(true)
 export const visibility = readonly(visibilityRef)
@@ -8,7 +8,7 @@ const onVisibilityChange = () => {
 }
 
 const install = () => {
-  window.addEventListener("visibilitychange", onVisibilityChange)
+  window.addEventListener('visibilitychange', onVisibilityChange)
 }
 
 export default install

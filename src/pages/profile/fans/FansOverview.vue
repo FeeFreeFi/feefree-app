@@ -20,10 +20,10 @@
 </template>
 
 <script setup>
-import { useMessage } from "naive-ui"
-import { account } from "@/hooks/useWallet"
-import { profile } from "@/hooks/useUser"
-import { createShare } from "@/hooks/useShare"
+import { useMessage } from 'naive-ui'
+import { account } from '@/hooks/useWallet'
+import { profile } from '@/hooks/useUser'
+import { createShare } from '@/hooks/useShare'
 
 const message = useMessage()
 const { referral, onShare } = createShare(message)

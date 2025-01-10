@@ -1,4 +1,4 @@
-import { BaseError } from "viem"
+import { BaseError } from 'viem'
 
 export const getErrorMessage = (err: unknown, defaultMessage: string) => {
   let message = defaultMessage

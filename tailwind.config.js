@@ -2,7 +2,7 @@
 // https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/config.full.js
 
 import plugin from 'tailwindcss/plugin'
-import animate from "tailwindcss-animate"
+import animate from 'tailwindcss-animate'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -37,9 +37,9 @@ export default {
         box: 'rgba(34, 45, 42, 0.5)',
       },
       backgroundImage: {
-        'primary-gradient': "linear-gradient(256deg, #E7E368 0%, #41F5CF 100%)",
-        'primary-gradient-hover': "linear-gradient(256deg, #DFDA2D 0%, #35EDC6 100%)",
-        'tab-gradient': "linear-gradient(270deg, rgba(61,77,74,0.5) 0%, #1C2423 100%)",
+        'primary-gradient': 'linear-gradient(256deg, #E7E368 0%, #41F5CF 100%)',
+        'primary-gradient-hover': 'linear-gradient(256deg, #DFDA2D 0%, #35EDC6 100%)',
+        'tab-gradient': 'linear-gradient(270deg, rgba(61,77,74,0.5) 0%, #1C2423 100%)',
       },
       borderRadius: {
         20: '20px',
@@ -51,36 +51,36 @@ export default {
     plugin(({ addUtilities }) => {
       addUtilities({
         '.translate-center': {
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
         },
         '.translate-x-center': {
-          left: "50%",
-          transform: "translateX(-50%)",
+          left: '50%',
+          transform: 'translateX(-50%)',
         },
         '.translate-y-center': {
-          top: "50%",
-          transform: "translateY(-50%)",
+          top: '50%',
+          transform: 'translateY(-50%)',
         },
         '.flex-center': {
-          display: "flex",
-          "justify-content": "center",
-          "align-items": "center",
+          display: 'flex',
+          'justify-content': 'center',
+          'align-items': 'center',
         },
         '.flex-x-center': {
-          display: "flex",
-          "flex-direction": "column",
-          "justify-content": "center",
+          display: 'flex',
+          'flex-direction': 'column',
+          'justify-content': 'center',
         },
         '.flex-y-center': {
-          display: "flex",
-          "align-items": "center",
+          display: 'flex',
+          'align-items': 'center',
         },
       })
     }),
   ],
   corePlugins: {
-    preflight: false
+    preflight: false,
   },
 }

@@ -1,14 +1,14 @@
-import type { MessageApi } from "naive-ui"
-import { computed } from "vue"
-import { copyText, getAccountReferral } from "@/utils"
-import { account } from "./useWallet"
-import { profile } from "./useUser"
+import type { MessageApi } from 'naive-ui'
+import { computed } from 'vue'
+import { copyText, getAccountReferral } from '@/utils'
+import { account } from './useWallet'
+import { profile } from './useUser'
 
 export const createShare = (message: MessageApi) => {
   const referral = computed(() => profile.value ? profile.value.referral : getAccountReferral(account.value))
   const shareUrl = computed(() => {
     const url = new URL(window.location.href)
-    url.searchParams.append("referral", referral.value)
+    url.searchParams.append('referral', referral.value)
 
     return url.href
   })
@@ -20,7 +20,7 @@ export const createShare = (message: MessageApi) => {
 
     const success = await copyText(shareUrl.value)
     if (success) {
-      message.success("Referral copied, share and earn!")
+      message.success('Referral copied, share and earn!')
     }
   }
 

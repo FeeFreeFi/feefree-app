@@ -1,7 +1,7 @@
-import postcssImport from "postcss-import"
-import postcssPresetEnv from "postcss-preset-env"
-import autoprefixer from "autoprefixer"
-import tailwindcss from "tailwindcss"
+import postcssImport from 'postcss-import'
+import postcssPresetEnv from 'postcss-preset-env'
+import autoprefixer from 'autoprefixer'
+import tailwindcss from 'tailwindcss'
 
 // https://github.com/postcss/postcss#usage
 
@@ -12,5 +12,5 @@ export default {
     postcssPresetEnv(),
     autoprefixer(),
     tailwindcss(),
-  ]
+  ],
 }

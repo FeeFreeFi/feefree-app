@@ -10,11 +10,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import ActionModal from "@/components/ActionModal/index.vue"
-import NftImage from "./NftImage.vue"
+import { computed } from 'vue'
+import ActionModal from '@/components/ActionModal/index.vue'
+import NftImage from './NftImage.vue'
 
-/** @type {import('vue').ModelRef<import('@/types').MintAction>}*/
+/** @type {import('vue').ModelRef<import('@/types').MintAction>} */
 const modelValue = defineModel({ type: Object, required: true })
 
 const data = computed(() => modelValue.value.data)

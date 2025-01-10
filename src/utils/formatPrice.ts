@@ -1,7 +1,7 @@
-import { fromValue } from "./bn"
+import { fromValue } from './bn'
 
-export const formatPrice = (price: number, dp: number|undefined = undefined) => {
-  price = price || 0
+export const formatPrice = (price: number, dp: number | undefined = undefined) => {
+  price ||= 0
 
   if (dp === undefined) {
     if (price > 1000) {

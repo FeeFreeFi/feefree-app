@@ -1,8 +1,8 @@
-import type { AddLiquidityParams, ExchangeParams, LaunchParams, InitializeParams, Manager, PoolMeta, QuoteAddLiquidityData, QuoteRemoveLiquidityData, QuoteSwapData, RemoveLiquidityParams, SwapParams, Token } from "@/types"
-import { ref } from "vue"
-import pMap from "p-map"
-import { maxBy, minBy } from "lodash-es"
-import { isNative, getStamp, byDecimals } from "@/utils"
+import type { AddLiquidityParams, ExchangeParams, LaunchParams, InitializeParams, Manager, PoolMeta, QuoteAddLiquidityData, QuoteRemoveLiquidityData, QuoteSwapData, RemoveLiquidityParams, SwapParams, Token } from '@/types'
+import { ref } from 'vue'
+import pMap from 'p-map'
+import { maxBy, minBy } from 'lodash-es'
+import { isNative, getStamp, byDecimals } from '@/utils'
 import {
   launch as _launch,
   initialize as _initialize,
@@ -16,23 +16,23 @@ import {
   encodeRemoveLiquidityData,
   encodeSwapData,
   encodeExchangeData,
-} from "@/contracts/Manager"
+} from '@/contracts/Manager'
 import {
   addLiquidity as _quoteAddLiquidity,
   removeLiquidity as _quoteRemoveLiquidity,
   swap as _quoteSwap,
-} from "@/contracts/Quoter"
-import { allowance, isOperator, approve } from "@/contracts/ERC6909"
-import { getPublicClient } from "./useClient"
-import { getWalletClient, walletChainId } from "./useWallet"
-import { getPrice } from "./usePrices"
-import { SLIPPAGE } from "@/config"
+} from '@/contracts/Quoter'
+import { allowance, isOperator, approve } from '@/contracts/ERC6909'
+import { getPublicClient } from './useClient'
+import { getWalletClient, walletChainId } from './useWallet'
+import { getPrice } from './usePrices'
+import { SLIPPAGE } from '@/config'
 
 const DURATION = 600
 
 const DENOMINATOR = 10000n
 
-const config = ref<{[chainId:number]: Manager}>({})
+const config = ref<Record<number, Manager>>({})
 
 export const getManager = (chainId: number) => config.value[chainId]
 
@@ -52,7 +52,7 @@ export const addManagers = (managers: Manager[]) => {
 
 export const isSupportChain = (chainId: number) => !!getManager(chainId)
 
-export const getSupportedChains = () => Object.keys(config.value).map(chainId => ({ chainId: parseInt(chainId, 10) }))
+export const getSupportedChains = () => Object.keys(config.value).map(chainId => ({ chainId: Number.parseInt(chainId, 10) }))
 
 export const launch = async (params: LaunchParams) => {
   const chainId = walletChainId.value
@@ -121,17 +121,17 @@ export const quoteSwap = async (chainId: number, tokenPaths: Token[][], amountSp
   const isExactIn = amountSpecified < 0n
   const result = await pMap(tokenPaths, async tokens => {
     const paths = tokens.map(it => it.address)
-    const {amountIn, amountOut} = await _quoteSwap(publicClient, quoter, paths, amountSpecified)
+    const { amountIn, amountOut } = await _quoteSwap(publicClient, quoter, paths, amountSpecified)
 
     return {
       paths,
       amountSpecified,
-      amountIn: isExactIn  ? amountIn : amountIn * (DENOMINATOR + SLIPPAGE) / DENOMINATOR,
+      amountIn: isExactIn ? amountIn : amountIn * (DENOMINATOR + SLIPPAGE) / DENOMINATOR,
       amountOut: isExactIn ? amountOut * (DENOMINATOR - SLIPPAGE) / DENOMINATOR : amountOut,
     }
   }, { concurrency: 3 })
 
-  return (isExactIn ? maxBy(result, "amountOut") : minBy(result, "amountIn")) as QuoteSwapData
+  return (isExactIn ? maxBy(result, 'amountOut') : minBy(result, 'amountIn')) as QuoteSwapData
 }
 
 export const swap = async (params: SwapParams, swapFee: bigint) => {
@@ -159,10 +159,10 @@ export const checkLiquidityAllowance = async (pool: PoolMeta, account: string, a
   const { chainId, id } = pool
   const publicClient = getPublicClient(chainId)
   const address = getLiquidityAddress(chainId)
-  spender = spender || getManagerAddress(chainId)
+  spender ||= getManagerAddress(chainId)
   const [approved, value] = await Promise.all([
     isOperator(publicClient, address, account, spender),
-    allowance(publicClient, address, account, spender, BigInt(id))
+    allowance(publicClient, address, account, spender, BigInt(id)),
   ])
 
   return approved || value >= amount

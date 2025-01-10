@@ -1,4 +1,4 @@
-import { ref } from "vue"
+import { ref } from 'vue'
 
 export const createCache = () => {
   const data = ref<Record<string, unknown>>({})

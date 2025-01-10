@@ -17,13 +17,13 @@
 </template>
 
 <script setup lang="ts">
-import { PAGE_PROFILE_HOME } from "@/config"
-import { jazzicon, shortString, byDecimals } from "@/utils"
-import { account, chainSupported, nativeBalance, nativeCurrency } from "@/hooks/useWallet"
-import { open } from "@/hooks/useWalletConnector"
+import { PAGE_PROFILE_HOME } from '@/config'
+import { jazzicon, shortString, byDecimals } from '@/utils'
+import { account, chainSupported, nativeBalance, nativeCurrency } from '@/hooks/useWallet'
+import { open } from '@/hooks/useWalletConnector'
 import { screen } from '@/hooks/useScreen'
-import ZButton from "@/components/ZButton.vue"
-import WalletConnector from "@/components/WalletConnector/index.vue"
-import TokenMore from "@/components/TokenMore/index.vue"
-import ChainSelector from "./ChainSelector.vue"
+import ZButton from '@/components/ZButton.vue'
+import WalletConnector from '@/components/WalletConnector/index.vue'
+import TokenMore from '@/components/TokenMore/index.vue'
+import ChainSelector from './ChainSelector.vue'
 </script>

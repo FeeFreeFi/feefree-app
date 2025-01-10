@@ -1,6 +1,6 @@
-import { ref, readonly, watch, onMounted, onBeforeUnmount } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { getChainIdByKey, getChainKey, DEFAULT_CHAIN_ID } from "./useChains"
+import { ref, readonly, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { getChainIdByKey, getChainKey, DEFAULT_CHAIN_ID } from './useChains'
 
 const appChainIdRef = ref(DEFAULT_CHAIN_ID)
 
@@ -48,4 +48,3 @@ export const syncRouteChain = () => {
     onAppChainIdChange()
   })
 }
-

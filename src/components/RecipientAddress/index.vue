@@ -11,19 +11,17 @@
         <n-text type="primary">Edit</n-text>
       </div>
     </div>
-    <n-drawer class="bg-dialog !rounded-t-2xl !h-auto" placement="bottom" v-model:show="show" :to="screen.sm ? to : undefined" :auto-focus="false" :trap-focus="!screen.sm" :block-scroll="!screen.sm">
+    <n-drawer v-model:show="show" class="bg-dialog !rounded-t-2xl !h-auto" placement="bottom" :to="screen.sm ? to : undefined" :auto-focus="false" :trap-focus="!screen.sm" :block-scroll="!screen.sm">
       <RecipientView v-model="modelValue" :on-close="onClose" />
     </n-drawer>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { shortString } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import RecipientView from "./RecipientView.vue"
-
-const modelValue = defineModel({ type: String, required: true })
+import { ref } from 'vue'
+import { shortString } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import RecipientView from './RecipientView.vue'
 
 const props = defineProps({
   to: {
@@ -35,6 +33,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const modelValue = defineModel({ type: String, required: true })
 
 const show = ref(false)
 

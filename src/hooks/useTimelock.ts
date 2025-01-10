@@ -1,17 +1,17 @@
-import type { LockData, PoolMeta } from "@/types"
-import { unlock as _unlock, lock as _lock } from "@/contracts/Timelock"
-import { getLockDatas as _getLockDatas } from "@/contracts/Quoter"
-import { allowance, isOperator, approve as _approve } from "@/contracts/ERC6909"
-import { getPublicClient } from "./useClient"
-import { getManager, getQuoterAddress } from "./useManager"
-import { getWalletClient, walletChainId } from "./useWallet"
-import { createCache } from "./useCache"
+import type { LockData, PoolMeta } from '@/types'
+import { unlock as _unlock, lock as _lock } from '@/contracts/Timelock'
+import { getLockDatas as _getLockDatas } from '@/contracts/Quoter'
+import { allowance, isOperator, approve as _approve } from '@/contracts/ERC6909'
+import { getPublicClient } from './useClient'
+import { getManager, getQuoterAddress } from './useManager'
+import { getWalletClient, walletChainId } from './useWallet'
+import { createCache } from './useCache'
 
 const cache = createCache()
 
 const getKey = (chainId: number, poolId: string) => `${chainId}:${poolId}`
 
-const getValues = (chainId: number, poolId: string)=> {
+const getValues = (chainId: number, poolId: string) => {
   return cache.getValue(getKey(chainId, poolId)) as LockData[]
 }
 
@@ -36,7 +36,7 @@ export const checkAllowance = async (pool: PoolMeta, account: string, amount: bi
   const { timelock, liquidity } = getManager(chainId)
   const [approved, value] = await Promise.all([
     isOperator(publicClient, liquidity, account, timelock),
-    allowance(publicClient, liquidity, account, timelock, BigInt(id))
+    allowance(publicClient, liquidity, account, timelock, BigInt(id)),
   ])
 
   return approved || value >= amount

@@ -1,8 +1,8 @@
-import type { PublicClient, Hash } from "viem"
-import { createPublicClient, http, fallback } from "viem"
-import { getChain, getRpcUrls } from "./useChains"
+import type { PublicClient, Hash } from 'viem'
+import { createPublicClient, http, fallback } from 'viem'
+import { getChain, getRpcUrls } from './useChains'
 
-const publicClients: {[chainId: number]: PublicClient} = {}
+const publicClients: Record<number, PublicClient> = {}
 
 const createTransport = (urls: string[]) => {
   return fallback(urls.map(url => http(url, { batch: true })))

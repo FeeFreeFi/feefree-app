@@ -1,17 +1,17 @@
-import type { ClaimsResponse, FansResponse, GeneralResponse, InviterResponse, LoginResponse, ManagersResponse, NftsResponse, NoticeResponse, Pagination, PointsResponse, PoolsResponse, PricesResponse, ProfileResponse, RewardsResponse, SignatureData, TokensResponse } from "@/types"
-import { createFetch } from "ofetch"
-import { decode } from "cbor-x/decode"
-import { API_BASE } from "@/config"
-import { clearAuth, getAccessToken, getRefreshToken } from "@/hooks/useAuth"
-import { refreshToken as _refreshToken, login as _login } from "@/hooks/useLogin"
+import type { ClaimsResponse, FansResponse, GeneralResponse, InviterResponse, LoginResponse, ManagersResponse, NftsResponse, NoticeResponse, Pagination, PointsResponse, PoolsResponse, PricesResponse, ProfileResponse, RewardsResponse, SignatureData, TokensResponse } from '@/types'
+import { createFetch } from 'ofetch'
+import { decode } from 'cbor-x/decode'
+import { API_BASE } from '@/config'
+import { clearAuth, getAccessToken, getRefreshToken } from '@/hooks/useAuth'
+import { refreshToken as _refreshToken, login as _login } from '@/hooks/useLogin'
 
-const ACCEPT = "application/x-buffer"
+const ACCEPT = 'application/x-buffer'
 
 const service = createFetch({
   defaults: {
     baseURL: API_BASE,
     timeout: 10000,
-    method: "POST",
+    method: 'POST',
     headers: { Accept: ACCEPT },
   },
 })
@@ -32,8 +32,8 @@ const fetch = async (options: { url: string, data?: object, headers?: object }, 
         ...options,
         headers: {
           ...options.headers,
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       }
     }
   }
@@ -63,110 +63,110 @@ const fetch = async (options: { url: string, data?: object, headers?: object }, 
 
 export const getPrices = () => {
   return fetch({
-    url: "/general/prices",
+    url: '/general/prices',
   }, false) as Promise<PricesResponse>
 }
 
-export const getInviter = (data: {referral:string}) => {
+export const getInviter = (data: { referral: string }) => {
   return fetch({
-    url: "/general/inviter",
+    url: '/general/inviter',
     data,
   }, false) as Promise<InviterResponse>
 }
 
 export const getManagers = () => {
   return fetch({
-    url: "/general/managers",
+    url: '/general/managers',
   }, false) as Promise<ManagersResponse>
 }
 
 export const getTokens = () => {
   return fetch({
-    url: "/general/tokens",
+    url: '/general/tokens',
   }, false) as Promise<TokensResponse>
 }
 
 export const getPools = () => {
   return fetch({
-    url: "/general/pools",
+    url: '/general/pools',
   }, false) as Promise<PoolsResponse>
 }
 
 export const getNfts = () => {
   return fetch({
-    url: "/general/nfts",
+    url: '/general/nfts',
   }, false) as Promise<NftsResponse>
 }
 
 export const getNotice = () => {
   return fetch({
-    url: "/general/notice",
+    url: '/general/notice',
   }, false) as Promise<NoticeResponse>
 }
 
 export const login = (data: SignatureData) => {
   return fetch({
-    url: "/sys/login",
+    url: '/sys/login',
     data,
   }, false) as Promise<LoginResponse>
 }
 
-export const refreshToken = (data: {refreshToken:string}) => {
+export const refreshToken = (data: { refreshToken: string }) => {
   return fetch({
-    url: "/sys/refresh",
+    url: '/sys/refresh',
     data,
   }, false) as Promise<LoginResponse>
 }
 
 export const logout = () => {
   return fetch({
-    url: "/sys/logout",
+    url: '/sys/logout',
   })
 }
 
 export const getProfile = () => {
   return fetch({
-    url: "/user/profile",
+    url: '/user/profile',
   }) as Promise<ProfileResponse>
 }
 
-export const acceptInvite = (data: {referral:string}) => {
+export const acceptInvite = (data: { referral: string }) => {
   return fetch({
-    url: "/user/accept",
+    url: '/user/accept',
     data,
   })
 }
 
-export const updateProfile = (data: {nickname:string}) => {
+export const updateProfile = (data: { nickname: string }) => {
   return fetch({
-    url: "/user/update",
+    url: '/user/update',
     data,
   })
 }
 
 export const getFans = (data: Pagination) => {
   return fetch({
-    url: "/user/fans",
+    url: '/user/fans',
     data,
   }) as Promise<FansResponse>
 }
 
 export const getClaims = (data: Pagination) => {
   return fetch({
-    url: "/user/claims",
+    url: '/user/claims',
     data,
   }) as Promise<ClaimsResponse>
 }
 
 export const getRewards = () => {
   return fetch({
-    url: "/user/rewards",
+    url: '/user/rewards',
   }) as Promise<RewardsResponse>
 }
 
 export const getPoints = (data: Pagination) => {
   return fetch({
-    url: "/user/points",
+    url: '/user/points',
     data,
   }) as Promise<PointsResponse>
 }

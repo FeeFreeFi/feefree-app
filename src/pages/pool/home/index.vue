@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="grid gap-y-4 sm:gap-y-8 grid-cols-1 sm:grid-cols-2 sm:gap-x-8 md:grid-cols-2 md:gap-x-32 lg:grid-cols-3 lg:gap-x-14 xl:grid-cols-4 xl:gap-x-8 2xl:grid-cols-5 2xl:gap-x-4 justify-items-center">
-      <div class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg" v-for="pool in pools" :key="pool.id">
+      <div v-for="pool in pools" :key="pool.id" class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg">
         <div class="relative w-full h-[78px] flex justify-center overflow-hidden rounded-t-lg">
           <img class="w-[311px] h-[78px] max-w-max pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
           <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="pool.chainId" />
@@ -48,25 +48,25 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue"
+import { ref, computed, onMounted, watch } from 'vue'
 import { PAGE_POOL_OVERVIEW } from '@/config'
-import { toBalance, encodePoolId } from "@/utils"
-import { appChainId, syncRouteChain } from "@/hooks/useAppState"
-import { loadMyPools as _loadMyPools, getPools } from "@/hooks/usePool"
-import { onPriceChanged } from "@/hooks/usePrices"
-import { configReady } from "@/hooks/useConfig"
-import { createPoolStates } from "@/hooks/usePoolState"
-import { account } from "@/hooks/useWallet"
-import ZContainer from "@/components/ZContainer.vue"
-import ZChainIcon from "@/components/ZChainIcon.vue"
-import ZButton from "@/components/ZButton.vue"
-import ZPoolIcon from "@/components/ZPoolIcon.vue"
-import ZPoolName from "@/components/ZPoolName.vue"
-import TabButton from "./TabButton.vue"
-import poolBg from "@/assets/images/pool-bg.svg"
+import { toBalance, encodePoolId } from '@/utils'
+import { appChainId, syncRouteChain } from '@/hooks/useAppState'
+import { loadMyPools as _loadMyPools, getPools } from '@/hooks/usePool'
+import { onPriceChanged } from '@/hooks/usePrices'
+import { configReady } from '@/hooks/useConfig'
+import { createPoolStates } from '@/hooks/usePoolState'
+import { account } from '@/hooks/useWallet'
+import ZContainer from '@/components/ZContainer.vue'
+import ZChainIcon from '@/components/ZChainIcon.vue'
+import ZButton from '@/components/ZButton.vue'
+import ZPoolIcon from '@/components/ZPoolIcon.vue'
+import ZPoolName from '@/components/ZPoolName.vue'
+import TabButton from './TabButton.vue'
+import poolBg from '@/assets/images/pool-bg.svg'
 
-const TAB_HOT = "#hot"
-const TAB_MY = "#my"
+const TAB_HOT = '#hot'
+const TAB_MY = '#my'
 const tab = ref(TAB_HOT)
 
 const isActiveTab = computed(() => active => tab.value === active)

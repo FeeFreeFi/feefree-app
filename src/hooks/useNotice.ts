@@ -1,9 +1,9 @@
-import type { Notice } from "@/types"
-import { readonly, ref } from "vue"
-import { CACHE_NOTICE } from "@/config"
-import { getStorage, setStorage } from "@/utils"
-import { getNotice } from "@/api"
-import { createInterval } from "./useTimer"
+import type { Notice } from '@/types'
+import { readonly, ref } from 'vue'
+import { CACHE_NOTICE } from '@/config'
+import { getStorage, setStorage } from '@/utils'
+import { getNotice } from '@/api'
+import { createInterval } from './useTimer'
 
 const noticeRef = ref<Notice>()
 export const notice = readonly(noticeRef)
@@ -15,16 +15,16 @@ const fetchNotice = async () => {
     return
   }
 
-  const notice = res.data
-  if (notice.id !== id) {
-    noticeRef.value = notice
+  const data = res.data
+  if (data.id !== id) {
+    noticeRef.value = data
   }
 }
 
 const { start: startFetchNotice, stop: stopFetchNotice } = createInterval(fetchNotice, 1800000)
 
 export const markAsRead = () => {
-  setStorage(CACHE_NOTICE, noticeRef.value?.id || "")
+  setStorage(CACHE_NOTICE, noticeRef.value?.id || '')
   noticeRef.value = undefined
 }
 

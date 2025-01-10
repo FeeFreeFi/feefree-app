@@ -73,22 +73,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, computed } from "vue"
-import { useNotification } from "naive-ui"
-import { shortString, formatPrice, isNative } from "@/utils"
-import { account, getWalletClient, walletChainId } from "@/hooks/useWallet"
-import { balanceOf, totalSupply } from "@/hooks/useToken"
-import { getAccountUrl, getHolderUrl } from "@/hooks/useChains"
+import { ref, onMounted, watch, computed } from 'vue'
+import { useNotification } from 'naive-ui'
+import { shortString, formatPrice, isNative } from '@/utils'
+import { account, getWalletClient, walletChainId } from '@/hooks/useWallet'
+import { balanceOf, totalSupply } from '@/hooks/useToken'
+import { getAccountUrl, getHolderUrl } from '@/hooks/useChains'
 import ZModalView from '@/components/ZModalView.vue'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import ZBalance from '@/components/ZBalance.vue'
-import ZCopyable from "@/components/ZCopyable.vue"
-import ZViewUrl from "@/components/ZViewUrl.vue"
-import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import { doSwitchNetwork } from "@/hooks/useInteraction"
-import { getPrice } from "@/hooks/usePrices"
-
-const notification = useNotification()
+import ZCopyable from '@/components/ZCopyable.vue'
+import ZViewUrl from '@/components/ZViewUrl.vue'
+import { open as openWalletConnector } from '@/hooks/useWalletConnector'
+import { doSwitchNetwork } from '@/hooks/useInteraction'
+import { getPrice } from '@/hooks/usePrices'
 
 const props = defineProps({
   token: {
@@ -102,6 +100,8 @@ const props = defineProps({
   },
 })
 
+const notification = useNotification()
+
 const balance = ref(0n)
 const total = ref(0n)
 const price = computed(() => getPrice(props.token.key))
@@ -112,7 +112,7 @@ const getViewUrl = computed(() => {
    */
   return token => {
     if (isNative(token.address)) {
-      return account.value ? getAccountUrl(token.chainId, account.value) : ""
+      return account.value ? getAccountUrl(token.chainId, account.value) : ''
     }
 
     return getHolderUrl(token.chainId, token.address, account.value)

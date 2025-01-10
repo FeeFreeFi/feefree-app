@@ -15,10 +15,10 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import ActionModal from "@/components/ActionModal/index.vue"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
+import { computed } from 'vue'
+import ActionModal from '@/components/ActionModal/index.vue'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
 
 /** @type {import('vue').ModelRef<import('@/types').RemoveLiquidityAction>} */
 const modelValue = defineModel({ type: Object, required: true })

@@ -1,11 +1,10 @@
-import type { Ref } from "vue"
-import type { PoolMeta } from "@/types"
-import { watch } from "vue"
-import { balanceOf } from "@/contracts/ERC6909"
-import { getPublicClient } from "./useClient"
-import { createCache } from "./useCache"
-import { createDebounceUpdate } from "./useTimer"
-import { getLiquidityAddress } from "./useManager"
+import type { Ref } from 'vue'
+import type { PoolMeta } from '@/types'
+import { balanceOf } from '@/contracts/ERC6909'
+import { getPublicClient } from './useClient'
+import { createCache } from './useCache'
+import { createDebounceUpdate } from './useTimer'
+import { getLiquidityAddress } from './useManager'
 
 const cache = createCache()
 

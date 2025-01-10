@@ -1,19 +1,26 @@
-import { debounce } from "lodash-es"
-import "../lib/q5"
+import { debounce } from 'lodash-es'
+import '@/vendors/q5'
 
-const meteor = id => {
+const meteor = (id: string) => {
   const el = document.querySelector(id)
-  const q = new window.Q5("ff", el)
+  // @ts-expect-error ignore
+  const q = new window.Q5('ff', el)
 
   const { createCanvas, resizeCanvas, opacity, background, translate, random, map, dist, norm, color, lerpColor, stroke, strokeWeight, line } = q
 
-  const stars = []
+  const stars: Star[] = []
   const RANGE = 100
   const SPEED = 5
   const COUNT = 400
   const SIZE = 1.1
 
   class Star {
+    x = 0
+    y = 0
+    z = 0
+    px = 0
+    py = 0
+
     constructor() {
       this.reset()
     }
@@ -36,8 +43,8 @@ const meteor = id => {
 
       const n = map(RANGE, 0, 200, 0, width)
       const percent = norm(dist(sx, sy, 0, 0), 0, n)
-      const from = color("#41f5cf")
-      const to = color("#e7e368")
+      const from = color('#41f5cf')
+      const to = color('#e7e368')
       const between = lerpColor(from, to, percent)
 
       stroke(between)
@@ -81,7 +88,7 @@ const meteor = id => {
     }
 
     translate(width / 2, height / 2)
-    for (let star of stars) {
+    for (const star of stars) {
       star.update()
       star.display()
     }

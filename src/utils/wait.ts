@@ -1,1 +1,3 @@
-export const wait = (delay: number) => new Promise<void>(resolve => setTimeout(() => resolve(), delay))
+export const wait = (delay: number) => new Promise<void>(resolve => {
+  setTimeout(() => resolve(), delay)
+})

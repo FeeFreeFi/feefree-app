@@ -5,12 +5,12 @@
         <n-text class="font-medium text-base">Deposit</n-text>
       </div>
     </div>
-    <div class="flex-1 flex flex-col lg:flex-row gap-8 lg:gap-6" v-if="pool">
+    <div v-if="pool" class="flex-1 flex flex-col lg:flex-row gap-8 lg:gap-6">
       <div class="flex-1 lg:p-6 flex flex-col gap-10 lg:bg-tab rounded overflow-hidden">
         <div class="flex flex-col gap-4">
           <n-text class="text-xs" depth="1">I want to deposit</n-text>
-          <DepositInput :token="pool.currency0" :balance="balance0" v-model="inputAmount0" @change="onAmount0Change" />
-          <DepositInput :token="pool.currency1" :balance="balance1" v-model="inputAmount1" @change="onAmount1Change" />
+          <DepositInput v-model="inputAmount0" :token="pool.currency0" :balance="balance0" @change="onAmount0Change" />
+          <DepositInput v-model="inputAmount1" :token="pool.currency1" :balance="balance1" @change="onAmount1Change" />
         </div>
         <div>
           <ActionButton :chain-id="pool.chainId" :chains="supportedChains">
@@ -32,28 +32,28 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { useNotification } from "naive-ui"
-import { PAGE_NOT_FOUND } from "@/config"
-import { parseAmount, toAmount, decodePoolId, getAmount0FromAmount1AndSqrtPrice, getAmount1FromAmount0AndSqrtPrice } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import { allowance } from "@/hooks/useToken"
-import { account, updateNativeBalance } from "@/hooks/useWallet"
-import { createLiquidityState } from "@/hooks/useLiquidityState"
-import { doApproval, doSend } from "@/hooks/useInteraction"
-import { addLiquidity, getManagerAddress, getSupportedChains, isSupportChain, quoteAddLiquidity } from "@/hooks/useManager"
-import { fetchPoolMeta, getPoolData } from "@/hooks/usePool"
-import { configReady } from "@/hooks/useConfig"
-import { onPriceChanged } from "@/hooks/usePrices"
-import { createPoolState } from "@/hooks/usePoolState"
-import { createQuoteState } from "@/hooks/useQuoteState"
-import { createTokenStates } from "@/hooks/useTokenState"
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useNotification } from 'naive-ui'
+import { PAGE_NOT_FOUND } from '@/config'
+import { parseAmount, toAmount, decodePoolId, getAmount0FromAmount1AndSqrtPrice, getAmount1FromAmount0AndSqrtPrice } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import { allowance } from '@/hooks/useToken'
+import { account, updateNativeBalance } from '@/hooks/useWallet'
+import { createLiquidityState } from '@/hooks/useLiquidityState'
+import { doApproval, doSend } from '@/hooks/useInteraction'
+import { addLiquidity, getManagerAddress, getSupportedChains, isSupportChain, quoteAddLiquidity } from '@/hooks/useManager'
+import { fetchPoolMeta, getPoolData } from '@/hooks/usePool'
+import { configReady } from '@/hooks/useConfig'
+import { onPriceChanged } from '@/hooks/usePrices'
+import { createPoolState } from '@/hooks/usePoolState'
+import { createQuoteState } from '@/hooks/useQuoteState'
+import { createTokenStates } from '@/hooks/useTokenState'
 import ApproveModal from '@/components/ActionModal/ApproveModal.vue'
-import ActionButton from "@/components/ActionButton.vue"
-import ZButton from "@/components/ZButton.vue"
-import PoolPosition from "./PoolPosition.vue"
-import DepositInput from "./DepositInput.vue"
+import ActionButton from '@/components/ActionButton.vue'
+import ZButton from '@/components/ZButton.vue'
+import PoolPosition from './PoolPosition.vue'
+import DepositInput from './DepositInput.vue'
 import DepositModal from './DepositModal.vue'
 
 const route = useRoute()
@@ -83,8 +83,8 @@ const balance1 = computed(() => balances.value[1])
 /** @type {import('vue').Ref<() => Promise<void>>} */
 const debounceUpdateBalances = ref(null)
 
-const inputAmount0 = ref("")
-const inputAmount1 = ref("")
+const inputAmount0 = ref('')
+const inputAmount1 = ref('')
 const depositing = ref(false)
 const depositAction = ref({ show: false })
 
@@ -98,7 +98,7 @@ const amount0 = computed(() => pool.value ? parseAmount(inputAmount0.value || 0,
 const amount1 = computed(() => pool.value ? parseAmount(inputAmount1.value || 0, pool.value.currency1.decimals) : 0n)
 const inputHint = computed(() => {
   if (!amount0.value || !amount1.value) {
-    return "Please enter amount"
+    return 'Please enter amount'
   }
 
   if (amount0.value > balance0.value) {
@@ -109,7 +109,7 @@ const inputHint = computed(() => {
     return `${pool.value.currency1.symbol} insufficient balance`
   }
 
-  return ""
+  return ''
 })
 const isInputValid = computed(() => {
   return amount0.value && amount0.value <= balance0.value && amount1.value && amount1.value <= balance1.value
@@ -117,12 +117,6 @@ const isInputValid = computed(() => {
 
 const approved = computed(() => approved0.value && approved1.value)
 
-const checkAllowance = async () => {
-  await Promise.all([
-    doCheckAllowanceOne(true),
-    doCheckAllowanceOne(false)
-  ])
-}
 const doCheckAllowanceOne = async isZero => {
   const _approved = isZero ? approved0 : approved1
   const token = isZero ? pool.value.currency0 : pool.value.currency1
@@ -131,6 +125,12 @@ const doCheckAllowanceOne = async isZero => {
 
   const allowed = await allowance(token, account.value, spender)
   _approved.value = allowed >= amount
+}
+const checkAllowance = async () => {
+  await Promise.all([
+    doCheckAllowanceOne(true),
+    doCheckAllowanceOne(false),
+  ])
 }
 const onCheckApproval = async () => {
   approvalChecking.value = true
@@ -168,7 +168,7 @@ const updateQuoteData = async () => {
     quoteData.value = await quoteAddLiquidity(pool.value.chainId, pool.value.currency0.address, pool.value.currency1.address, amount0.value, amount1.value)
   } catch (err) {
     notification.error({
-      title: "Error",
+      title: 'Error',
       content: err.shortMessage || err.details || err.message,
       duration: 3000,
     })
@@ -205,12 +205,12 @@ const onDeposit = async () => {
 
   depositAction.value.data = { chainId: pool.value.chainId, pool: pool.value, amount0Max, amount1Max }
 
-  const success = await doSend(depositAction, depositing, "Deposit", () => addLiquidity(params))
+  const success = await doSend(depositAction, depositing, 'Deposit', () => addLiquidity(params))
 
   if (success) {
     quoteData.value = null
-    inputAmount0.value = ""
-    inputAmount1.value = ""
+    inputAmount0.value = ''
+    inputAmount1.value = ''
     reset()
     debounceUpdateBalances.value && debounceUpdateBalances.value()
     updateNativeBalance()

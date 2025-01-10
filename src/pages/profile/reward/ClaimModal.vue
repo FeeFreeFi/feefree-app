@@ -7,12 +7,12 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { getNativeToken } from "@/hooks/useToken"
-import ActionModal from "@/components/ActionModal/index.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
+import { computed } from 'vue'
+import { getNativeToken } from '@/hooks/useToken'
+import ActionModal from '@/components/ActionModal/index.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
 
-/** @type {import('vue').ModelRef<import('@/types').ClaimAction>}*/
+/** @type {import('vue').ModelRef<import('@/types').ClaimAction>} */
 const modelValue = defineModel({ type: Object, required: true })
 
 const data = computed(() => modelValue.value.data)

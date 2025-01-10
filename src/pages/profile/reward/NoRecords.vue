@@ -10,5 +10,5 @@
 </template>
 
 <script setup>
-import noTokenBg from "@/assets/images/no-token-bg.svg"
+import noTokenBg from '@/assets/images/no-token-bg.svg'
 </script>

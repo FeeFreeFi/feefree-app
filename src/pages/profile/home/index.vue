@@ -101,23 +101,23 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { useMessage } from "naive-ui"
-import { PAGE_PROFILE_FANS, PAGE_PROFILE_POINTS, PAGE_PROFILE_REWARD } from "@/config"
-import { shortString } from "@/utils"
-import { logout } from "@/api"
+import { computed } from 'vue'
+import { useMessage } from 'naive-ui'
+import { PAGE_PROFILE_FANS, PAGE_PROFILE_POINTS, PAGE_PROFILE_REWARD } from '@/config'
+import { shortString } from '@/utils'
+import { logout } from '@/api'
 import { account, nativeBalance, nativeCurrency, disconnect } from '@/hooks/useWallet'
-import { open as openWalletConnector } from "@/hooks/useWalletConnector"
-import { appChainId } from "@/hooks/useAppState"
-import { getAccountUrl } from "@/hooks/useChains"
-import { clearAuth, getAccessToken } from "@/hooks/useAuth"
-import { profile } from "@/hooks/useUser"
-import { createShare } from "@/hooks/useShare"
-import ZCopyable from "@/components/ZCopyable.vue"
+import { open as openWalletConnector } from '@/hooks/useWalletConnector'
+import { appChainId } from '@/hooks/useAppState'
+import { getAccountUrl } from '@/hooks/useChains'
+import { clearAuth, getAccessToken } from '@/hooks/useAuth'
+import { profile } from '@/hooks/useUser'
+import { createShare } from '@/hooks/useShare'
+import ZCopyable from '@/components/ZCopyable.vue'
 import ZButton from '@/components/ZButton.vue'
-import ZViewUrl from "@/components/ZViewUrl.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZBack from "@/components/ZBack.vue"
+import ZViewUrl from '@/components/ZViewUrl.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import ZBack from '@/components/ZBack.vue'
 
 const message = useMessage()
 

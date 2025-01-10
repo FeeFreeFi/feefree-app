@@ -10,8 +10,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { screen } from "@/hooks/useScreen"
+import { ref } from 'vue'
+import { screen } from '@/hooks/useScreen'
 
 const props = defineProps({
   modalClass: {

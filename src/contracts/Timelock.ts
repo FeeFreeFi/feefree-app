@@ -1,41 +1,41 @@
-import type { PublicClient, WalletClient, Abi, Address } from "viem"
+import type { PublicClient, WalletClient, Abi, Address } from 'viem'
 
 const ABI_LOCK: Abi = [
   {
     inputs: [
       {
-        name: "token",
-        type: "address"
+        name: 'token',
+        type: 'address',
       },
       {
-        name: "from",
-        type: "address"
+        name: 'from',
+        type: 'address',
       },
       {
-        name: "tokenId",
-        type: "uint256"
+        name: 'tokenId',
+        type: 'uint256',
       },
       {
-        name: "amount",
-        type: "uint256"
+        name: 'amount',
+        type: 'uint256',
       },
       {
-        name: "unlockTime",
-        type: "uint256"
+        name: 'unlockTime',
+        type: 'uint256',
       },
       {
-        name: "owner",
-        type: "address"
-      }
+        name: 'owner',
+        type: 'address',
+      },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "lock",
+    stateMutability: 'nonpayable',
+    type: 'function',
+    name: 'lock',
     outputs: [
       {
-        type: "bytes32"
-      }
-    ]
+        type: 'bytes32',
+      },
+    ],
   },
 ]
 
@@ -43,19 +43,19 @@ const ABI_UNLOCK: Abi = [
   {
     inputs: [
       {
-        name: "lockId",
-        type: "bytes32"
+        name: 'lockId',
+        type: 'bytes32',
       },
       {
-        name: "recipient",
-        type: "address"
-      }
+        name: 'recipient',
+        type: 'address',
+      },
     ],
     outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "unlock"
-  }
+    stateMutability: 'nonpayable',
+    type: 'function',
+    name: 'unlock',
+  },
 ]
 
 export const lock = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, token: string, from: string, tokenId: bigint, amount: bigint, unlockTime: number, owner: string) => {

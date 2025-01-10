@@ -88,26 +88,26 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue"
-import { useNotification } from "naive-ui"
-import { wait } from "@/utils"
-import { appChainId } from "@/hooks/useAppState"
-import { account, updateNativeBalance } from "@/hooks/useWallet"
-import { getMigration, migrateLiquidity, removeLiquidity, unexchange } from "@/hooks/useMigration"
-import { configReady } from "@/hooks/useConfig"
-import { createTokenStatesForMap } from "@/hooks/useTokenState"
-import { approveLiquidity, checkLiquidityAllowance, getSupportedChains } from "@/hooks/useManager"
-import { allowance, approve } from "@/hooks/useToken"
-import { waitForTransactionReceipt } from "@/hooks/useClient"
-import ZPoolIcon from "@/components/ZPoolIcon.vue"
-import ZPoolName from "@/components/ZPoolName.vue"
-import ZButton from "@/components/ZButton.vue"
-import ZBalance from "@/components/ZBalance.vue"
-import ActionButton from "@/components/ActionButton.vue"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
-import poolBg from "@/assets/images/pool-bg.svg"
-import { createLiquidityState } from "@/hooks/useLiquidityState"
-import ZChainIcon from "@/components/ZChainIcon.vue"
+import { ref, computed, onMounted } from 'vue'
+import { useNotification } from 'naive-ui'
+import { wait } from '@/utils'
+import { appChainId } from '@/hooks/useAppState'
+import { account, updateNativeBalance } from '@/hooks/useWallet'
+import { getMigration, migrateLiquidity, removeLiquidity, unexchange } from '@/hooks/useMigration'
+import { configReady } from '@/hooks/useConfig'
+import { createTokenStatesForMap } from '@/hooks/useTokenState'
+import { approveLiquidity, checkLiquidityAllowance, getSupportedChains } from '@/hooks/useManager'
+import { allowance, approve } from '@/hooks/useToken'
+import { waitForTransactionReceipt } from '@/hooks/useClient'
+import ZPoolIcon from '@/components/ZPoolIcon.vue'
+import ZPoolName from '@/components/ZPoolName.vue'
+import ZButton from '@/components/ZButton.vue'
+import ZBalance from '@/components/ZBalance.vue'
+import ActionButton from '@/components/ActionButton.vue'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
+import poolBg from '@/assets/images/pool-bg.svg'
+import { createLiquidityState } from '@/hooks/useLiquidityState'
+import ZChainIcon from '@/components/ZChainIcon.vue'
 
 const notification = useNotification()
 
@@ -122,7 +122,7 @@ const allTokens = computed(() => config.value ? [liquidityLegacyToken.value, ...
 const allBalances = ref({})
 
 const liquidityOldBalance = ref(0n)
-const liquidityLegacyBalance = computed(() => config.value && allBalances.value[liquidityLegacyToken.value.address] || 0n)
+const liquidityLegacyBalance = computed(() => config.value ? allBalances.value[liquidityLegacyToken.value.address] || 0n : 0n)
 
 /** @type {import('vue').Ref<{chainId:number}[]>} */
 const supportedChains = ref([])
@@ -134,12 +134,12 @@ const debounceUpdateBalances = ref(null)
 
 const loading = ref('')
 
-const ACTION_WITHDRAW_LEGACY = "withdraw-legacy"
-const ACTION_MIGRATE_LEGACY = "migrate-legacy"
-const ACTION_WITHDRAW_OLD = "withdraw-old"
-const ACTION_MIGRATE_OLD = "migrate-old"
+const ACTION_WITHDRAW_LEGACY = 'withdraw-legacy'
+const ACTION_MIGRATE_LEGACY = 'migrate-legacy'
+const ACTION_WITHDRAW_OLD = 'withdraw-old'
+const ACTION_MIGRATE_OLD = 'migrate-old'
 
-const showError = (err, title = "Error") => {
+const showError = (err, title = 'Error') => {
   notification.error({
     title,
     content: err.shortMessage || err.details || err.message,
@@ -147,7 +147,7 @@ const showError = (err, title = "Error") => {
   })
 }
 
-const showSuccess = (message, title = "Success") => {
+const showSuccess = (message, title = 'Success') => {
   notification.success({
     title,
     content: message,
@@ -161,7 +161,7 @@ const onApproval = async (token, amount, spender) => {
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     return true
   } catch (err) {
-    showError(err, "Approve fail")
+    showError(err, 'Approve fail')
     return false
   }
 }
@@ -172,7 +172,7 @@ const onApprovalLiquidity = async () => {
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     return true
   } catch (err) {
-    showError(err, "Approve fail")
+    showError(err, 'Approve fail')
     return false
   }
 }
@@ -187,7 +187,7 @@ const ensureApproved = async (token, amount, spender) => {
   if (!approved) {
     const success = await onApproval(token, amount, spender)
     if (success) {
-      showSuccess("Approve success")
+      showSuccess('Approve success')
       updateNativeBalance()
       approved = await checkAllowance(token, amount, spender)
     }
@@ -201,7 +201,7 @@ const ensureApprovedLiquidity = async () => {
   if (!approved) {
     const success = await onApprovalLiquidity()
     if (success) {
-      showSuccess("Approve success")
+      showSuccess('Approve success')
       updateNativeBalance()
       approved = await checkLiquidityAllowance(poolOld.value, account.value, liquidityOldBalance.value, config.value.address)
     }
@@ -241,12 +241,12 @@ const onWithdrawLiquidity = async (legacy = true) => {
     await wait(1000)
     const tx = await removeLiquidity(pool.chainId, pool.key)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
-    showSuccess("Withdraw success")
+    showSuccess('Withdraw success')
 
     debounceUpdateBalances.value && debounceUpdateBalances.value()
     updateNativeBalance()
   } catch (err) {
-    showError(err, "Withdraw fail")
+    showError(err, 'Withdraw fail')
   }
 
   loading.value = ''
@@ -263,12 +263,12 @@ const onMigrateLiquidity = async (legacy = true) => {
     await wait(1000)
     const tx = await migrateLiquidity(pool.chainId, pool.key)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
-    showSuccess("Migrate success")
+    showSuccess('Migrate success')
 
     debounceUpdateBalances.value && debounceUpdateBalances.value()
     updateNativeBalance()
   } catch (err) {
-    showError(err, "Migrate fail")
+    showError(err, 'Migrate fail')
   }
 
   loading.value = ''
@@ -289,13 +289,13 @@ const onWithdrawToken = async token => {
     await wait(1000)
     const tx = await unexchange({ address: token.origin, chainId: token.chainId })
     await waitForTransactionReceipt(tx.chainId, tx.hash)
-    showSuccess("Withdraw success")
+    showSuccess('Withdraw success')
 
     debounceUpdateBalances.value && debounceUpdateBalances.value()
     updateNativeBalance()
   } catch (err) {
     console.log(err)
-    showError(err, "Withdraw fail")
+    showError(err, 'Withdraw fail')
   }
 
   loading.value = ''

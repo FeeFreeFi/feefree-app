@@ -1,10 +1,9 @@
-import type { Token } from "@/types"
-import type { Ref } from "vue"
-import { watch } from "vue"
-import { balanceOf } from "./useToken"
-import { createCache } from "./useCache"
-import { createDebounceUpdate } from "./useTimer"
-import pMap from "p-map"
+import type { Token } from '@/types'
+import type { Ref } from 'vue'
+import { balanceOf } from './useToken'
+import { createCache } from './useCache'
+import { createDebounceUpdate } from './useTimer'
+import pMap from 'p-map'
 
 const cache = createCache()
 

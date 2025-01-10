@@ -7,7 +7,7 @@ import type { Token } from '@/types'
 import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
-  token: Token|undefined
+  token: Token | undefined
 }>(), {
   token: undefined,
 })

@@ -5,14 +5,14 @@
 </template>
 
 <script setup>
-import { watch, onMounted, onBeforeUnmount } from "vue"
-import { acceptInvite } from "@/api"
-import { show, close } from "@/hooks/useWalletConnector"
-import { reset } from "@/hooks/useConnecting"
-import { account } from "@/hooks/useWallet"
-import { referral, profile, canAcceptInvite, fetchProfile } from "@/hooks/useUser"
-import ZModalWrapper from "@/components/ZModalWrapper.vue"
-import ConnectorView from "./ConnectorView.vue"
+import { watch, onMounted, onBeforeUnmount } from 'vue'
+import { acceptInvite } from '@/api'
+import { show, close } from '@/hooks/useWalletConnector'
+import { reset } from '@/hooks/useConnecting'
+import { account } from '@/hooks/useWallet'
+import { referral, profile, canAcceptInvite, fetchProfile } from '@/hooks/useUser'
+import ZModalWrapper from '@/components/ZModalWrapper.vue'
+import ConnectorView from './ConnectorView.vue'
 
 const handleInvite = async () => {
   if (!account.value || !referral.value || !profile.value || !canAcceptInvite(referral.value)) {

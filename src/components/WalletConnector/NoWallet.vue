@@ -10,5 +10,5 @@
 </template>
 
 <script setup>
-import noWalletBg from "@/assets/images/no-wallet-bg.svg"
+import noWalletBg from '@/assets/images/no-wallet-bg.svg'
 </script>

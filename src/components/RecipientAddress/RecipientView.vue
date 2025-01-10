@@ -3,7 +3,7 @@
     <div class="px-4 pb-4 flex flex-col">
       <div class="flex overflow-hidden">
         <div class="flex-1 bg-card px-2 sm:px-4 overflow-hidden relative">
-          <n-input class="w-full text-[11px] sm:text-xs text-basic" v-model:value="input" :bordered="false" placeholder="Destination Address" size="large" :on-focus="onInputFocus" :on-blur="onInputBlur" />
+          <n-input v-model:value="input" class="w-full text-[11px] sm:text-xs text-basic" :bordered="false" placeholder="Destination Address" size="large" :on-focus="onInputFocus" :on-blur="onInputBlur" />
         </div>
         <div>
           <ZButton v-if="!input || focus" class="!rounded-l-none h-full w-12 sm:w-[68px] px-0 text-xs sm:text-sm" @click="onPaste">Paste</ZButton>
@@ -30,14 +30,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed } from 'vue'
 import { isAddress } from 'viem'
-import { pasteText } from "@/utils"
-import { account } from "@/hooks/useWallet"
+import { pasteText } from '@/utils'
+import { account } from '@/hooks/useWallet'
 import ZModalView from '@/components/ZModalView.vue'
-import ZButton from "../ZButton.vue"
-
-const recipient = defineModel({ type: String, required: true })
+import ZButton from '../ZButton.vue'
 
 const props = defineProps({
   onClose: {
@@ -46,6 +44,8 @@ const props = defineProps({
   },
 })
 
+const recipient = defineModel({ type: String, required: true })
+
 const focus = ref(false)
 const checked = ref(false)
 const input = ref(recipient.value)
@@ -53,17 +53,9 @@ const isValid = ref(isAddress(input.value))
 
 const isSame = computed(() => !!input.value && input.value === account.value)
 
-const onPaste = async () => {
-  const text = await pasteText()
-  if (text) {
-    input.value = text
-    onInputBlur()
-  }
-}
-
 const onClear = () => {
-  input.value = ""
-  recipient.value = ""
+  input.value = ''
+  recipient.value = ''
   checked.value = false
   isValid.value = false
 }
@@ -75,6 +67,14 @@ const onInputFocus = () => {
 const onInputBlur = () => {
   focus.value = false
   isValid.value = input.value ? isAddress(input.value) : false
+}
+
+const onPaste = async () => {
+  const text = await pasteText()
+  if (text) {
+    input.value = text
+    onInputBlur()
+  }
 }
 
 const onOk = () => {

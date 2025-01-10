@@ -19,9 +19,9 @@
 </template>
 
 <script setup>
-import ZBalance from "@/components/ZBalance.vue"
+import ZBalance from '@/components/ZBalance.vue'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
-import { openTokenMore } from "@/hooks/useTokenMore"
+import { openTokenMore } from '@/hooks/useTokenMore'
 
 defineProps({
   token: {
@@ -43,7 +43,8 @@ defineProps({
 
 <style lang="scss">
 .token-item {
-  &:hover, &.active {
+  &:hover,
+  &.active {
     .more-icon {
       opacity: 100;
     }

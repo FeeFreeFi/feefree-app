@@ -1,5 +1,5 @@
 <template>
-  <div class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20" :id="containerId.slice(1)">
+  <div :id="containerId.slice(1)" class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
     <div class="flex flex-col">
       <div class="flex justify-between">
         <n-text class="text-lg font-medium">Swap</n-text>
@@ -7,7 +7,7 @@
           <i-ff-share class="size-4" />
         </div>
       </div>
-      <TokenInput class="mt-4 sm:mt-8" v-model="inputAmount" :token="inputToken" :balance="inputBalance" label="Give" @change="onAmountChange" @select="onSelectInputToken" />
+      <TokenInput v-model="inputAmount" class="mt-4 sm:mt-8" :token="inputToken" :balance="inputBalance" label="Give" @change="onAmountChange" @select="onSelectInputToken" />
       <ReverseButton class="my-3" :disabled="!inputToken && !outputToken" @reverse="onReverse" />
       <SwapOutput :input-token="inputToken" :output-token="outputToken" :output-balance="outputBalance" :quote="quoteData" :fee="fee" @select="onSelectOutputToken" />
       <div class="mt-10">
@@ -18,7 +18,7 @@
           <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="!quoteData" :loading="swaping" aria-label="Swap" @click="onSwap">Swap</ZButton>
         </ActionButton>
       </div>
-      <RecipientAddress class="mt-4" v-model="recipient" :to="containerId" />
+      <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />
     </div>
     <TokenSelector v-model:show="showTokenSelector" :current="currentToken" :on-select="onSelectToken" />
     <ApproveModal v-model="approveAction" />
@@ -28,32 +28,32 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue"
-import { useMessage, useNotification } from "naive-ui"
-import { useRoute, useRouter } from "vue-router"
-import { uuid, parseAmount, isNative, isSame } from "@/utils"
-import { account, updateNativeBalance } from "@/hooks/useWallet"
-import { appChainId, syncRouteChain } from "@/hooks/useAppState"
-import { doApproval, doSend } from "@/hooks/useInteraction"
-import { getChainIdByKey, getChainKey, getNativeCurrency } from "@/hooks/useChains"
-import { getPoolTokens, findPaths, getPoolId, fetchPoolMeta, loadMyPools as _loadMyPools } from "@/hooks/usePool"
-import { getSwapFee } from "@/hooks/useFee"
-import { quoteSwap, checkValueChange, isSupportChain, getManagerAddress, getSupportedChains, swap } from "@/hooks/useManager"
-import { configReady } from "@/hooks/useConfig"
-import { allowance, cacheTokens, fetchToken, getNativeToken } from "@/hooks/useToken"
-import { createQuoteState } from "@/hooks/useQuoteState"
-import { createTokenStates } from "@/hooks/useTokenState"
-import TokenSelector from "@/components/TokenSelector/index.vue"
-import RecipientAddress from "@/components/RecipientAddress/index.vue"
-import ActionButton from "@/components/ActionButton.vue"
-import ZButton from "@/components/ZButton.vue"
-import TokenInput from "@/components/TokenInput.vue"
+import { ref, computed, watch, onMounted } from 'vue'
+import { useMessage, useNotification } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
+import { uuid, parseAmount, isNative, isSame } from '@/utils'
+import { account, updateNativeBalance } from '@/hooks/useWallet'
+import { appChainId, syncRouteChain } from '@/hooks/useAppState'
+import { doApproval, doSend } from '@/hooks/useInteraction'
+import { getChainIdByKey, getChainKey, getNativeCurrency } from '@/hooks/useChains'
+import { getPoolTokens, findPaths, getPoolId, fetchPoolMeta, loadMyPools as _loadMyPools } from '@/hooks/usePool'
+import { getSwapFee } from '@/hooks/useFee'
+import { quoteSwap, checkValueChange, isSupportChain, getManagerAddress, getSupportedChains, swap } from '@/hooks/useManager'
+import { configReady } from '@/hooks/useConfig'
+import { allowance, cacheTokens, fetchToken, getNativeToken } from '@/hooks/useToken'
+import { createQuoteState } from '@/hooks/useQuoteState'
+import { createTokenStates } from '@/hooks/useTokenState'
+import TokenSelector from '@/components/TokenSelector/index.vue'
+import RecipientAddress from '@/components/RecipientAddress/index.vue'
+import ActionButton from '@/components/ActionButton.vue'
+import ZButton from '@/components/ZButton.vue'
+import TokenInput from '@/components/TokenInput.vue'
 import ApproveModal from '@/components/ActionModal/ApproveModal.vue'
-import ReverseButton from "./ReverseButton.vue"
-import SwapOutput from "./SwapOutput.vue"
-import SwapModal from "./SwapModal.vue"
-import ValueChangeModal from "./ValueChangeModal.vue"
-import { createShare } from "@/hooks/useShare"
+import ReverseButton from './ReverseButton.vue'
+import SwapOutput from './SwapOutput.vue'
+import SwapModal from './SwapModal.vue'
+import ValueChangeModal from './ValueChangeModal.vue'
+import { createShare } from '@/hooks/useShare'
 
 const containerId = `#el-${uuid()}`
 const route = useRoute()
@@ -75,7 +75,7 @@ const paths = ref([])
 const quoteData = ref(null)
 
 const isForInput = ref(true)
-const inputAmount = ref("")
+const inputAmount = ref('')
 const showTokenSelector = ref(false)
 const recipient = ref('')
 const approvalChecking = ref(false)
@@ -101,14 +101,14 @@ const amountIn = computed(() => inputToken.value ? parseAmount(inputAmount.value
 
 const inputHint = computed(() => {
   if (!amountIn.value) {
-    return "Please enter amount"
+    return 'Please enter amount'
   }
 
   if (amountIn.value > inputBalance.value) {
     return `${inputToken.value.symbol} insufficient balance`
   }
 
-  return ""
+  return ''
 })
 const isInputValid = computed(() => {
   return amountIn.value && amountIn.value <= inputBalance.value
@@ -134,6 +134,21 @@ const onApproval = async () => {
   }
 }
 
+const updateRouteForInputOutput = () => {
+  const { referral } = route.query
+
+  const [input, output] = inputOutputTokens.value
+  const chain = getChainKey(appChainId.value)
+  const query = {
+    chain,
+    input: input ? (isNative(input.address) ? getNativeCurrency(input.chainId).symbol : input.address) : undefined,
+    output: output ? (isNative(output.address) ? getNativeCurrency(output.chainId).symbol : output.address) : undefined,
+    referral,
+  }
+
+  router.push({ replace: true, name: route.name, query })
+}
+
 const handleRoute = async () => {
   const { chain, input, output } = route.query
 
@@ -142,7 +157,7 @@ const handleRoute = async () => {
     const tokens = getPoolTokens(appChainId.value)
     inputToken.value = tokens[0]
     outputToken.value = tokens[1]
-  } else if(!isSupportChain(chainId)) {
+  } else if (!isSupportChain(chainId)) {
     inputToken.value = null
     outputToken.value = null
   } else {
@@ -169,8 +184,8 @@ const reset = () => {
   approving.value = false
   swaping.value = false
 
-  inputAmount.value = ""
-  recipient.value = ""
+  inputAmount.value = ''
+  recipient.value = ''
   quoteData.value = null
   showTokenSelector.value = false
   isForInput.value = true
@@ -188,7 +203,7 @@ const updateQuoteData = async () => {
     quoteData.value = await quoteSwap(inputToken.value.chainId, paths.value, amountSpecified)
   } catch (err) {
     notification.error({
-      title: "Error",
+      title: 'Error',
       content: err.shortMessage || err.details || err.message,
       duration: 3000,
     })
@@ -210,6 +225,18 @@ const onAmountChange = () => {
   onCheckApproval()
 }
 
+const onReverse = () => {
+  const [tokenA, tokenB] = [inputToken.value, outputToken.value]
+  inputToken.value = tokenB
+  outputToken.value = tokenA
+
+  inputAmount.value = ''
+  quoteData.value = null
+
+  updateRouteForInputOutput()
+  debounceUpdateBalances.value && debounceUpdateBalances.value()
+}
+
 const onSelectToken = async token => {
   const targetToken = isForInput.value ? inputToken : outputToken
   const otherToken = isForInput.value ? outputToken : inputToken
@@ -224,7 +251,7 @@ const onSelectToken = async token => {
 
   targetToken.value = token
 
-  inputAmount.value = ""
+  inputAmount.value = ''
   quoteData.value = null
 
   updateRouteForInputOutput()
@@ -241,30 +268,18 @@ const onSelectOutputToken = () => {
   showTokenSelector.value = true
 }
 
-const onReverse = () => {
-  const [tokenA, tokenB] = [inputToken.value, outputToken.value]
-  inputToken.value = tokenB
-  outputToken.value = tokenA
-
-  inputAmount.value = ""
-  quoteData.value = null
-
-  updateRouteForInputOutput()
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
-}
-
 const doSwap = async () => {
   const { paths, amountSpecified, amountIn, amountOut } = quoteData.value
   const params = {
     paths,
     amountSpecified,
     amountDesired: amountSpecified < 0n ? amountOut : amountIn,
-    recipient: recipient.value || account.value
+    recipient: recipient.value || account.value,
   }
 
   swapAction.value.data = { inputToken, outputToken, amountIn, amountOut, fee: fee.value }
 
-  const success = await doSend(swapAction, swaping, "Swap", () => swap(params, fee.value))
+  const success = await doSend(swapAction, swaping, 'Swap', () => swap(params, fee.value))
 
   if (success) {
     reset()
@@ -314,21 +329,6 @@ const onTokensChange = async () => {
   await fetchPoolMeta(chainId, id)
 
   paths.value = findPaths(inputToken.value, outputToken.value)
-}
-
-const updateRouteForInputOutput = () => {
-  const { referral } = route.query
-
-  const [input, output] = inputOutputTokens.value
-  const chain = getChainKey(appChainId.value)
-  const query = {
-    chain,
-    input: input ? (isNative(input.address) ? getNativeCurrency(input.chainId).symbol : input.address) : undefined,
-    output: output ? (isNative(output.address) ? getNativeCurrency(output.chainId).symbol : output.address) : undefined,
-    referral,
-  }
-
-  router.push({ replace: true, name: route.name, query })
 }
 
 onMounted(async () => {

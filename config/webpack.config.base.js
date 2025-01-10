@@ -1,21 +1,22 @@
 import path from 'node:path'
-import webpack from "webpack"
-import MiniCssExtractPlugin from "mini-css-extract-plugin"
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import UnpluginIcons from 'unplugin-icons/webpack'
-import UnpluginIconsResolver from 'unplugin-icons/resolver'
-import { FileSystemIconLoader } from 'unplugin-icons/loaders'
+import webpack from 'webpack'
 import { VueLoaderPlugin } from 'vue-loader'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import ESLintPlugin from 'eslint-webpack-plugin'
 import formatter from 'eslint-formatter-friendly'
+import AutoImport from 'unplugin-auto-import/webpack'
 import Components from 'unplugin-vue-components/webpack'
+import UnpluginIcons from 'unplugin-icons/webpack'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import UnpluginIconsResolver from 'unplugin-icons/resolver'
+import { FileSystemIconLoader } from 'unplugin-icons/loaders'
 
 import { getDefinition, dirs, appMeta } from './environment.js'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const customIconNamespace = "ff"
+const customIconNamespace = 'ff'
 
 // https://webpack.js.org/configuration/
 /**
@@ -50,7 +51,7 @@ export default {
                 whitespace: 'preserve',
               },
               extractCSS: isProduction,
-            }
+            },
           },
         ],
       },
@@ -78,7 +79,7 @@ export default {
             options: {
               cacheDirectory: true,
             },
-          }
+          },
         ],
         resolve: {
           fullySpecified: false,
@@ -93,15 +94,18 @@ export default {
             loader: 'css-loader',
             options: {
               importLoaders: 2,
-            }
+            },
           },
           {
             loader: 'postcss-loader',
           },
           {
             loader: 'sass-loader',
-          }
-        ]
+            options: {
+              additionalData: '@use "@/assets/styles/variables.module.scss" as *;',
+            },
+          },
+        ],
       },
       {
         test: /\.module\.scss$/,
@@ -114,15 +118,15 @@ export default {
               modules: {
                 mode: 'local',
               },
-            }
+            },
           },
           {
             loader: 'postcss-loader',
           },
           {
             loader: 'sass-loader',
-          }
-        ]
+          },
+        ],
       },
       {
         test: /\.(png|jpe?g|svg)(\?.*)?$/,
@@ -133,8 +137,8 @@ export default {
           },
         },
         generator: {
-          filename: 'images/[name].[contenthash:8][ext]'
-        }
+          filename: 'images/[name].[contenthash:8][ext]',
+        },
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
@@ -145,21 +149,25 @@ export default {
           },
         },
         generator: {
-          filename: 'fonts/[name].[contenthash:8][ext]'
-        }
+          filename: 'fonts/[name].[contenthash:8][ext]',
+        },
       },
-    ]
+    ],
   },
   plugins: [
     new webpack.ProgressPlugin(),
     new webpack.DefinePlugin(getDefinition(!isProduction)),
     new ESLintPlugin({
-      configType: "flat",
+      configType: 'flat',
       extensions: ['ts', 'js', 'vue'],
       formatter,
     }),
+    AutoImport({
+      imports: ['vue', 'vue-router'],
+      dts: path.resolve(dirs.src, 'types/auto-imports.d.ts'),
+    }),
     Components({
-      dts: "src/types/components.d.ts",
+      dts: 'src/types/components.d.ts',
       resolvers: [
         UnpluginIconsResolver({
           customCollections: [customIconNamespace],
@@ -169,7 +177,7 @@ export default {
     }),
     UnpluginIcons({
       customCollections: {
-        [customIconNamespace]: FileSystemIconLoader(path.resolve(dirs.src, "assets/icons")),
+        [customIconNamespace]: FileSystemIconLoader(path.resolve(dirs.src, 'assets/icons')),
       },
     }),
     new VueLoaderPlugin(),
@@ -182,13 +190,15 @@ export default {
       description: appMeta.description,
       filename: 'index.html',
       template: path.join(dirs.src, 'index.html'),
-      minify: isProduction ? {
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-        removeComments: true,
-        minifyJS: true,
-        minifyCSS: true
-      } : 'auto',
+      minify: isProduction
+        ? {
+            collapseWhitespace: true,
+            removeAttributeQuotes: true,
+            removeComments: true,
+            minifyJS: true,
+            minifyCSS: true,
+          }
+        : 'auto',
     }),
   ],
 }

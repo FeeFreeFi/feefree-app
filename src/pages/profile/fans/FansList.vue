@@ -11,7 +11,7 @@
         <n-text class="w-[80px] sm:w-[160px] text-center" :depth="1">Accept at</n-text>
       </div>
       <div v-if="list.length > 0">
-        <div class="h-9 px-3 flex items-center gap-1 transition-colors hover:bg-card/60" v-for="item, index in list" :key="index">
+        <div v-for="item, index in list" :key="index" class="h-9 px-3 flex items-center gap-1 transition-colors hover:bg-card/60">
           <div class="w-14 flex-y-center gap-1">
             <i-ff-dimaond class="size-4" />
             <n-text class="text-sm">Lv{{ item.level }}</n-text>
@@ -46,15 +46,15 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs"
-import { DATE_FORMAT_DEFAULT } from "@/config"
-import { shortString } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import { getAccountUrl } from "@/hooks/useChains"
-import { appChainId } from "@/hooks/useAppState"
-import ZPagination from "@/components/ZPagination.vue"
-import ZCopyable from "@/components/ZCopyable.vue"
-import NoRecords from "./NoRecords.vue"
+import dayjs from 'dayjs'
+import { DATE_FORMAT_DEFAULT } from '@/config'
+import { shortString } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import { getAccountUrl } from '@/hooks/useChains'
+import { appChainId } from '@/hooks/useAppState'
+import ZPagination from '@/components/ZPagination.vue'
+import ZCopyable from '@/components/ZCopyable.vue'
+import NoRecords from './NoRecords.vue'
 
 defineProps({
   total: {

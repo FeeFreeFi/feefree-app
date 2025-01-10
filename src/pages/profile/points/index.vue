@@ -14,12 +14,12 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from "vue"
-import { getPoints } from "@/api"
-import { profile } from "@/hooks/useUser"
-import ZBack from "@/components/ZBack.vue"
-import PointsOverview from "./PointsOverview.vue"
-import PointsList from "./PointsList.vue"
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { getPoints } from '@/api'
+import { profile } from '@/hooks/useUser'
+import ZBack from '@/components/ZBack.vue'
+import PointsOverview from './PointsOverview.vue'
+import PointsList from './PointsList.vue'
 
 const pagination = ref({
   page: 1,
@@ -31,6 +31,11 @@ const pagination = ref({
  * @type {import('vue').Ref<import('@/types').Points[]>}
  */
 const pointsList = ref([])
+
+const reset = () => {
+  pagination.value = { page: 1, limit: 10, total: 0 }
+  pointsList.value = []
+}
 
 const fetchPoints = async () => {
   const { page, limit } = pagination.value
@@ -65,11 +70,6 @@ const onUpdatePage = page => {
   }
 
   fetchPoints()
-}
-
-const reset = () => {
-  pagination.value = { page: 1, limit: 10, total: 0 }
-  pointsList.value = []
 }
 
 onMounted(() => {

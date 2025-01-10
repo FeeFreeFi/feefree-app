@@ -1,8 +1,6 @@
-/* eslint-disable */
-// @ts-nocheck
-
-import type { GlobalThemeOverrides } from "naive-ui"
-import * as themeVars from "@/assets/styles/variables.module.scss"
+import type { GlobalThemeOverrides } from 'naive-ui'
+// import * as themeVars from '@/assets/styles/variables.module.scss'
+import * as themeVars from '../assets/styles/variables.module.scss'
 
 export const themeOverrides: GlobalThemeOverrides = {
   common: {

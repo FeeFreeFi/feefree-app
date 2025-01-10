@@ -5,20 +5,20 @@
 </template>
 
 <script setup>
-import { watch, onBeforeMount, onMounted, onBeforeUnmount } from "vue"
-import { useRoute } from "vue-router"
-import { useNotification } from "naive-ui"
-import { wait } from "@/utils"
-import { account, autoConnect } from "@/hooks/useWallet"
-import { findWallet } from "@/hooks/useWalletDetector"
-import { visibility } from "@/hooks/usePage"
-import { recentWallet } from "@/hooks/useConnecting"
-import { login, refreshToken } from "@/hooks/useLogin"
-import { clearAuth, isMatchAccount, getAccessToken, auth, loadAuth } from "@/hooks/useAuth"
-import { fetchProfile, resetProfile, saveReferral } from "@/hooks/useUser"
-import { fetchConfig } from "@/hooks/useConfig"
-import { createPriceState } from "@/hooks/usePrices"
-import { loadSafeWallet } from "@/hooks/useSafeWallet"
+import { watch, onBeforeMount, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute } from 'vue-router'
+import { useNotification } from 'naive-ui'
+import { wait } from '@/utils'
+import { account, autoConnect } from '@/hooks/useWallet'
+import { findWallet } from '@/hooks/useWalletDetector'
+import { visibility } from '@/hooks/usePage'
+import { recentWallet } from '@/hooks/useConnecting'
+import { login, refreshToken } from '@/hooks/useLogin'
+import { clearAuth, isMatchAccount, getAccessToken, auth, loadAuth } from '@/hooks/useAuth'
+import { fetchProfile, resetProfile, saveReferral } from '@/hooks/useUser'
+import { fetchConfig } from '@/hooks/useConfig'
+import { createPriceState } from '@/hooks/usePrices'
+import { loadSafeWallet } from '@/hooks/useSafeWallet'
 
 const route = useRoute()
 const notification = useNotification()
@@ -33,20 +33,16 @@ const doLogin = async () => {
   })
 }
 
-const doAutoConnect = async () => {
-  await wait(100)
+const watchAccount = () => {
+  watch([account, visibility], ([newAccount, newVisibility], [oldAccount]) => {
+    if (newAccount) {
+      if (newAccount !== oldAccount) {
+        clearAuth()
+      }
 
-  const name = recentWallet.value || "Safe"
-  const wallet = findWallet(name)
-  if (!wallet) {
-    watchAccount()
-    return
-  }
-
-  const success = await autoConnect(wallet)
-  watchAccount()
-
-  success && loadProfile()
+      newVisibility && !auth.value && doLogin()
+    }
+  })
 }
 
 const loadProfile = async () => {
@@ -65,16 +61,20 @@ const loadProfile = async () => {
   doLogin()
 }
 
-const watchAccount = () => {
-  watch([account, visibility], ([newAccount, newVisibility], [oldAccount])=> {
-    if (newAccount) {
-      if (newAccount !== oldAccount) {
-        clearAuth()
-      }
+const doAutoConnect = async () => {
+  await wait(100)
 
-      newVisibility && !auth.value && doLogin()
-    }
-  })
+  const name = recentWallet.value || 'Safe'
+  const wallet = findWallet(name)
+  if (!wallet) {
+    watchAccount()
+    return
+  }
+
+  const success = await autoConnect(wallet)
+  watchAccount()
+
+  success && loadProfile()
 }
 
 onBeforeMount(() => {

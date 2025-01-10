@@ -1,46 +1,42 @@
-import { readonly, ref } from "vue"
-import { debounce } from "lodash-es"
-import { isMobile } from "@/utils"
+import { readonly, ref } from 'vue'
+import { debounce } from 'lodash-es'
+import { isMobile } from '@/utils'
 
-type MediaSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
+type MediaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
-type MediaMatch = {
-  [key in MediaSize]: boolean;
-}
+type MediaMatch = Record<MediaSize, boolean>
 
-type Breakpoints = {
-  [key in MediaSize]: number;
-}
+type Breakpoints = Record<MediaSize, number>
 
 const breakpoints: Breakpoints = {
   xs: 0,
-  sm : 640,
+  sm: 640,
   md: 768,
   lg: 1024,
   xl: 1280,
-  "2xl": 1536,
+  '2xl': 1536,
 }
 
 const matchesRef = ref({
   xs: true,
-  sm : false,
+  sm: false,
   md: false,
   lg: false,
   xl: false,
-  "2xl": false,
+  '2xl': false,
 })
 
 const screenRef = ref({
-  name: "",
+  name: '',
   breakpoints,
   ...matchesRef.value,
   lt: {
     xs: false,
-    sm : true,
+    sm: true,
     md: true,
     lg: true,
     xl: true,
-    "2xl": true,
+    '2xl': true,
   },
   isMobile: isMobile(),
 })
@@ -51,13 +47,12 @@ const update = () => {
 
   let items = Object.keys(matches).filter(name => matches[name as MediaSize]).map(name => ({ name, size: breakpoints[name as MediaSize] }))
   items = items.sort((a, b) => b.size - a.size)
-  const name = items[0].name
 
   const lt = Object.fromEntries(Object.entries(matches).map(([name, value]) => [name, !value])) as MediaMatch
 
   screenRef.value = {
     ...screenRef.value,
-    name,
+    name: items[0].name,
     ...matches,
     lt,
     isMobile: isMobile(),
@@ -88,12 +83,12 @@ const onWindowResize = () => {
 
 const install = () => {
   Object.entries(breakpoints).forEach(([name, size]) => {
-    const media  = window.matchMedia(`(min-width: ${size}px)`)
+    const media = window.matchMedia(`(min-width: ${size}px)`)
     media.addEventListener('change', e => onMediaChange(name, e.matches))
     onMediaChange(name, media.matches)
   })
 
-  window.addEventListener("resize", onWindowResize)
+  window.addEventListener('resize', onWindowResize)
 
   update()
 }

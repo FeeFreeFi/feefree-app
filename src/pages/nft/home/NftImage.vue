@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import ZChainIcon from "@/components/ZChainIcon.vue"
+import ZChainIcon from '@/components/ZChainIcon.vue'
 
 defineProps({
   src: {
@@ -23,11 +23,11 @@ defineProps({
   },
   imgClass: {
     type: String,
-    default: "rounded-t-lg",
+    default: 'rounded-t-lg',
   },
   chainClass: {
     type: String,
-    default: "size-4",
+    default: 'size-4',
   },
 })
 </script>

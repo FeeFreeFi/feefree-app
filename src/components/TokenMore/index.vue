@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { state, onClose } from "@/hooks/useTokenMore"
-import ZModalWrapper from "@/components/ZModalWrapper.vue"
-import TokenMoreView from "./TokenMoreView.vue"
+import { state, onClose } from '@/hooks/useTokenMore'
+import ZModalWrapper from '@/components/ZModalWrapper.vue'
+import TokenMoreView from './TokenMoreView.vue'
 </script>

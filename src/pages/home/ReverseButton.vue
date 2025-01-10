@@ -15,13 +15,13 @@ const props = defineProps({
     default: false,
   },
 })
-const emit = defineEmits(["reverse"])
+const emit = defineEmits(['reverse'])
 
 const onReverse = () => {
   if (props.disabled) {
     return
   }
 
-  emit("reverse")
+  emit('reverse')
 }
 </script>

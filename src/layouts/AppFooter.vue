@@ -9,5 +9,5 @@
 </template>
 
 <script setup>
-import NavBar from "@/components/NavBar/index.vue"
+import NavBar from '@/components/NavBar/index.vue'
 </script>

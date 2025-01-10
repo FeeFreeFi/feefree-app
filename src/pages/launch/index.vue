@@ -1,10 +1,10 @@
 <template>
-  <div class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20" :id="containerId.slice(1)">
+  <div :id="containerId.slice(1)" class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
     <div class="flex flex-col">
       <n-text class="text-lg font-medium">Launch Shortable Token</n-text>
-      <TokenInput class="mt-4 sm:mt-8" v-model="assetAmount" :token="assetToken" :balance="assetBalance" label="Pricing Token" @change="onAmountChange" @select="onShowAssetSelector" />
-      <LaunchToken class="mt-3 sm:mt-6" v-model:name="name" v-model:symbol="symbol" />
-      <LockLiquidity class="mt-3 sm:mt-6" v-model="duration" />
+      <TokenInput v-model="assetAmount" class="mt-4 sm:mt-8" :token="assetToken" :balance="assetBalance" label="Pricing Token" @change="onAmountChange" @select="onShowAssetSelector" />
+      <LaunchToken v-model:name="name" v-model:symbol="symbol" class="mt-3 sm:mt-6" />
+      <LockLiquidity v-model="duration" class="mt-3 sm:mt-6" />
       <div class="mt-10">
         <ActionButton :chain-id="assetToken?.chainId" :chains="supportedChains">
           <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
@@ -13,7 +13,7 @@
           <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="launching" :loading="launching" aria-label="Launch" @click="onLaunch">Launch</ZButton>
         </ActionButton>
       </div>
-      <RecipientAddress class="mt-4" v-model="recipient" :to="containerId" />
+      <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />
     </div>
     <TokenSelector v-model:show="showAssetSelector" :current="assetToken" :on-select="onSelectAsset" />
     <ApproveModal v-model="approveAction" />
@@ -22,28 +22,28 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { parseAmount, uuid, isNative, isSame } from "@/utils"
-import { TOTAL_SUPPLY } from "@/config"
-import { configReady } from "@/hooks/useConfig"
-import { account, updateNativeBalance } from "@/hooks/useWallet"
-import { appChainId, syncRouteChain } from "@/hooks/useAppState"
-import { doApproval, doSend } from "@/hooks/useInteraction"
-import { getChainIdByKey, getChainKey } from "@/hooks/useChains"
-import { isSupportChain, getManagerAddress, getSupportedChains, launch } from "@/hooks/useManager"
-import { createTokenState } from "@/hooks/useTokenState"
-import { allowance, cacheTokens, fetchToken, getNativeToken } from "@/hooks/useToken"
-import { loadMyPools } from "@/hooks/usePool"
-import TokenSelector from "@/components/TokenSelector/index.vue"
-import RecipientAddress from "@/components/RecipientAddress/index.vue"
-import ActionButton from "@/components/ActionButton.vue"
-import ZButton from "@/components/ZButton.vue"
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { parseAmount, uuid, isNative, isSame } from '@/utils'
+import { TOTAL_SUPPLY } from '@/config'
+import { configReady } from '@/hooks/useConfig'
+import { account, updateNativeBalance } from '@/hooks/useWallet'
+import { appChainId, syncRouteChain } from '@/hooks/useAppState'
+import { doApproval, doSend } from '@/hooks/useInteraction'
+import { getChainIdByKey, getChainKey } from '@/hooks/useChains'
+import { isSupportChain, getManagerAddress, getSupportedChains, launch } from '@/hooks/useManager'
+import { createTokenState } from '@/hooks/useTokenState'
+import { allowance, cacheTokens, fetchToken, getNativeToken } from '@/hooks/useToken'
+import { loadMyPools } from '@/hooks/usePool'
+import TokenSelector from '@/components/TokenSelector/index.vue'
+import RecipientAddress from '@/components/RecipientAddress/index.vue'
+import ActionButton from '@/components/ActionButton.vue'
+import ZButton from '@/components/ZButton.vue'
 import ApproveModal from '@/components/ActionModal/ApproveModal.vue'
 import LockLiquidity from '@/components/LockLiquidity.vue'
-import TokenInput from "@/components/TokenInput.vue"
-import LaunchToken from "./LaunchToken.vue"
-import LaunchModal from "./LaunchModal.vue"
+import TokenInput from '@/components/TokenInput.vue'
+import LaunchToken from './LaunchToken.vue'
+import LaunchModal from './LaunchModal.vue'
 
 const containerId = `#el-${uuid()}`
 const route = useRoute()
@@ -53,9 +53,9 @@ const router = useRouter()
 const supportedChains = ref([])
 /** @type {import('vue').Ref<import('@/types').Token>} */
 const assetToken = ref(null)
-const assetAmount = ref("")
-const name = ref("")
-const symbol = ref("")
+const assetAmount = ref('')
+const name = ref('')
+const symbol = ref('')
 const duration = ref(0)
 
 const showAssetSelector = ref(false)
@@ -76,7 +76,7 @@ const amountAsset = computed(() => assetToken.value ? parseAmount(assetAmount.va
 
 const inputHint = computed(() => {
   if (!amountAsset.value) {
-    return "Please enter amount"
+    return 'Please enter amount'
   }
 
   if (amountAsset.value > assetBalance.value) {
@@ -84,14 +84,14 @@ const inputHint = computed(() => {
   }
 
   if (!name.value) {
-    return "Please enter name"
+    return 'Please enter name'
   }
 
   if (!symbol.value) {
-    return "Please enter symbol"
+    return 'Please enter symbol'
   }
 
-  return ""
+  return ''
 })
 const isInputValid = computed(() => {
   return amountAsset.value && amountAsset.value <= assetBalance.value && name.value && symbol.value
@@ -114,13 +114,27 @@ const onApproval = async () => {
   }
 }
 
+const updateRouteForAsset = () => {
+  const { referral } = route.query
+
+  const chain = getChainKey(appChainId.value)
+  const asset = assetToken.value
+  const query = {
+    chain,
+    asset: asset ? (isNative(asset.address) ? asset.symbol : asset.address) : undefined,
+    referral,
+  }
+
+  router.push({ replace: true, name: route.name, query })
+}
+
 const handleRoute = async () => {
   const { chain, asset } = route.query
 
   const chainId = getChainIdByKey(chain)
   if (!chainId) {
     assetToken.value = getNativeToken(appChainId.value)
-  } else if(!isSupportChain(chainId)) {
+  } else if (!isSupportChain(chainId)) {
     assetToken.value = null
   } else {
     const nativeToken = getNativeToken(chainId)
@@ -138,11 +152,11 @@ const reset = () => {
   approvalChecking.value = false
   approving.value = false
 
-  assetAmount.value = ""
-  name.value = ""
-  symbol.value = ""
+  assetAmount.value = ''
+  name.value = ''
+  symbol.value = ''
   duration.value = 0
-  recipient.value = ""
+  recipient.value = ''
   showAssetSelector.value = false
 }
 
@@ -162,7 +176,7 @@ const onSelectAsset = async token => {
 
   assetToken.value = token
 
-  assetAmount.value = ""
+  assetAmount.value = ''
   debounceUpdateBalance.value && debounceUpdateBalance.value()
   updateRouteForAsset()
 }
@@ -192,7 +206,7 @@ const onLaunch = async () => {
     duration: params.duration,
   }
 
-  const success = await doSend(launchAction, launching, "Launch", () => launch(params))
+  const success = await doSend(launchAction, launching, 'Launch', () => launch(params))
   if (success) {
     reset()
     debounceUpdateBalance.value && debounceUpdateBalance.value()
@@ -209,20 +223,6 @@ const onAppChainIdChange = () => {
 
   debounceUpdateBalance.value && debounceUpdateBalance.value()
   updateRouteForAsset()
-}
-
-const updateRouteForAsset = () => {
-  const { referral } = route.query
-
-  const chain = getChainKey(appChainId.value)
-  const asset = assetToken.value
-  const query = {
-    chain,
-    asset: asset ? (isNative(asset.address) ? asset.symbol : asset.address) : undefined,
-    referral,
-  }
-
-  router.push({ replace: true, name: route.name, query })
 }
 
 onMounted(async () => {

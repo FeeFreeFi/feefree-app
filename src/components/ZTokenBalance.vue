@@ -8,8 +8,8 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { toBalanceWithUnit } from "@/utils"
+import { computed } from 'vue'
+import { toBalanceWithUnit } from '@/utils'
 
 const props = defineProps({
   token: {
@@ -38,11 +38,11 @@ const props = defineProps({
 
 const signClass = computed(() => {
   const { sign } = props
-  return sign !== undefined ? (sign ? "px-1 py-[2px] rounded-xl bg-card-1 text-success/80" : "px-1 py-[2px] rounded-xl bg-card-1 text-error/90") : ''
+  return sign !== undefined ? (sign ? 'px-1 py-[2px] rounded-xl bg-card-1 text-success/80' : 'px-1 py-[2px] rounded-xl bg-card-1 text-error/90') : ''
 })
 
 const displaySign = computed(() => {
   const { sign } = props
-  return sign !== undefined ? (sign ? "+ " : "- ") : ''
+  return sign !== undefined ? (sign ? '+ ' : '- ') : ''
 })
 </script>

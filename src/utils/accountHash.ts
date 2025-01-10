@@ -1,8 +1,8 @@
-import { hashMessage } from "viem"
-import { base58 } from "@scure/base"
+import { hashMessage } from 'viem'
+import { base58 } from '@scure/base'
 
 const fromHexString = (hexString: string) => {
-  return Uint8Array.from(Array.from(hexString.match(/.{1,2}/g) || []).map(byte => parseInt(byte, 16)))
+  return Uint8Array.from(Array.from(hexString.match(/.{1,2}/g) || []).map(byte => Number.parseInt(byte, 16)))
 }
 
 const getAccountHash = (account: string) => {

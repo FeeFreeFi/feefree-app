@@ -10,7 +10,7 @@
 
 <script setup>
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
-import DownArrow from "@/components/Arrow/DownArrow.vue"
+import DownArrow from '@/components/Arrow/DownArrow.vue'
 
 const props = defineProps({
   token: {
@@ -26,13 +26,13 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["select"])
+const emit = defineEmits(['select'])
 
 const onSelect = () => {
   if (props.disabled) {
     return
   }
 
-  emit("select")
+  emit('select')
 }
 </script>

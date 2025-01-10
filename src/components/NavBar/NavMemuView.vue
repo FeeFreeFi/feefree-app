@@ -20,6 +20,6 @@ import {
   URL_DISCORD,
   URL_TWITTER,
   URL_GITHUB,
-} from "@/config"
-import NavLink2 from "./NavLink2.vue"
+} from '@/config'
+import NavLink2 from './NavLink2.vue'
 </script>

@@ -3,7 +3,7 @@
     <div>
       <n-checkbox v-model:checked="checked" @update:checked="onChecked">Lock Liquidity</n-checkbox>
     </div>
-    <n-radio-group :class="[checked ? '' : 'hidden']" v-model:value="duration" name="duration">
+    <n-radio-group v-model:value="duration" :class="[checked ? '' : 'hidden']" name="duration">
       <div class="grid gap-y-2 grid-cols-2 md:grid-cols-4">
         <n-radio v-for="option in options" :key="option.value" :value="option.value">
           <n-text class="opacity-80">{{ option.label }}</n-text>
@@ -14,15 +14,15 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue"
+import { ref, watch, onMounted } from 'vue'
 
 const duration = defineModel({ type: Number, required: true })
 
 const options = [
-  { label: "30 Days", value: 2592000 },
-  { label: "180 Days", value: 15552000 },
-  { label: "1 Year", value: 31536000 },
-  { label: "2 Years", value: 63072000 },
+  { label: '30 Days', value: 2592000 },
+  { label: '180 Days', value: 15552000 },
+  { label: '1 Year', value: 31536000 },
+  { label: '2 Years', value: 63072000 },
 ]
 
 const checked = ref(false)

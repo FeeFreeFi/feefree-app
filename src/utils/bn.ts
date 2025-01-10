@@ -1,16 +1,16 @@
-import { BigNumber } from "bignumber.js"
+import { BigNumber } from 'bignumber.js'
 
 const UNITS = [
-  { value: 1e12, name: "T" },
-  { value: 1e9, name: "B" },
-  { value: 1e6, name: "M" },
+  { value: 1e12, name: 'T' },
+  { value: 1e9, name: 'B' },
+  { value: 1e6, name: 'M' },
 ]
 
-type Value = BigNumber|string|number|bigint
+type Value = BigNumber | string | number | bigint
 
-export const toBytes32 = (value: bigint) => `0x${value.toString(16).padStart(64, "0")}`
+export const toBytes32 = (value: bigint) => `0x${value.toString(16).padStart(64, '0')}`
 
-const toBigInt = (value: BigNumber|string|number) => BigInt(value.toString(10))
+const toBigInt = (value: BigNumber | string | number) => BigInt(value.toString(10))
 
 export const fromValue = (value: Value) => new BigNumber(value.toString(10))
 
@@ -20,7 +20,7 @@ export const byDecimals = (value: Value, decimals: number) => new BigNumber(valu
 
 export const parseAmount = (value: Value, decimals: number) => toBigInt(fromDecimals(value, decimals).dp(0))
 
-export const toAmount = (value: Value, decimals: number, dp: number|undefined = undefined) => byDecimals(value, decimals).dp(dp === undefined ? decimals : dp).toString(10)
+export const toAmount = (value: Value, decimals: number, dp: number | undefined = undefined) => byDecimals(value, decimals).dp(dp === undefined ? decimals : dp).toString(10)
 
 export const toBalance = (value: Value, dp = 0) => fromValue(value).dp(dp).toFormat()
 

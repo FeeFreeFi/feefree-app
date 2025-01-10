@@ -1,9 +1,9 @@
-import { ref } from "vue"
-import { getFees } from "@/contracts/Quoter"
-import { getPublicClient } from "./useClient"
-import { getQuoterAddress, getSupportedChains } from "./useManager"
+import { ref } from 'vue'
+import { getFees } from '@/contracts/Quoter'
+import { getPublicClient } from './useClient'
+import { getQuoterAddress, getSupportedChains } from './useManager'
 
-const config = ref<{[chainId:number]: {swapFee:bigint, exchangeFee:bigint, lpFee:bigint}}>({})
+const config = ref<Record<number, { swapFee: bigint, exchangeFee: bigint, lpFee: bigint }>>({})
 
 export const fetchFees = async () => {
   const chains = getSupportedChains()

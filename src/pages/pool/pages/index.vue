@@ -8,6 +8,6 @@
 </template>
 
 <script setup>
-import ZContainer from "@/components/ZContainer.vue"
-import PoolNav from "../components/PoolNav.vue"
+import ZContainer from '@/components/ZContainer.vue'
+import PoolNav from '../components/PoolNav.vue'
 </script>

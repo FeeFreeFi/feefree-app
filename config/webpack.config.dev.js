@@ -24,7 +24,7 @@ const devServer = {
       context: ['/api'],
       target: process.env.API_BASE,
     },
-  ]
+  ],
 }
 
 /**
@@ -39,7 +39,7 @@ const devConfig = {
   performance: {
     hints: false,
   },
-  cache: { type: "memory" },
+  cache: { type: 'memory' },
   optimization: {
     splitChunks: {
       chunks: 'all',

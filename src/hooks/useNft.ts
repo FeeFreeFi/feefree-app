@@ -1,18 +1,17 @@
-import type { Ref } from "vue"
-import type { Nft } from "@/types"
-import pMap from "p-map"
-import { groupBy } from "lodash-es"
-import { ref, watch } from "vue"
-import { getNfts as _getNfts } from "@/api"
-import { mint as _mint, totalSupply as _totalSupply } from "@/contracts/Nft"
-import { getMinted as _getMinted } from "@/contracts/Quoter"
-import { getPublicClient } from "./useClient"
-import { createDebounceUpdate } from "./useTimer"
-import { getWalletClient } from "./useWallet"
-import { createCache } from "./useCache"
-import { getQuoterAddress } from "./useManager"
+import type { Ref } from 'vue'
+import type { Nft } from '@/types'
+import pMap from 'p-map'
+import { groupBy } from 'lodash-es'
+import { getNfts as _getNfts } from '@/api'
+import { mint as _mint, totalSupply as _totalSupply } from '@/contracts/Nft'
+import { getMinted as _getMinted } from '@/contracts/Quoter'
+import { getPublicClient } from './useClient'
+import { createDebounceUpdate } from './useTimer'
+import { getWalletClient } from './useWallet'
+import { createCache } from './useCache'
+import { getQuoterAddress } from './useManager'
 
-const config = ref<{[chainId: number]: Nft[]}>()
+const config = ref<Record<number, Nft[]>>()
 
 export const fetchNfts = async () => {
   if (config.value) {
@@ -25,10 +24,10 @@ export const fetchNfts = async () => {
     return
   }
 
-  config.value = groupBy(res.data, "chainId")
+  config.value = groupBy(res.data, 'chainId')
 }
 
-export const getSupportedChains = () => Object.keys(config.value || {}).map(chainId => ({ chainId: parseInt(chainId, 10) }))
+export const getSupportedChains = () => Object.keys(config.value || {}).map(chainId => ({ chainId: Number.parseInt(chainId, 10) }))
 
 export const getNfts = (chainId: number) => config.value?.[chainId] || []
 

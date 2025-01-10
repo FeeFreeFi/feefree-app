@@ -10,7 +10,7 @@
         <n-text v-if="screen.sm" class="w-24 text-center" :depth="1">Update at</n-text>
         <n-text class="flex-1 text-right pr-[10px]" :depth="1">Action</n-text>
       </div>
-      <div class="h-10 px-3 flex items-center gap-1 transition-colors hover:bg-card/60" v-for="item, index in list" :key="index">
+      <div v-for="item, index in list" :key="index" class="h-10 px-3 flex items-center gap-1 transition-colors hover:bg-card/60">
         <div class="w-[72px] flex items-center gap-2">
           <ZChainIcon class="size-4" :chain-id="item.chainId" />
           <n-text class="text-xs">{{ getChainName(item.chainId) }}</n-text>
@@ -28,13 +28,13 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs"
-import { ETH } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import { getChainName, getTransactionUrl } from "@/hooks/useChains"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZChainIcon from "@/components/ZChainIcon.vue"
-import ZButton from "@/components/ZButton.vue"
+import dayjs from 'dayjs'
+import { ETH } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import { getChainName, getTransactionUrl } from '@/hooks/useChains'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import ZChainIcon from '@/components/ZChainIcon.vue'
+import ZButton from '@/components/ZButton.vue'
 
 defineProps({
   claiming: {

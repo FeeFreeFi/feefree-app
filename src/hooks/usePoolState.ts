@@ -1,8 +1,7 @@
-import type { Ref } from "vue"
-import type { PoolData, PoolMeta } from "@/types"
-import { watch } from "vue"
-import { createDebounceUpdate } from "./useTimer"
-import { getPoolData, getPoolDatas, updatePoolDatas } from "./usePool"
+import type { Ref } from 'vue'
+import type { PoolData, PoolMeta } from '@/types'
+import { createDebounceUpdate } from './useTimer'
+import { getPoolData, getPoolDatas, updatePoolDatas } from './usePool'
 
 export const createPoolState = (pool: Ref<PoolMeta>, state: Ref<PoolData>) => {
   state.value = getPoolData(pool.value)
@@ -20,12 +19,12 @@ export const createPoolState = (pool: Ref<PoolMeta>, state: Ref<PoolData>) => {
 
   watch(pool, doUpdate)
 
-  const { debounceUpdate } =  createDebounceUpdate(doUpdate, 1000, 60000)
+  const { debounceUpdate } = createDebounceUpdate(doUpdate, 1000, 60000)
 
   return debounceUpdate
 }
 
-export const createPoolStates = (pools: Ref<PoolMeta[]>, states: Ref<{[id: string]: PoolData}>) => {
+export const createPoolStates = (pools: Ref<PoolMeta[]>, states: Ref<Record<string, PoolData>>) => {
   states.value = getPoolDatas(pools.value)
 
   const doUpdate = async () => {
@@ -43,4 +42,3 @@ export const createPoolStates = (pools: Ref<PoolMeta[]>, states: Ref<{[id: strin
 
   return createDebounceUpdate(doUpdate, 1000, 60000)
 }
-

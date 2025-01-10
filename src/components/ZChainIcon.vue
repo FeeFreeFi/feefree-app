@@ -4,7 +4,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getChainName } from "@/hooks/useChains"
+import { getChainName } from '@/hooks/useChains'
 
 const props = defineProps({
   chainId: {

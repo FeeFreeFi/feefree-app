@@ -1,8 +1,8 @@
-import type { Profile } from "@/types"
-import { readonly, ref } from "vue"
-import { getProfile } from "@/api"
-import { CACHE_REFERRAL } from "@/config"
-import { setStorage } from "@/utils"
+import type { Profile } from '@/types'
+import { readonly, ref } from 'vue'
+import { getProfile } from '@/api'
+import { CACHE_REFERRAL } from '@/config'
+import { setStorage } from '@/utils'
 
 const profileRef = ref<Profile | undefined>()
 

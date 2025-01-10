@@ -1,7 +1,7 @@
-import type { Callback } from "@/types"
-import { ref, watch } from "vue"
-import { createDebounceUpdate } from "./useTimer"
-import { getPrices } from "@/api"
+import type { Callback } from '@/types'
+import { ref, watch } from 'vue'
+import { createDebounceUpdate } from './useTimer'
+import { getPrices } from '@/api'
 
 const pricesRef = ref<Record<string, number>>({})
 const nonces = ref(0)
@@ -20,11 +20,11 @@ const doUpdate = async () => {
     ...pricesRef.value,
     ...res.data,
   }
-  nonces.value++
+  nonces.value += 1
 }
 
 export const getPrice = (key: string) => {
-  return key && pricesRef.value[key] || 0
+  return key ? pricesRef.value[key] || 0 : 0
 }
 
 export const createPriceState = () => {

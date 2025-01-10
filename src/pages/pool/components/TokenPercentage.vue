@@ -9,11 +9,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { isNative } from "@/utils"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import { getAccountUrl, getHolderUrl } from "@/hooks/useChains"
+import { computed } from 'vue'
+import { isNative } from '@/utils'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import { getAccountUrl, getHolderUrl } from '@/hooks/useChains'
 
 const props = defineProps({
   token: {

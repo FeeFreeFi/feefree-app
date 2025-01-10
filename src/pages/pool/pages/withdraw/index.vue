@@ -33,30 +33,30 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue"
-import { useNotification } from "naive-ui"
-import { useRoute, useRouter } from "vue-router"
-import { PAGE_NOT_FOUND } from "@/config"
-import { parseAmount, decodePoolId } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import { account, updateNativeBalance } from "@/hooks/useWallet"
-import { appChainId } from "@/hooks/useAppState"
-import { approveLiquidity, checkLiquidityAllowance, getManagerAddress, getSupportedChains, isSupportChain, quoteRemoveLiquidity, removeLiquidity } from "@/hooks/useManager"
-import { fetchPoolMeta, getPoolData, getPoolName } from "@/hooks/usePool"
-import { createLiquidityState } from "@/hooks/useLiquidityState"
-import { configReady } from "@/hooks/useConfig"
-import { doSend } from "@/hooks/useInteraction"
-import { onPriceChanged } from "@/hooks/usePrices"
-import { createPoolState } from "@/hooks/usePoolState"
-import { createQuoteState } from "@/hooks/useQuoteState"
-import { createDebounceUpdate } from "@/hooks/useTimer"
-import ZButton from "@/components/ZButton.vue"
-import ActionButton from "@/components/ActionButton.vue"
-import PoolPosition from "./PoolPosition.vue"
-import WithdrawInput from "./WithdrawInput.vue"
-import TokenReceive from "./TokenReceive.vue"
+import { ref, computed, watch, onMounted } from 'vue'
+import { useNotification } from 'naive-ui'
+import { useRoute, useRouter } from 'vue-router'
+import { PAGE_NOT_FOUND } from '@/config'
+import { parseAmount, decodePoolId } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import { account, updateNativeBalance } from '@/hooks/useWallet'
+import { appChainId } from '@/hooks/useAppState'
+import { approveLiquidity, checkLiquidityAllowance, getManagerAddress, getSupportedChains, isSupportChain, quoteRemoveLiquidity, removeLiquidity } from '@/hooks/useManager'
+import { fetchPoolMeta, getPoolData, getPoolName } from '@/hooks/usePool'
+import { createLiquidityState } from '@/hooks/useLiquidityState'
+import { configReady } from '@/hooks/useConfig'
+import { doSend } from '@/hooks/useInteraction'
+import { onPriceChanged } from '@/hooks/usePrices'
+import { createPoolState } from '@/hooks/usePoolState'
+import { createQuoteState } from '@/hooks/useQuoteState'
+import { createDebounceUpdate } from '@/hooks/useTimer'
+import ZButton from '@/components/ZButton.vue'
+import ActionButton from '@/components/ActionButton.vue'
+import PoolPosition from './PoolPosition.vue'
+import WithdrawInput from './WithdrawInput.vue'
+import TokenReceive from './TokenReceive.vue'
 import ApproveLiquidtyModal from './ApproveLiquidtyModal.vue'
-import WithdrawModal from "./WithdrawModal.vue"
+import WithdrawModal from './WithdrawModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -80,9 +80,9 @@ const debounceUpdateLiquidity = ref(null)
 
 const liquidity = ref(0n)
 
-const inputAmount = ref("")
+const inputAmount = ref('')
 const amount = computed(() => parseAmount(inputAmount.value || 0, 0))
-const inputHint = computed(() => "Please enter amount")
+const inputHint = computed(() => 'Please enter amount')
 const isInputValid = computed(() => amount.value && amount.value <= liquidity.value)
 
 const approvalChecking = ref(false)
@@ -103,7 +103,7 @@ const onApproval = async () => {
 
   approveAction.value.data = { chainId, pool: pool.value, amount: amount.value, spender }
 
-  const success = await doSend(approveAction, approving, "Approve", () => approveLiquidity(pool.value, spender, amount.value))
+  const success = await doSend(approveAction, approving, 'Approve', () => approveLiquidity(pool.value, spender, amount.value))
 
   if (success) {
     checkAllowance()
@@ -121,7 +121,7 @@ const updateQuoteData = async () => {
     quoteData.value = await quoteRemoveLiquidity(pool.value.chainId, pool.value.currency0.address, pool.value.currency1.address, amount.value)
   } catch (err) {
     notification.error({
-      title: "Error",
+      title: 'Error',
       content: err.shortMessage || err.details || err.message,
       duration: 3000,
     })
@@ -149,10 +149,10 @@ const onWithdraw = async () => {
 
   withdrawAction.value.data = { chainId: pool.value.chainId, pool: pool.value, amount0Min, amount1Min }
 
-  const success = await doSend(withdrawAction, withdrawing, "Withdraw", () => removeLiquidity(params))
+  const success = await doSend(withdrawAction, withdrawing, 'Withdraw', () => removeLiquidity(params))
 
   if (success) {
-    inputAmount.value = ""
+    inputAmount.value = ''
     reset()
     debounceUpdateLiquidity.value && debounceUpdateLiquidity.value()
     updateNativeBalance()

@@ -11,8 +11,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const DEFAULT_LABEL = "View on explorer"
-
 const props = defineProps({
   url: {
     type: String,
@@ -35,6 +33,8 @@ const props = defineProps({
     default: '',
   },
 })
+
+const DEFAULT_LABEL = 'View on explorer'
 
 const displayLabel = computed(() => typeof props.label === 'boolean' ? DEFAULT_LABEL : props.label)
 </script>

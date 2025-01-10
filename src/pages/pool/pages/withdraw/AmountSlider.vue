@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import { fromValue, parseAmount } from "@/utils"
-import { computed } from "vue"
+import { fromValue, parseAmount } from '@/utils'
+import { computed } from 'vue'
 
 const props = defineProps({
   amount: {
@@ -27,7 +27,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["change"])
+const emit = defineEmits(['change'])
 
 const percent = computed(() => props.balance ? fromValue(props.amount).times(100).div(props.balance).toNumber() : 0)
 
@@ -38,6 +38,6 @@ const onUpdate = ratio => {
   }
 
   const value = parseAmount(fromValue(ratio).times(balance).div(100), 0)
-  emit("change", value)
+  emit('change', value)
 }
 </script>

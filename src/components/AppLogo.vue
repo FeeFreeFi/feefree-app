@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import { PAGE_HOME } from "@/config"
+import { PAGE_HOME } from '@/config'
 </script>

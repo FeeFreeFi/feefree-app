@@ -9,7 +9,7 @@
     </div>
     <div class="p-4 flex flex-col bg-card rounded-lg">
       <div class="mb-2 sm:px-2 flex-y-center gap-2">
-        <n-input-number class="flex-1 token-input-amount" v-model:value="amount" :min="0" :max="maxAmount" placeholder="0.0" :input-props="{name: 'give'}" :readonly="!isSupported" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
+        <n-input-number v-model:value="amount" class="flex-1 token-input-amount" :min="0" :max="maxAmount" placeholder="0.0" :input-props="{ name: 'give' }" :readonly="!isSupported" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
         <TokenSelectorTrigger :token="token" :disabled="!isSupported" @select="onTriggerSelect" />
       </div>
       <n-divider class="!my-0" />
@@ -19,20 +19,18 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue"
-import { parseAmount, toAmount } from "@/utils"
-import { account } from "@/hooks/useWallet"
-import { appChainId } from "@/hooks/useAppState"
-import { isSupportChain } from "@/hooks/useManager"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import AmountButtonGroup from "@/components/AmountButtonGroup.vue"
-import TokenSelectorTrigger from "@/components/TokenSelector/TokenSelectorTrigger.vue"
-
-const modelValue = defineModel({ type: String, required: true })
+import { ref, watch, onMounted, computed } from 'vue'
+import { parseAmount, toAmount } from '@/utils'
+import { account } from '@/hooks/useWallet'
+import { appChainId } from '@/hooks/useAppState'
+import { isSupportChain } from '@/hooks/useManager'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import AmountButtonGroup from '@/components/AmountButtonGroup.vue'
+import TokenSelectorTrigger from '@/components/TokenSelector/TokenSelectorTrigger.vue'
 
 const props = defineProps({
   token: {
-    /** @type {import('vue').PropType<import('@/types').Token>}*/
+    /** @type {import('vue').PropType<import('@/types').Token>} */
     type: Object,
     default: () => null,
   },
@@ -46,9 +44,12 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(["change", "select"])
 
-const amount = ref(parseFloat(modelValue.value) || null)
+const emit = defineEmits(['change', 'select'])
+
+const modelValue = defineModel({ type: String, required: true })
+
+const amount = ref(Number.parseFloat(modelValue.value) || null)
 const maxAmount = computed(() => account.value && props.token ? toAmount(props.balance, props.token.decimals) : undefined)
 const amountValue = computed(() => props.token ? parseAmount(amount.value || 0, props.token.decimals) : 0n)
 
@@ -67,22 +68,22 @@ const onInputBlur = () => {
   const { token } = props
   modelValue.value = toAmount(amountValue.value, token.decimals)
 
-  emit("change")
+  emit('change')
 }
 
 const onTriggerSelect = () => {
-  emit("select")
+  emit('select')
 }
 
 const onPickAmount = value => {
   const { token } = props
   modelValue.value = toAmount(value, token.decimals)
-  emit("change")
+  emit('change')
 }
 
 onMounted(() => {
   watch(modelValue, () => {
-    amount.value = !modelValue.value || modelValue.value === '0' ? null : parseFloat(modelValue.value, 10) || null
+    amount.value = !modelValue.value || modelValue.value === '0' ? null : Number.parseFloat(modelValue.value, 10) || null
   })
 })
 </script>

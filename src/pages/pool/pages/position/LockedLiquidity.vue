@@ -17,18 +17,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
-import ZPoolIcon from "@/components/ZPoolIcon.vue"
-import ZButton from "@/components/ZButton.vue"
-import ZBalance from "@/components/ZBalance.vue"
-import dayjs from "dayjs"
+import { ref, computed } from 'vue'
+import ZPoolIcon from '@/components/ZPoolIcon.vue'
+import ZButton from '@/components/ZButton.vue'
+import ZBalance from '@/components/ZBalance.vue'
+import dayjs from 'dayjs'
 
 const props = defineProps({
   pool: {
     /**
      * @type {import('vue').PropType<import('@/types').PoolMeta>}
      */
-     type: Object,
+    type: Object,
     required: true,
   },
   data: {
@@ -43,7 +43,7 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(["unlock"])
+const emit = defineEmits(['unlock'])
 
 const duration = computed(() => {
   const now = dayjs().unix()
@@ -64,6 +64,6 @@ const onFinish = () => {
 }
 
 const onUnlock = () => {
-  emit("unlock", props.data)
+  emit('unlock', props.data)
 }
 </script>

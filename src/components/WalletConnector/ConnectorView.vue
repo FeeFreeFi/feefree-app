@@ -14,18 +14,16 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { useNotification } from "naive-ui"
-import { wait } from "@/utils"
-import { getWallets } from "@/hooks/useWalletDetector"
-import { connect } from "@/hooks/useWallet"
-import { appChainId } from "@/hooks/useAppState"
-import { connecting, reset, connectingWallet, recentWallet, setRecent } from "@/hooks/useConnecting"
+import { computed } from 'vue'
+import { useNotification } from 'naive-ui'
+import { wait } from '@/utils'
+import { getWallets } from '@/hooks/useWalletDetector'
+import { connect } from '@/hooks/useWallet'
+import { appChainId } from '@/hooks/useAppState'
+import { connecting, reset, connectingWallet, recentWallet, setRecent } from '@/hooks/useConnecting'
 import ZModalView from '@/components/ZModalView.vue'
-import WalletItem from "./WalletItem.vue"
-import NoWallet from "./NoWallet.vue"
-
-const notification = useNotification()
+import WalletItem from './WalletItem.vue'
+import NoWallet from './NoWallet.vue'
 
 const props = defineProps({
   onClose: {
@@ -33,6 +31,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const notification = useNotification()
 
 const wallets = getWallets()
 

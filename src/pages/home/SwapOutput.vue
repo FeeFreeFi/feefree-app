@@ -28,16 +28,16 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { byDecimals, fromValue } from "@/utils"
-import { appChainId } from "@/hooks/useAppState"
-import { isSupportChain } from "@/hooks/useManager"
-import { screen } from "@/hooks/useScreen"
-import { getNativeCurrency } from "@/hooks/useChains"
-import { getPrice } from "@/hooks/usePrices"
-import TokenPrice from "@/components/TokenPrice.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import TokenSelectorTrigger from "@/components/TokenSelector/TokenSelectorTrigger.vue"
+import { computed } from 'vue'
+import { byDecimals, fromValue } from '@/utils'
+import { appChainId } from '@/hooks/useAppState'
+import { isSupportChain } from '@/hooks/useManager'
+import { screen } from '@/hooks/useScreen'
+import { getNativeCurrency } from '@/hooks/useChains'
+import { getPrice } from '@/hooks/usePrices'
+import TokenPrice from '@/components/TokenPrice.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import TokenSelectorTrigger from '@/components/TokenSelector/TokenSelectorTrigger.vue'
 
 const props = defineProps({
   inputToken: {
@@ -76,7 +76,7 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(["select"])
+const emit = defineEmits(['select'])
 
 const isSupported = computed(() => isSupportChain(appChainId.value))
 
@@ -98,6 +98,6 @@ const price = computed(() => {
 })
 
 const onTriggerSelect = () => {
-  emit("select")
+  emit('select')
 }
 </script>

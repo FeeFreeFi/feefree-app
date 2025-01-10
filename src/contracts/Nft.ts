@@ -1,15 +1,15 @@
-import type { PublicClient, WalletClient, Abi, Address } from "viem"
+import type { PublicClient, WalletClient, Abi, Address } from 'viem'
 
 const ABI_MINT: Abi = [
   {
-    name: "mint",
-    type: "function",
-    stateMutability: "nonpayable",
+    name: 'mint',
+    type: 'function',
+    stateMutability: 'nonpayable',
     inputs: [
       {
-        name: "to",
-				type: "address"
-      }
+        name: 'to',
+        type: 'address',
+      },
     ],
     outputs: [],
   },
@@ -26,7 +26,7 @@ const ABI_TOTAL_SUPPLY: Abi = [
         type: 'uint256',
       },
     ],
-  }
+  },
 ]
 
 export const totalSupply = async (publicClient: PublicClient, address: string) => {

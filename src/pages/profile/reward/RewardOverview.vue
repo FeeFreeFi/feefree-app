@@ -20,9 +20,9 @@
 </template>
 
 <script setup>
-import { ETH } from "@/utils"
-import { account } from "@/hooks/useWallet"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
+import { ETH } from '@/utils'
+import { account } from '@/hooks/useWallet'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
 
 defineProps({
   current: {

@@ -1,8 +1,8 @@
-import { getManagers, getPools, getTokens } from "@/api"
-import { addTokens, loadCachedTokens } from "./useToken"
-import { addManagers } from "./useManager"
-import { addPools } from "./usePool"
-import { fetchFees } from "./useFee"
+import { getManagers, getPools, getTokens } from '@/api'
+import { addTokens, loadCachedTokens } from './useToken'
+import { addManagers } from './useManager'
+import { addPools } from './usePool'
+import { fetchFees } from './useFee'
 
 let fetchConfigPromise: Promise<void>
 

@@ -1,11 +1,11 @@
 <template>
   <div class="flex gap-2 sm:gap-4">
-    <ZGhostButton class="flex-1 !h-7 sm:!h-8 text-xs sm:text-sm" v-for="item, index in items" :key="index" :disabled="!balance" :aria-label="item.label" @click="() => onPick(item.value)">{{ item.label }}</ZGhostButton>
+    <ZGhostButton v-for="item, index in items" :key="index" class="flex-1 !h-7 sm:!h-8 text-xs sm:text-sm" :disabled="!balance" :aria-label="item.label" @click="() => onPick(item.value)">{{ item.label }}</ZGhostButton>
   </div>
 </template>
 
 <script setup>
-import ZGhostButton from "@/components/ZGhostButton.vue"
+import ZGhostButton from '@/components/ZGhostButton.vue'
 
 const props = defineProps({
   balance: {
@@ -17,13 +17,13 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(["pick"])
+const emit = defineEmits(['pick'])
 
 const items = [
-  { label: "25%", value: 25n },
-  { label: "50%", value: 50n },
-  { label: "75%", value: 75n },
-  { label: "MAX", value: 100n },
+  { label: '25%', value: 25n },
+  { label: '50%', value: 50n },
+  { label: '75%', value: 75n },
+  { label: 'MAX', value: 100n },
 ]
 
 const onPick = ratio => {
@@ -33,6 +33,6 @@ const onPick = ratio => {
   }
 
   const amount = ratio === 100n ? balance : balance * ratio / 100n
-  emit("pick", amount)
+  emit('pick', amount)
 }
 </script>

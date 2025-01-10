@@ -1,22 +1,22 @@
-import type { PoolData, PoolInfo, PoolMeta, Token } from "@/types"
-import { ref } from "vue"
-import { keccak256, encodeAbiParameters } from "viem"
-import pMap from "p-map"
-import { intersectionBy, uniqBy } from "lodash-es"
-import { byDecimals, fromValue } from "@/utils"
+import type { PoolData, PoolInfo, PoolMeta, Token } from '@/types'
+import { ref } from 'vue'
+import { keccak256, encodeAbiParameters } from 'viem'
+import pMap from 'p-map'
+import { intersectionBy, uniqBy } from 'lodash-es'
+import { byDecimals, fromValue } from '@/utils'
 import {
   getPoolState as _getPoolState,
   getPoolMeta as _getPoolMeta,
   getPoolIds,
-} from "@/contracts/Quoter"
-import { getPublicClient } from "./useClient"
-import { getManager, getQuoterAddress } from "./useManager"
-import { getToken, populateToken } from "./useToken"
-import { getPrice } from "./usePrices"
+} from '@/contracts/Quoter'
+import { getPublicClient } from './useClient'
+import { getManager, getQuoterAddress } from './useManager'
+import { getToken, populateToken } from './useToken'
+import { getPrice } from './usePrices'
 
-const config = ref<{[id:string]: PoolMeta}>({})
+const config = ref<Record<string, PoolMeta>>({})
 
-const datas = ref<{[id:string]: PoolData}>({})
+const datas = ref<Record<string, PoolData>>({})
 
 // 2n ** 96n
 const Q96 = 79228162514264337593543950336n
@@ -26,15 +26,15 @@ const Q192 = 6277101735386680763835789423207666416102355444464034512896n
 const MAX_COUNT = 5
 
 const POOL_KEY = {
-  name: "params",
-  type: "tuple",
+  name: 'params',
+  type: 'tuple',
   components: [
-    { name: "currency0", type: "address" },
-    { name: "currency1", type: "address" },
-    { name: "fee", type: "uint24" },
-    { name: "tickSpacing", type: "int24" },
-    { name: "hooks", type: "address" },
-  ]
+    { name: 'currency0', type: 'address' },
+    { name: 'currency1', type: 'address' },
+    { name: 'fee', type: 'uint24' },
+    { name: 'tickSpacing', type: 'int24' },
+    { name: 'hooks', type: 'address' },
+  ],
 }
 
 const getDefaultPoolData = () => ({
@@ -45,9 +45,13 @@ const getDefaultPoolData = () => ({
   tvl: 0n,
   price0: 0,
   price1: 0,
-  percent0: "0%",
-  percent1: "0%",
+  percent0: '0%',
+  percent1: '0%',
 }) as PoolData
+
+export const getPool = (id: string) => config.value[id]
+
+export const getPoolName = (pool: PoolMeta) => `${pool.currency0.symbol}-${pool.currency1.symbol}`
 
 export const getBalances = (sqrtPriceX96: bigint, liquidity: bigint) => {
   if (sqrtPriceX96 === 0n) {
@@ -60,10 +64,39 @@ export const getBalances = (sqrtPriceX96: bigint, liquidity: bigint) => {
   return { balance0, balance1 }
 }
 
+const getPoolState = async (chainId: number, id: string) => {
+  const quoter = getQuoterAddress(chainId)
+  const publicClient = getPublicClient(chainId)
+  const { sqrtPriceX96, liquidity } = await _getPoolState(publicClient, quoter, id)
+
+  return { id, sqrtPriceX96, liquidity }
+}
+
+export const getPositionData = (id: string, sqrtPriceX96: bigint, liquidity: bigint) => {
+  const { currency0, currency1 } = getPool(id)
+  const { balance0, balance1 } = getBalances(sqrtPriceX96, liquidity)
+  const price0 = getPrice(currency0.key || '')
+  const price1 = getPrice(currency1.key || '')
+  const tvl0 = byDecimals(balance0, currency0.decimals).times(price0).dp(4)
+  const tvl1 = byDecimals(balance1, currency1.decimals).times(price1).dp(4)
+  const tvl = tvl0.plus(tvl1)
+  const percent0 = tvl.eq(0) ? '50%' : `${tvl0.times(100).div(tvl).toFormat(2)}%`
+  const percent1 = tvl.eq(0) ? '50%' : `${tvl1.times(100).div(tvl).toFormat(2)}%`
+
+  return {
+    balance0,
+    balance1,
+    percent0,
+    percent1,
+    tvl: BigInt(tvl.dp(0).toString(10)),
+    liquidity,
+  }
+}
+
 const updatePoolData = async (pool: PoolMeta) => {
   const { chainId, id, currency0, currency1 } = pool
 
-  const { sqrtPriceX96, liquidity }  = await getPoolState(chainId, id)
+  const { sqrtPriceX96, liquidity } = await getPoolState(chainId, id)
 
   const dp = currency0.decimals - currency1.decimals
   const factor = 10 ** dp
@@ -80,17 +113,19 @@ const findPool = (input: string, output: string, pools: PoolMeta[]) => {
   return pools.findIndex(it => it.currency0.address === currency0 && it.currency1.address === currency1)
 }
 
-const mapPool = (pool: PoolMeta, currency: string) => pool.currency0.address === currency ? pool.currency1 : pool.currency1.address === currency ? pool.currency0 : undefined
-
-export const getPool = (id: string) => config.value[id]
-
-export const getPoolName = (pool: PoolMeta) => `${pool.currency0.symbol}-${pool.currency1.symbol}`
+const mapPool = (pool: PoolMeta, currency: string) => {
+  if (pool.currency0.address === currency) {
+    return pool.currency1
+  } else if (pool.currency1.address === currency) {
+    return pool.currency0
+  }
+}
 
 /**
  * @param {number} chainId
  * @param {boolean} hot
  */
-export const getPools = (chainId: number|undefined = undefined, hot: boolean|undefined = undefined) => {
+export const getPools = (chainId: number | undefined = undefined, hot: boolean | undefined = undefined) => {
   const list = Object.values(config.value)
   return list.filter(it => (!chainId || it.chainId === chainId) && (hot === undefined || it.hot === hot))
 }
@@ -120,7 +155,7 @@ export const fetchPoolMeta = async (chainId: number, id: string) => {
   if (!meta) {
     const quoter = getQuoterAddress(chainId)
     const publicClient = getPublicClient(chainId)
-    const { currency0, currency1, } = await _getPoolMeta(publicClient, quoter, id)
+    const { currency0, currency1 } = await _getPoolMeta(publicClient, quoter, id)
     config.value[id] = {
       id,
       chainId,
@@ -132,14 +167,6 @@ export const fetchPoolMeta = async (chainId: number, id: string) => {
   }
 
   return meta
-}
-
-const getPoolState = async (chainId: number, id: string) => {
-  const quoter = getQuoterAddress(chainId)
-  const publicClient = getPublicClient(chainId)
-  const { sqrtPriceX96, liquidity } = await _getPoolState(publicClient, quoter, id)
-
-  return { id, sqrtPriceX96, liquidity }
 }
 
 export const loadMyPools = async (chainId: number, account: string) => {
@@ -179,7 +206,7 @@ export const getPoolId = (chainId: number, currency0: string, currency1: string)
 
 export const getPoolTokens = (chainId: number) => {
   const tokens = getPools(chainId).map(pool => [pool.currency0, pool.currency1]).flat()
-  return uniqBy(tokens, "address")
+  return uniqBy(tokens, 'address')
 }
 
 export const findPaths = (inputToken: Token, outputToken: Token) => {
@@ -198,7 +225,7 @@ export const findPaths = (inputToken: Token, outputToken: Token) => {
 
   const items1 = pools.map(it => mapPool(it, inputToken.address)).filter(it => !!it)
   const items2 = pools.map(it => mapPool(it, outputToken.address)).filter(it => !!it)
-  const mediators = intersectionBy(items1, items2, "address")
+  const mediators = intersectionBy(items1, items2, 'address')
   if (mediators.length > 0) {
     paths.push(...mediators.map(it => [inputToken, it, outputToken]))
   }
@@ -216,33 +243,12 @@ export const findPaths = (inputToken: Token, outputToken: Token) => {
   return paths.slice(0, MAX_COUNT)
 }
 
-export const getPositionData = (id: string, sqrtPriceX96: bigint, liquidity: bigint) => {
-  const { currency0, currency1 } = getPool(id)
-  const { balance0, balance1 } = getBalances(sqrtPriceX96, liquidity)
-  const price0 = getPrice(currency0.key || '')
-  const price1 = getPrice(currency1.key || '')
-  const tvl0 = byDecimals(balance0, currency0.decimals).times(price0).dp(4)
-  const tvl1 = byDecimals(balance1, currency1.decimals).times(price1).dp(4)
-  const tvl = tvl0.plus(tvl1)
-  const percent0 = tvl.eq(0) ? '50%' : `${tvl0.times(100).div(tvl).toFormat(2)}%`
-  const percent1 = tvl.eq(0) ? '50%' : `${tvl1.times(100).div(tvl).toFormat(2)}%`
-
-  return {
-    balance0,
-    balance1,
-    percent0,
-    percent1,
-    tvl: BigInt(tvl.dp(0).toString(10)),
-    liquidity,
-  }
-}
-
 export const updatePoolDatas = async (pools: PoolMeta[]) => {
   await pMap(pools, updatePoolData, { concurrency: 3 })
 }
 
-export const getPoolData = (pool: PoolMeta|undefined = undefined) => {
-  return pool && datas.value[pool.id] || getDefaultPoolData()
+export const getPoolData = (pool: PoolMeta | undefined = undefined) => {
+  return pool ? datas.value[pool.id] || getDefaultPoolData() : getDefaultPoolData()
 }
 
 export const getPoolDatas = (pools: PoolMeta[]) => {

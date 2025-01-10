@@ -13,5 +13,5 @@
 </template>
 
 <script setup lang="ts">
-import { themeOverrides } from "@/hooks/useTheme"
+import { themeOverrides } from '@/hooks/useTheme'
 </script>

@@ -13,31 +13,28 @@
 </template>
 
 <script setup>
-import { ref, computed, h, watch, onMounted } from "vue"
-import { useNotification } from "naive-ui"
-import { getChainName, getChains, isSupportChain } from "@/hooks/useChains"
-import { walletChainId, chainSupported } from "@/hooks/useWallet"
-import { appChainId, setAppChainId } from "@/hooks/useAppState"
-import { doSwitchNetwork } from "@/hooks/useInteraction"
-import ZActionButton from "@/components/ZActionButton.vue"
-import DownArrow from "@/components/Arrow/DownArrow.vue"
-import ZChainIcon from "@/components/ZChainIcon.vue"
+import { ref, computed, h, watch, onMounted } from 'vue'
+import { useNotification } from 'naive-ui'
+import { getChainName, getChains, isSupportChain } from '@/hooks/useChains'
+import { walletChainId, chainSupported } from '@/hooks/useWallet'
+import { appChainId, setAppChainId } from '@/hooks/useAppState'
+import { doSwitchNetwork } from '@/hooks/useInteraction'
+import ZActionButton from '@/components/ZActionButton.vue'
+import DownArrow from '@/components/Arrow/DownArrow.vue'
+import ZChainIcon from '@/components/ZChainIcon.vue'
 
 const notification = useNotification()
 
 const renderLabel = option => {
-  return h("div",
-    {
-      class: "flex-y-center gap-2",
-    },
-    [
-      h(ZChainIcon, {
-        class: "inline-block size-6",
-        chainId: option.value,
-      }),
-      option.name,
-    ]
-  )
+  return h('div', {
+    class: 'flex-y-center gap-2',
+  }, [
+    h(ZChainIcon, {
+      class: 'inline-block size-6',
+      chainId: option.value,
+    }),
+    option.name,
+  ])
 }
 
 const options = getChains().map(chain => {

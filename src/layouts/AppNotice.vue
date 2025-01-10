@@ -10,8 +10,8 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount } from "vue"
-import { notice, startFetchNotice, stopFetchNotice, markAsRead } from "@/hooks/useNotice"
+import { onMounted, onBeforeUnmount } from 'vue'
+import { notice, startFetchNotice, stopFetchNotice, markAsRead } from '@/hooks/useNotice'
 
 const onClose = () => {
   markAsRead()

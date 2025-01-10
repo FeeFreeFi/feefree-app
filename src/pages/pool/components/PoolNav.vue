@@ -11,7 +11,7 @@
     </div>
     <!-- Pools -->
     <div class="flex-1 lg:max-h-[calc(100vh-232px)] lg:p-6 flex lg:flex-col gap-2 items-center lg:bg-card lg:rounded-20">
-      <LinkButton class="flex-1 lg:flex-initial" v-for="item, index in tabs" :key="index" :to="item.route" :aria-label="item.label">{{ item.label }}</LinkButton>
+      <LinkButton v-for="item, index in tabs" :key="index" class="flex-1 lg:flex-initial" :to="item.route" :aria-label="item.label">{{ item.label }}</LinkButton>
     </div>
     <n-divider v-if="screen.lt.lg" class="!my-0" />
   </div>
@@ -24,15 +24,15 @@ import {
   PAGE_POOL_POSITION,
   PAGE_POOL_DEPOSIT,
   PAGE_POOL_WITHDRAW,
-} from "@/config"
-import { screen } from "@/hooks/useScreen"
-import LeftArrow from "@/components/Arrow/LeftArrow.vue"
-import LinkButton from "../components/LinkButton.vue"
+} from '@/config'
+import { screen } from '@/hooks/useScreen'
+import LeftArrow from '@/components/Arrow/LeftArrow.vue'
+import LinkButton from '../components/LinkButton.vue'
 
 const tabs = [
-  { route: { name: PAGE_POOL_OVERVIEW }, label: "Overview" },
-  { route: { name: PAGE_POOL_POSITION }, label: "Position" },
-  { route: { name: PAGE_POOL_DEPOSIT }, label: "Deposit" },
-  { route: { name: PAGE_POOL_WITHDRAW }, label: "Withdraw" },
+  { route: { name: PAGE_POOL_OVERVIEW }, label: 'Overview' },
+  { route: { name: PAGE_POOL_POSITION }, label: 'Position' },
+  { route: { name: PAGE_POOL_DEPOSIT }, label: 'Deposit' },
+  { route: { name: PAGE_POOL_WITHDRAW }, label: 'Withdraw' },
 ]
 </script>

@@ -6,7 +6,7 @@
         <slot name="logo" />
       </div>
       <div>
-        <div class="hidden lg:flex" v-if="screen.lg">
+        <div v-if="screen.lg" class="hidden lg:flex">
           <NavBar class="px-6" />
         </div>
       </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { screen } from "@/hooks/useScreen"
-import NavBar from "@/components/NavBar/index.vue"
-import AccountCenter from "@/components/AccountCenter/index.vue"
+import { screen } from '@/hooks/useScreen'
+import NavBar from '@/components/NavBar/index.vue'
+import AccountCenter from '@/components/AccountCenter/index.vue'
 </script>

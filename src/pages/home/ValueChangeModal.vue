@@ -8,7 +8,7 @@
         </div>
       </template>
       <div class="px-6 pt-2 pb-6 flex flex-col gap-8 relative">
-        <div class="flex flex-col gap-2" v-if="data">
+        <div v-if="data" class="flex flex-col gap-2">
           <div class="h-12 flex-y-center justify-between px-4 py-3 bg-card/40">
             <div class="flex gap-2">
               <ZTokenIcon :token="data.inputToken" />
@@ -43,14 +43,21 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { formatPrice } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import ZModalView from "@/components/ZModalView.vue"
-import ZButton from "@/components/ZButton.vue"
-import ZGhostButton from "@/components/ZGhostButton.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
+import { computed } from 'vue'
+import { formatPrice } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import ZModalView from '@/components/ZModalView.vue'
+import ZButton from '@/components/ZButton.vue'
+import ZGhostButton from '@/components/ZGhostButton.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
+
+const props = defineProps({
+  onConfirm: {
+    type: Function,
+    required: true,
+  },
+})
 
 /**
  * @type {import('vue').ModelRef<{show:boolean, data:import('@/types').ValueChangedData}>}
@@ -58,13 +65,6 @@ import ZTokenIcon from "@/components/ZTokenIcon.vue"
 const modelValue = defineModel({
   type: Object,
   required: true,
-})
-
-const props = defineProps({
-  onConfirm: {
-    type: Function,
-    required: true,
-  },
 })
 
 const data = computed(() => modelValue.value.data)

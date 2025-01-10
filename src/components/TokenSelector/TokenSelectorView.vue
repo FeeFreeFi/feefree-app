@@ -19,17 +19,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue"
-import { Patterns } from "@/config"
-import { isSame } from "@/utils"
-import { account } from "@/hooks/useWallet"
-import { createTokenStatesForMap } from "@/hooks/useTokenState"
-import { cacheTokens, fetchToken, getCachedTokens, getTokens } from "@/hooks/useToken"
-import { appChainId } from "@/hooks/useAppState"
+import { ref, computed, onMounted } from 'vue'
+import { Patterns } from '@/config'
+import { isSame } from '@/utils'
+import { account } from '@/hooks/useWallet'
+import { createTokenStatesForMap } from '@/hooks/useTokenState'
+import { cacheTokens, fetchToken, getCachedTokens, getTokens } from '@/hooks/useToken'
+import { appChainId } from '@/hooks/useAppState'
 import ZModalView from '@/components/ZModalView.vue'
 import ZSearch from '@/components/ZSearch.vue'
-import TokenItem from "./TokenItem.vue"
-import NoToken from "./NoToken.vue"
+import TokenItem from './TokenItem.vue'
+import NoToken from './NoToken.vue'
 
 const props = defineProps({
   current: {
@@ -61,12 +61,11 @@ const displayTokens = computed(() => {
     return tokens.value
   }
 
-  const reg = new RegExp(key, "i")
-  const addressReg = new RegExp(`^${key}$`, "i")
+  const reg = new RegExp(key, 'i')
+  const addressReg = new RegExp(`^${key}$`, 'i')
 
   return tokens.value.filter(it => reg.test(it.name) || reg.test(it.symbol) || addressReg.test(it.address))
 })
-
 
 const onSearch = async value => {
   const key = search.value
@@ -74,7 +73,7 @@ const onSearch = async value => {
     return
   }
 
-  const addressReg = new RegExp(`^${key}$`, "i")
+  const addressReg = new RegExp(`^${key}$`, 'i')
   if (tokens.value.find(it => addressReg.test(it.address))) {
     return
   }

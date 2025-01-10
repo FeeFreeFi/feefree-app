@@ -15,8 +15,6 @@ import { computed } from 'vue'
 import { screen } from '@/hooks/useScreen'
 import { useRoute } from 'vue-router'
 
-const route = useRoute()
-
 const props = defineProps({
   to: {
     type: Object,
@@ -28,13 +26,15 @@ const props = defineProps({
   },
   icon: {
     type: String,
-    default: "",
+    default: '',
   },
   exact: {
     type: Boolean,
     default: false,
   },
 })
+
+const route = useRoute()
 
 const isActive = computed(() => {
   return href => props.exact ? route.path === href : route.path.startsWith(href)

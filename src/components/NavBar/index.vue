@@ -12,15 +12,15 @@ import {
   // PAGE_LAUNCH,
   PAGE_NFT_HOME,
   PAGE_MIGRATE,
-} from "@/config"
-import NavLink from "./NavLink.vue"
-import NavMenu from "./NavMenu.vue"
+} from '@/config'
+import NavLink from './NavLink.vue'
+import NavMenu from './NavMenu.vue'
 
 const links = [
-  { to: { name: PAGE_HOME }, label: "Home", icon: "home.svg", exact: true },
-  { to: { name: PAGE_POOL_HOME }, label: "Pool", icon: "pool.svg", exact: false },
+  { to: { name: PAGE_HOME }, label: 'Home', icon: 'home.svg', exact: true },
+  { to: { name: PAGE_POOL_HOME }, label: 'Pool', icon: 'pool.svg', exact: false },
   // { to: { name: PAGE_LAUNCH }, label: "Launch", icon: "launch.svg", exact: false },
-  { to: { name: PAGE_NFT_HOME }, label: "NFT", icon: "nft.svg", exact: false },
-  { to: { name: PAGE_MIGRATE }, label: "Migrate", icon: "migrate.svg", exact: false },
+  { to: { name: PAGE_NFT_HOME }, label: 'NFT', icon: 'nft.svg', exact: false },
+  { to: { name: PAGE_MIGRATE }, label: 'Migrate', icon: 'migrate.svg', exact: false },
 ]
 </script>

@@ -9,11 +9,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import ActionModal from "@/components/ActionModal/index.vue"
-import ZTokenIcon from "@/components/ZTokenIcon.vue"
-import ZTokenBalance from "@/components/ZTokenBalance.vue"
-import ZSpender from "@/components/ZSpender.vue"
+import { computed } from 'vue'
+import ActionModal from '@/components/ActionModal/index.vue'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+import ZSpender from '@/components/ZSpender.vue'
 
 /** @type {import('vue').ModelRef<import('@/types').ApprovalAction>} */
 const modelValue = defineModel({ type: Object, required: true })

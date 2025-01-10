@@ -8,6 +8,6 @@ defineProps({
     /** @type {import('vue').PropType<import('@/types').PoolMeta>} */
     type: Object,
     required: true,
-  }
+  },
 })
 </script>

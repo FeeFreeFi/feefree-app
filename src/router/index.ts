@@ -18,10 +18,10 @@ import {
   PAGE_PROFILE_FANS,
   PAGE_NOT_FOUND,
   PAGE_MIGRATE,
-} from "@/config"
+} from '@/config'
 
-import DefaultLayout from "@/layouts/index.vue"
-import PageHome from "@/pages/home/index.vue"
+import DefaultLayout from '@/layouts/index.vue'
+import PageHome from '@/pages/home/index.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -29,7 +29,7 @@ const routes: RouteRecordRaw[] = [
     component: DefaultLayout,
     children: [
       {
-        path: "",
+        path: '',
         name: PAGE_HOME,
         component: PageHome,
         meta: { title: APP_PRODUCT_NAME },
@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "pool",
+        path: 'pool',
         name: PAGE_POOL_HOME,
         component: () => import(/* webpackChunkName: "pool" */ '@/pages/pool/home/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
@@ -53,7 +53,7 @@ const routes: RouteRecordRaw[] = [
       //   meta: { title: APP_PRODUCT_NAME },
       // },
       {
-        path: "pool/:id",
+        path: 'pool/:id',
         component: () => import(/* webpackChunkName: "detail" */ '@/pages/pool/pages/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
         beforeEnter: to => {
@@ -64,26 +64,26 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
-            path: "",
+            path: '',
             name: PAGE_POOL_OVERVIEW,
             component: () => import(/* webpackChunkName: "overview" */ '@/pages/pool/pages/overview/index.vue'),
           },
           {
-            path: "position",
+            path: 'position',
             name: PAGE_POOL_POSITION,
             component: () => import(/* webpackChunkName: "position" */ '@/pages/pool/pages/position/index.vue'),
           },
           {
-            path: "deposit",
+            path: 'deposit',
             name: PAGE_POOL_DEPOSIT,
             component: () => import(/* webpackChunkName: "deposit" */ '@/pages/pool/pages/deposit/index.vue'),
           },
           {
-            path: "withdraw",
+            path: 'withdraw',
             name: PAGE_POOL_WITHDRAW,
             component: () => import(/* webpackChunkName: "withdraw" */ '@/pages/pool/pages/withdraw/index.vue'),
           },
-        ]
+        ],
       },
       // {
       //   path: "launch",
@@ -92,48 +92,48 @@ const routes: RouteRecordRaw[] = [
       //   meta: { title: APP_PRODUCT_NAME },
       // },
       {
-        path: "nft",
+        path: 'nft',
         name: PAGE_NFT_HOME,
         component: () => import(/* webpackChunkName: "nft" */ '@/pages/nft/home/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "migrate",
+        path: 'migrate',
         name: PAGE_MIGRATE,
         component: () => import(/* webpackChunkName: "migrate" */ '@/pages/migrate/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "profile",
+        path: 'profile',
         name: PAGE_PROFILE_HOME,
         component: () => import(/* webpackChunkName: "profile" */ '@/pages/profile/home/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "profile/points",
+        path: 'profile/points',
         name: PAGE_PROFILE_POINTS,
         component: () => import(/* webpackChunkName: "points" */ '@/pages/profile/points/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "profile/reward",
+        path: 'profile/reward',
         name: PAGE_PROFILE_REWARD,
         component: () => import(/* webpackChunkName: "reward" */ '@/pages/profile/reward/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "profile/fans",
+        path: 'profile/fans',
         name: PAGE_PROFILE_FANS,
         component: () => import(/* webpackChunkName: "fans" */ '@/pages/profile/fans/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
       {
-        path: "not-found",
+        path: 'not-found',
         name: PAGE_NOT_FOUND,
         component: () => import(/* webpackChunkName: "404" */ '@/pages/404/index.vue'),
         meta: { title: APP_PRODUCT_NAME },
       },
-    ]
+    ],
   },
   {
     path: '/:_(.*)*',

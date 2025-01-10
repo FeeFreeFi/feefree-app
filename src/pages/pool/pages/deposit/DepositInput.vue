@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 rounded flex flex-col gap-3 bg-card lg:bg-section">
     <div class="flex-y-center justify-between gap-2">
-      <n-input-number class="flex-1" v-model:value="amount" :min="0" :max="maxAmount" :bordered="false" placeholder="0.0" :input-props="{name: `${token.symbol} amount`}" :show-button="false" :on-blur="onInputBlur" />
+      <n-input-number v-model:value="amount" class="flex-1" :min="0" :max="maxAmount" :bordered="false" placeholder="0.0" :input-props="{ name: `${token.symbol} amount` }" :show-button="false" :on-blur="onInputBlur" />
       <div class="w-24 flex justify-end">
         <div class="flex-center gap-1">
           <ZTokenIcon :token="token" />
@@ -21,13 +21,11 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue"
-import { fromValue, parseAmount, toAmount } from "@/utils"
-import { account } from "@/hooks/useWallet"
+import { ref, watch, onMounted, computed } from 'vue'
+import { fromValue, parseAmount, toAmount } from '@/utils'
+import { account } from '@/hooks/useWallet'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
-
-const modelValue = defineModel({ type: String, required: true })
 
 const props = defineProps({
   token: {
@@ -45,7 +43,10 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(["change"])
+
+const emit = defineEmits(['change'])
+
+const modelValue = defineModel({ type: String, required: true })
 
 const amount = ref(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, props.token.decimals) : undefined)
@@ -54,7 +55,7 @@ const amountValue = computed(() => parseAmount(amount.value || 0, props.token.de
 const onMax = () => {
   const { balance, token } = props
   modelValue.value = toAmount(balance, token.decimals)
-  emit("change")
+  emit('change')
 }
 
 const onInputBlur = () => {
@@ -65,11 +66,11 @@ const onInputBlur = () => {
 
   const { token } = props
   modelValue.value = toAmount(amountValue.value, token.decimals)
-  emit("change")
+  emit('change')
 }
 
 onMounted(() => {
-   watch(modelValue, () => {
+  watch(modelValue, () => {
     amount.value = fromValue(modelValue.value || 0).toNumber()
   })
 })

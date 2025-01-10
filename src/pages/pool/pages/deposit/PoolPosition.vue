@@ -16,9 +16,9 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { fromValue } from "@/utils"
-import TokenPrice from "./TokenPrice.vue"
+import { computed } from 'vue'
+import { fromValue } from '@/utils'
+import TokenPrice from './TokenPrice.vue'
 
 const props = defineProps({
   balance: {
@@ -62,7 +62,7 @@ const props = defineProps({
 const currentPercent = computed(() => {
   const { balance, total } = props
   if (balance === 0n || total === 0n) {
-    return "0%"
+    return '0%'
   }
 
   return `${fromValue(balance).times(100).div(total).dp(4).toFormat()}%`

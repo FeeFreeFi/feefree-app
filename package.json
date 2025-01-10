@@ -1,7 +1,7 @@
 {
   "name": "feefree-app",
   "productName": "FeeFree",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "To build a Robinhood-style DEX in the blockchain industry, enabling participation in DeFi for everyone worldwide!",
   "author": "FeeFreeFi",
   "license": "MIT",
@@ -16,7 +16,8 @@
     "build": "cross-env NODE_ENV=production webpack build --config config/webpack.config.prod.js",
     "debug": "cross-env APP_DEBUG=true npm run build -- --devtool source-map",
     "report": "npm run build -- --analyze",
-    "lint": "eslint -f friendly --cache --cache-location ./node_modules/.cache/eslint src"
+    "lint": "eslint -f friendly",
+    "prepare": "husky"
   },
   "dependencies": {
     "@safe-global/safe-apps-provider": "^0.18.5",
@@ -38,10 +39,9 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^3.13.0",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
-    "@babel/preset-typescript": "^7.26.0",
-    "@eslint/js": "^9.17.0",
     "@iconify/json": "^2.2.293",
     "@types/lodash-es": "^4.17.12",
     "@types/mersenne-twister": "^1.1.7",
@@ -58,11 +58,14 @@
     "dotenv-flow": "^4.1.0",
     "eslint": "^9.17.0",
     "eslint-formatter-friendly": "^7.0.0",
+    "eslint-plugin-format": "^1.0.1",
     "eslint-webpack-plugin": "^4.2.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "fs-extra": "^11.2.0",
     "globals": "^15.14.0",
     "html-webpack-plugin": "^5.6.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.4.49",
     "postcss-import": "^16.1.0",
@@ -76,11 +79,9 @@
     "terser-webpack-plugin": "^5.3.11",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.19.1",
     "unplugin-auto-import": "^19.0.0",
     "unplugin-icons": "^22.0.0",
     "unplugin-vue-components": "^28.0.0",
-    "vue-eslint-parser": "^9.4.3",
     "vue-loader": "^17.4.2",
     "webpack": "^5.97.1",
     "webpack-bundle-analyzer": "^4.10.2",

@@ -1,93 +1,93 @@
-import type { PoolKey } from "@/types"
-import type { PublicClient, WalletClient, Abi, Address } from "viem"
+import type { PoolKey } from '@/types'
+import type { PublicClient, WalletClient, Abi, Address } from 'viem'
 
 const ABI_MIGRATE_LIQUIDITY: Abi = [
   {
-    type: "function",
-    name: "migrateLiquidity",
+    type: 'function',
+    name: 'migrateLiquidity',
     inputs: [
       {
-        name: "key",
-        type: "tuple",
+        name: 'key',
+        type: 'tuple',
         components: [
           {
-            name: "currency0",
-            type: "address",
+            name: 'currency0',
+            type: 'address',
           },
           {
-            name: "currency1",
-            type: "address",
+            name: 'currency1',
+            type: 'address',
           },
           {
-            name: "fee",
-            type: "uint24",
+            name: 'fee',
+            type: 'uint24',
           },
           {
-            name: "tickSpacing",
-            type: "int24",
+            name: 'tickSpacing',
+            type: 'int24',
           },
           {
-            name: "hooks",
-            type: "address",
-          }
-        ]
-      }
+            name: 'hooks',
+            type: 'address',
+          },
+        ],
+      },
     ],
     outputs: [],
-    stateMutability: "nonpayable"
+    stateMutability: 'nonpayable',
   },
 ]
 
 const ABI_REMOVE_LIQUIDITY: Abi = [
   {
-    type: "function",
-    name: "removeLiquidity",
+    type: 'function',
+    name: 'removeLiquidity',
     inputs: [
       {
-        name: "key",
-        type: "tuple",
+        name: 'key',
+        type: 'tuple',
         components: [
           {
-            name: "currency0",
-            type: "address",
+            name: 'currency0',
+            type: 'address',
           },
           {
-            name: "currency1",
-            type: "address",
+            name: 'currency1',
+            type: 'address',
           },
           {
-            name: "fee",
-            type: "uint24",
+            name: 'fee',
+            type: 'uint24',
           },
           {
-            name: "tickSpacing",
-            type: "int24",
+            name: 'tickSpacing',
+            type: 'int24',
           },
           {
-            name: "hooks",
-            type: "address",
-          }
-        ]
-      }
+            name: 'hooks',
+            type: 'address',
+          },
+        ],
+      },
     ],
     outputs: [],
-    stateMutability: "nonpayable"
+    stateMutability: 'nonpayable',
   },
 ]
 
 const ABI_UNEXCHANGE: Abi = [
   {
-    type: "function",
-    name: "unexchange",
+    type: 'function',
+    name: 'unexchange',
     inputs: [
       {
-        name: "currency",
-        type: "address",
-      }
+        name: 'currency',
+        type: 'address',
+      },
     ],
     outputs: [],
-    stateMutability: "payable"
-  }
+    stateMutability: 'payable',
+  },
 ]
 
 export const unexchange = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, currency: string, options: { value: bigint }) => {
@@ -138,4 +138,3 @@ export const migrateLiquidity = async (client: { publicClient: PublicClient, wal
 
   return { chainId: publicClient.chain!.id, hash }
 }
-

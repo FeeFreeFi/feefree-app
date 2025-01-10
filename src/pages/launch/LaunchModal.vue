@@ -1,8 +1,8 @@
 <template>
   <ActionModal v-model="modelValue">
     <template #icon="{ state }">
-      <i-ff-smile v-if="state == States.SUCCESS" class="size-full" />
-      <i-ff-sad v-else-if="state == States.FAIL" class="size-full" />
+      <i-ff-smile v-if="state === States.SUCCESS" class="size-full" />
+      <i-ff-sad v-else-if="state === States.FAIL" class="size-full" />
       <i-ff-launch v-else class="size-full" />
     </template>
     <div class="my-4 flex-1 flex flex-col">
@@ -14,11 +14,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
-import { States } from "@/config"
-import { formatPrice, byDecimals } from "@/utils"
-import ActionModal from "@/components/ActionModal/index.vue"
-import TokenItem from "./TokenItem.vue"
+import { computed } from 'vue'
+import { States } from '@/config'
+import { formatPrice, byDecimals } from '@/utils'
+import ActionModal from '@/components/ActionModal/index.vue'
+import TokenItem from './TokenItem.vue'
 
 /** @type {import('vue').ModelRef<import('@/types').LaunchAction>} */
 const modelValue = defineModel({ type: Object, required: true })

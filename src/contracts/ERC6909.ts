@@ -1,26 +1,26 @@
-import type { PublicClient, WalletClient, Abi, Address } from "viem"
+import type { PublicClient, WalletClient, Abi, Address } from 'viem'
 
 const ABI_BALANCE_OF: Abi = [
   {
     inputs: [
       {
-        name: "owner",
-        type: "address"
+        name: 'owner',
+        type: 'address',
       },
       {
-        name: "id",
-        type: "uint256"
-      }
+        name: 'id',
+        type: 'uint256',
+      },
     ],
-    stateMutability: "view",
-    type: "function",
-    name: "balanceOf",
+    stateMutability: 'view',
+    type: 'function',
+    name: 'balanceOf',
     outputs: [
       {
-        name: "amount",
-        type: "uint256"
-      }
-    ]
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
   },
 ]
 
@@ -28,51 +28,51 @@ const ABI_ALLOWANCE: Abi = [
   {
     inputs: [
       {
-        name: "owner",
-        type: "address"
+        name: 'owner',
+        type: 'address',
       },
       {
-        name: "spender",
-        type: "address"
+        name: 'spender',
+        type: 'address',
       },
       {
-        name: "id",
-        type: "uint256"
-      }
+        name: 'id',
+        type: 'uint256',
+      },
     ],
-    stateMutability: "view",
-    type: "function",
-    name: "allowance",
+    stateMutability: 'view',
+    type: 'function',
+    name: 'allowance',
     outputs: [
       {
-        name: "amount",
-        type: "uint256"
-      }
-    ]
-  }
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+  },
 ]
 
 const ABI_IS_OPERATOR: Abi = [
   {
     inputs: [
       {
-        name: "owner",
-        type: "address"
+        name: 'owner',
+        type: 'address',
       },
       {
-        name: "spender",
-        type: "address"
-      }
+        name: 'spender',
+        type: 'address',
+      },
     ],
-    stateMutability: "view",
-    type: "function",
-    name: "isOperator",
+    stateMutability: 'view',
+    type: 'function',
+    name: 'isOperator',
     outputs: [
       {
-        name: "approved",
-        type: "bool"
-      }
-    ]
+        name: 'approved',
+        type: 'bool',
+      },
+    ],
   },
 ]
 
@@ -80,22 +80,22 @@ const ABI_SET_OPERATOR: Abi = [
   {
     inputs: [
       {
-        name: "operator",
-        type: "address"
+        name: 'operator',
+        type: 'address',
       },
       {
-        name: "approved",
-        type: "bool"
-      }
+        name: 'approved',
+        type: 'bool',
+      },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "setOperator",
+    stateMutability: 'nonpayable',
+    type: 'function',
+    name: 'setOperator',
     outputs: [
       {
-        type: "bool"
-      }
-    ]
+        type: 'bool',
+      },
+    ],
   },
 ]
 
@@ -103,26 +103,26 @@ const ABI_APPROVE: Abi = [
   {
     inputs: [
       {
-        name: "spender",
-        type: "address"
+        name: 'spender',
+        type: 'address',
       },
       {
-        name: "id",
-        type: "uint256"
+        name: 'id',
+        type: 'uint256',
       },
       {
-        name: "amount",
-        type: "uint256"
-      }
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "approve",
+    stateMutability: 'nonpayable',
+    type: 'function',
+    name: 'approve',
     outputs: [
       {
-        type: "bool"
-      }
-    ]
+        type: 'bool',
+      },
+    ],
   },
 ]
 
@@ -130,26 +130,26 @@ const ABI_TRANSFER: Abi = [
   {
     inputs: [
       {
-        name: "receiver",
-        type: "address"
+        name: 'receiver',
+        type: 'address',
       },
       {
-        name: "id",
-        type: "uint256"
+        name: 'id',
+        type: 'uint256',
       },
       {
-        name: "amount",
-        type: "uint256"
-      }
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    stateMutability: "nonpayable",
-    type: "function",
-    name: "transfer",
+    stateMutability: 'nonpayable',
+    type: 'function',
+    name: 'transfer',
     outputs: [
       {
-        type: "bool"
-      }
-    ]
+        type: 'bool',
+      },
+    ],
   },
 ]
 

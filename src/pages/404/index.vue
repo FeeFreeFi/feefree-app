@@ -19,5 +19,8 @@
 <script setup lang="ts">
 import { PAGE_HOME } from '@/config'
 import ZGhostButton from '@/components/ZGhostButton.vue'
-import notFoundBg from "@/assets/images/not-found-bg.svg"
+import notFoundBg from '../../assets/images/not-found-bg.svg'
+import notFoundBg2 from '@/assets/images/not-found-bg.svg'
+
+console.log(notFoundBg2)
 </script>

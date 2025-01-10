@@ -1,12 +1,12 @@
-import type { Ref } from "vue"
-import type { NotificationProviderInst } from "naive-ui"
-import type { ApprovalAction, ModalAction, Token, Tx } from "@/types"
-import { States } from "@/config"
+import type { Ref } from 'vue'
+import type { NotificationProviderInst } from 'naive-ui'
+import type { ApprovalAction, ModalAction, Token, Tx } from '@/types'
+import { States } from '@/config'
 import { getChainName } from './useChains'
 import { switchChain } from './useWallet'
-import { approve } from "./useToken"
+import { approve } from './useToken'
 import { waitForTransactionReceipt } from './useClient'
-import { getErrorMessage } from "@/utils"
+import { getErrorMessage } from '@/utils'
 
 export const doSwitchNetwork = async (notification: NotificationProviderInst, chainId: number) => {
   try {
@@ -15,7 +15,7 @@ export const doSwitchNetwork = async (notification: NotificationProviderInst, ch
   } catch (err: unknown) {
     notification.error({
       title: `Switch to ${getChainName(chainId)} fail`,
-      content: getErrorMessage(err, "Switch chain error"),
+      content: getErrorMessage(err, 'Switch chain error'),
       duration: 5000,
     })
 
@@ -43,7 +43,7 @@ export const doSend = async (action: Ref<ModalAction>, loading: Ref<boolean>, ti
   } catch (err: unknown) {
     loading.value = false
     action.value.state = States.FAIL
-    action.value.error = getErrorMessage(err, "Internal error")
+    action.value.error = getErrorMessage(err, 'Internal error')
 
     return false
   }
@@ -52,5 +52,5 @@ export const doSend = async (action: Ref<ModalAction>, loading: Ref<boolean>, ti
 export const doApproval = async (action: Ref<ApprovalAction>, loading: Ref<boolean>, token: Token, spender: string, amount: bigint) => {
   action.value.data = { chainId: token.chainId, token, amount, spender }
 
-  return doSend(action, loading, "Approve", () => approve(token, spender, amount))
+  return doSend(action, loading, 'Approve', () => approve(token, spender, amount))
 }

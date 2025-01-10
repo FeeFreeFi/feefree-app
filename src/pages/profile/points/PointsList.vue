@@ -12,7 +12,7 @@
         <n-text v-if="screen.sm" class="flex-1 text-center" :depth="1">Meta</n-text>
       </div>
       <div v-if="list.length > 0">
-        <div class="h-9 px-3 flex items-center gap-1 transition-colors hover:bg-card/60" v-for="item, index in list" :key="index">
+        <div v-for="item, index in list" :key="index" class="h-9 px-3 flex items-center gap-1 transition-colors hover:bg-card/60">
           <n-text class="w-14 text-center text-sm font-medium">{{ item.value }}</n-text>
           <n-text class="w-[100px] text-xs text-center" :depth="1">{{ dayjs(item.date).fromNow() }}</n-text>
           <div class="flex-1 sm:w-20 text-xs text-center">
@@ -84,26 +84,14 @@
 </template>
 
 <script setup>
-import dayjs from "dayjs"
-import { shortString } from "@/utils"
-import { screen } from "@/hooks/useScreen"
-import { appChainId } from "@/hooks/useAppState"
-import { getAccountUrl, getTransactionUrl } from "@/hooks/useChains"
-import ZPagination from "@/components/ZPagination.vue"
-import ZCopyable from "@/components/ZCopyable.vue"
-import NoRecords from "./NoRecords.vue"
-
-const NAMES = {
-  101: "Genesis NFT",
-  102: "Week NFT",
-  103: "Add liquidity",
-  104: "Swap",
-  105: "Exchange",
-  201: "Invitation",
-  301: "Compensation",
-  302: "Bonus",
-  401: "Fans",
-}
+import dayjs from 'dayjs'
+import { shortString } from '@/utils'
+import { screen } from '@/hooks/useScreen'
+import { appChainId } from '@/hooks/useAppState'
+import { getAccountUrl, getTransactionUrl } from '@/hooks/useChains'
+import ZPagination from '@/components/ZPagination.vue'
+import ZCopyable from '@/components/ZCopyable.vue'
+import NoRecords from './NoRecords.vue'
 
 defineProps({
   total: {
@@ -129,4 +117,16 @@ defineProps({
     required: true,
   },
 })
+
+const NAMES = {
+  101: 'Genesis NFT',
+  102: 'Week NFT',
+  103: 'Add liquidity',
+  104: 'Swap',
+  105: 'Exchange',
+  201: 'Invitation',
+  301: 'Compensation',
+  302: 'Bonus',
+  401: 'Fans',
+}
 </script>
