@@ -74,7 +74,8 @@ const prodConfig = {
           to: dirs.dist,
           noErrorOnMissing: true,
           globOptions: {
-            ignore: ['.*'],
+            dot: true,
+            ignore: ['**/.*'],
           },
         },
       ],
