@@ -17,24 +17,21 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 import { shortString } from '@/utils'
 import { screen } from '@/hooks/useScreen'
 import RecipientView from './RecipientView.vue'
 
-const props = defineProps({
-  to: {
-    type: String,
-    required: true,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+interface Props {
+  to: string
+  disabled?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
 })
 
-const modelValue = defineModel({ type: String, required: true })
+const modelValue = defineModel<string>({ required: true })
 
 const show = ref(false)
 

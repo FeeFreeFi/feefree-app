@@ -9,6 +9,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import noWalletBg from '@/assets/images/no-wallet-bg.svg'
 </script>

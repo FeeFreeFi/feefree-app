@@ -4,20 +4,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ZGhostButton from '@/components/ZGhostButton.vue'
 
-const props = defineProps({
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-})
+interface Props {
+  balance: bigint
+}
 
-const emit = defineEmits(['pick'])
+const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'pick', amount: bigint): void
+}>()
 
 const items = [
   { label: '25%', value: 25n },
@@ -26,7 +24,7 @@ const items = [
   { label: 'MAX', value: 100n },
 ]
 
-const onPick = ratio => {
+const onPick = (ratio: bigint) => {
   const { balance } = props
   if (!balance) {
     return

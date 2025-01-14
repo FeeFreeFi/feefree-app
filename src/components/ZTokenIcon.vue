@@ -4,11 +4,12 @@
 
 <script setup lang="ts">
 import type { Token } from '@/types'
-import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-  token: Token | undefined
-}>(), {
+interface Props {
+  token?: Pick<Token, 'icon' | 'symbol'>
+}
+
+const props = withDefaults(defineProps<Props>(), {
   token: undefined,
 })
 

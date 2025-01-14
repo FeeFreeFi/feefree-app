@@ -9,31 +9,21 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 import { screen } from '@/hooks/useScreen'
 
-const props = defineProps({
-  modalClass: {
-    type: String,
-    default: '',
-  },
-  drawerClass: {
-    type: String,
-    default: '',
-  },
-  show: {
-    type: Boolean,
-    required: true,
-  },
-  onClose: {
-    type: Function,
-    required: true,
-  },
-  onLeave: {
-    type: Function,
-    default: () => {},
-  },
+interface Props {
+  modalClass?: string
+  drawerClass?: string
+  show: boolean
+  onClose: () => void
+  onLeave?: () => void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modalClass: '',
+  drawerClass: '',
+  onLeave: () => {},
 })
 
 const maskClosable = ref(true)
@@ -42,7 +32,7 @@ const onAfterEnter = () => {
   maskClosable.value = true
 }
 
-const onUpdateShow = value => {
+const onUpdateShow = (value: boolean) => {
   if (!value) {
     maskClosable.value = false
     props.onClose()

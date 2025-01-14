@@ -18,27 +18,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Token } from '@/types'
 import ZBalance from '@/components/ZBalance.vue'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import { openTokenMore } from '@/hooks/useTokenMore'
 
-defineProps({
-  token: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    required: true,
-  },
-  balance: {
-    /** @type {import('vue').PropType<bigint>} */
-    type: BigInt,
-    required: true,
-  },
-  active: {
-    type: Boolean,
-    required: true,
-  },
-})
+interface Props {
+  token: Pick<Token, 'icon' | 'symbol'>
+  balance: bigint
+  active: boolean
+}
+
+defineProps<Props>()
 </script>
 
 <style lang="scss">

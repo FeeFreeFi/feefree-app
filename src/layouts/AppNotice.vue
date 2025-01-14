@@ -9,8 +9,7 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
+<script setup lang="ts">
 import { notice, startFetchNotice, stopFetchNotice, markAsRead } from '@/hooks/useNotice'
 
 const onClose = () => {

@@ -13,10 +13,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch, onMounted } from 'vue'
-
-const duration = defineModel({ type: Number, required: true })
+<script setup lang="ts">
+const duration = defineModel<number>({ required: true })
 
 const options = [
   { label: '30 Days', value: 2592000 },

@@ -45,7 +45,8 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Fans } from '@/types'
 import dayjs from 'dayjs'
 import { DATE_FORMAT_DEFAULT } from '@/config'
 import { shortString } from '@/utils'
@@ -56,28 +57,12 @@ import ZPagination from '@/components/ZPagination.vue'
 import ZCopyable from '@/components/ZCopyable.vue'
 import NoRecords from './NoRecords.vue'
 
-defineProps({
-  total: {
-    type: Number,
-    required: true,
-  },
-  page: {
-    type: Number,
-    required: true,
-  },
-  list: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Fans[]>}
-     */
-    type: Array,
-    required: true,
-  },
-  onUpdatePage: {
-    /**
-     * @type {import('vue').PropType<(page:number) => Promise>}
-     */
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  total: number
+  page: number
+  list: Fans[]
+  onUpdatePage: (page: number) => void
+}
+
+defineProps<Props>()
 </script>

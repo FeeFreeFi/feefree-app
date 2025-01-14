@@ -11,21 +11,19 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { PoolMeta } from '@/types'
 import { PAGE_MIGRATE } from '@/config'
 import { getContractUrl } from '@/hooks/useChains'
 import { getPoolAddress } from '@/hooks/useManager'
 import ZPoolName from '@/components/ZPoolName.vue'
 import ZViewUrl from '@/components/ZViewUrl.vue'
 
-const props = defineProps({
-  pool: {
-    /** @type {import('vue').PropType<import('@/types').PoolMeta>} */
-    type: Object,
-    required: true,
-  },
-})
+interface Props {
+  pool: PoolMeta
+}
+
+const props = defineProps<Props>()
 
 const url = computed(() => props.pool ? getContractUrl(props.pool.chainId, getPoolAddress(props.pool.chainId)) : '')
 </script>

@@ -19,28 +19,21 @@
   </div>
 </template>
 
-<script setup>
-import { computed, useSlots } from 'vue'
+<script setup lang="ts">
 import CloseButton from '@/components/CloseButton.vue'
 import gradientBg from '@/assets/images/dialog-gradient-bg.svg'
 
-const props = defineProps({
-  onClose: {
-    type: Function,
-    required: true,
-  },
-  title: {
-    type: String,
-    default: '',
-  },
-  titleClass: {
-    type: String,
-    default: '',
-  },
-  contentClass: {
-    type: String,
-    default: '',
-  },
+interface Props {
+  onClose: () => void
+  title?: string
+  titleClass?: string
+  contentClass?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  title: '',
+  titleClass: '',
+  contentClass: '',
 })
 
 const slots = useSlots()

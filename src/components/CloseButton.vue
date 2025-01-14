@@ -4,11 +4,10 @@
   </span>
 </template>
 
-<script setup>
-defineProps({
-  onClose: {
-    type: Function,
-    default: () => {},
-  },
-})
+<script setup lang="ts">
+interface Props {
+  onClose: () => void
+}
+
+defineProps<Props>()
 </script>

@@ -5,31 +5,18 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { Token } from '@/types'
 import { formatPrice } from '@/utils'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 
-const props = defineProps({
-  inputToken: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-  outputToken: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-})
+interface Props {
+  inputToken: Token
+  outputToken: Token
+  price: number
+}
+
+const props = defineProps<Props>()
 
 const priceValue = computed(() => formatPrice(props.price))
 </script>

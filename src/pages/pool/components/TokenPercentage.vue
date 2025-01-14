@@ -8,38 +8,23 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { Token } from '@/types'
 import { isNative } from '@/utils'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
 import { getAccountUrl, getHolderUrl } from '@/hooks/useChains'
 
-const props = defineProps({
-  token: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    required: true,
-  },
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-  percent: {
-    type: String,
-    required: true,
-  },
-  dp: {
-    type: Number,
-    default: 3,
-  },
-  holder: {
-    type: String,
-    required: true,
-  },
+interface Props {
+  token: Token
+  balance: bigint
+  percent: string
+  dp?: number
+  holder: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  dp: 3,
 })
 
 const url = computed(() => {

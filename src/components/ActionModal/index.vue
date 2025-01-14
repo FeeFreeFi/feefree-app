@@ -33,8 +33,8 @@
   </n-modal>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { ModalAction } from '@/types'
 import { States } from '@/config'
 import ZModalView from '@/components/ZModalView.vue'
 import ZButton from '@/components/ZButton.vue'
@@ -42,8 +42,7 @@ import ZViewUrl from '@/components/ZViewUrl.vue'
 import { getTransactionUrl } from '@/hooks/useChains'
 import { shortString } from '@/utils'
 
-/** @type {import('vue').ModelRef<import('@/types').ModalAction>} */
-const modelValue = defineModel({ type: Object, required: true })
+const modelValue = defineModel<ModalAction>({ required: true })
 
 const tx = computed(() => modelValue.value.tx)
 const state = computed(() => modelValue.value.state)

@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMessage } from 'naive-ui'
 import { account } from '@/hooks/useWallet'
 import { profile } from '@/hooks/useUser'

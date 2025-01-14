@@ -15,49 +15,21 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { Token } from '@/types'
 import { fromValue } from '@/utils'
 import TokenPrice from './TokenPrice.vue'
 
-const props = defineProps({
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-  total: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-  currency0: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-  currency1: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-  price0: {
-    type: Number,
-    required: true,
-  },
-  price1: {
-    type: Number,
-    required: true,
-  },
-})
+interface Props {
+  balance: bigint
+  total: bigint
+  currency0: Token
+  currency1: Token
+  price0: number
+  price1: number
+}
+
+const props = defineProps<Props>()
 
 const currentPercent = computed(() => {
   const { balance, total } = props
@@ -65,6 +37,6 @@ const currentPercent = computed(() => {
     return '0%'
   }
 
-  return `${fromValue(balance).times(100).div(total).dp(4).toFormat()}%`
+  return `${fromValue(balance).times(100).div(total.toString(10)).dp(4).toFormat()}%`
 })
 </script>

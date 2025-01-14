@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.7.3 (2025-01-14)
+
+### Features
+- `TypeScript`: Migrate vue files to typescript.
+
+
 ## 0.7.2 (2025-01-10)
 
 ### Styles

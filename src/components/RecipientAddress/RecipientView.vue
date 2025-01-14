@@ -29,22 +29,20 @@
   </ZModalView>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
 import { isAddress } from 'viem'
 import { pasteText } from '@/utils'
 import { account } from '@/hooks/useWallet'
 import ZModalView from '@/components/ZModalView.vue'
 import ZButton from '../ZButton.vue'
 
-const props = defineProps({
-  onClose: {
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  onClose: () => void
+}
 
-const recipient = defineModel({ type: String, required: true })
+const props = defineProps<Props>()
+
+const recipient = defineModel<string>({ required: true })
 
 const focus = ref(false)
 const checked = ref(false)

@@ -36,21 +36,21 @@
       <div class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg">
         <div class="relative w-full h-[78px] flex justify-center overflow-hidden rounded-t-lg">
           <img class="w-[311px] h-[78px] max-w-max pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
-          <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="poolLegacy.chainId" />
+          <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="poolLegacy!.chainId" />
         </div>
         <div class="absolute left-4 sm:left-6 top-[65px]">
-          <ZPoolIcon :pool="poolLegacy" />
+          <ZPoolIcon :pool="poolLegacy!" />
         </div>
         <div class="flex flex-col px-4 sm:px-6 pb-6 pt-8">
           <div class="flex-y-center gap-2">
-            <ZPoolName :pool="poolLegacy" />
+            <ZPoolName :pool="poolLegacy!" />
             <n-text depth="1">Legacy</n-text>
           </div>
           <div class="mt-4 sm:mt-6 flex justify-between text-xs">
             <n-text depth="1">Liquidity</n-text>
             <ZBalance :value="liquidityLegacyBalance" :decimals="0" :dp="0" />
           </div>
-          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="poolLegacy.chainId" :chains="supportedChains">
+          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="poolLegacy!.chainId" :chains="supportedChains">
             <div class="flex gap-4">
               <ZButton class="h-10 flex-1 shrink-0" :disabled="!!loading || !liquidityLegacyBalance" :loading="loading === ACTION_WITHDRAW_LEGACY" aria-label="Withdraw" @click="() => onWithdrawLiquidity(true)">Withdraw</ZButton>
               <ZButton class="h-10 flex-1 shrink-0" :disabled="!!loading || !liquidityLegacyBalance" :loading="loading === ACTION_MIGRATE_LEGACY" aria-label="Migrate" @click="() => onMigrateLiquidity(true)">Migrate</ZButton>
@@ -87,10 +87,11 @@
   </ZContainer>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import type { Callback, Token } from '@/types'
+import type { DebouncedFunc } from 'lodash-es'
 import { useNotification } from 'naive-ui'
-import { wait } from '@/utils'
+import { getErrorMessage, wait } from '@/utils'
 import { appChainId } from '@/hooks/useAppState'
 import { account, updateNativeBalance } from '@/hooks/useWallet'
 import { getMigration, migrateLiquidity, removeLiquidity, unexchange } from '@/hooks/useMigration'
@@ -117,20 +118,17 @@ const poolLegacy = computed(() => config.value?.poolLegacy)
 
 const liquidityLegacyToken = computed(() => poolLegacy.value?.liquidity)
 
-const allTokens = computed(() => config.value ? [liquidityLegacyToken.value, ...config.value.tokens] : [])
-/** @type {import('vue').Ref<{[address:string]: bigint}>} */
-const allBalances = ref({})
+const allTokens = computed(() => config.value ? [liquidityLegacyToken.value, ...config.value.tokens].filter(it => !!it) : [])
+
+const allBalances = ref<Record<string, bigint>>({})
 
 const liquidityOldBalance = ref(0n)
-const liquidityLegacyBalance = computed(() => config.value ? allBalances.value[liquidityLegacyToken.value.address] || 0n : 0n)
+const liquidityLegacyBalance = computed(() => config.value ? allBalances.value[liquidityLegacyToken.value!.address] || 0n : 0n)
 
-/** @type {import('vue').Ref<{chainId:number}[]>} */
-const supportedChains = ref([])
+const supportedChains = ref<{ chainId: number }[]>([])
 
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateLiquidity = ref(null)
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateBalances = ref(null)
+const debounceUpdateLiquidity = ref<DebouncedFunc<Callback>>()
+const debounceUpdateBalances = ref<DebouncedFunc<Callback>>()
 
 const loading = ref('')
 
@@ -139,15 +137,15 @@ const ACTION_MIGRATE_LEGACY = 'migrate-legacy'
 const ACTION_WITHDRAW_OLD = 'withdraw-old'
 const ACTION_MIGRATE_OLD = 'migrate-old'
 
-const showError = (err, title = 'Error') => {
+const showError = (err: unknown, title = 'Error') => {
   notification.error({
     title,
-    content: err.shortMessage || err.details || err.message,
+    content: getErrorMessage(err, 'Error'),
     duration: 3000,
   })
 }
 
-const showSuccess = (message, title = 'Success') => {
+const showSuccess = (message: string, title = 'Success') => {
   notification.success({
     title,
     content: message,
@@ -155,7 +153,7 @@ const showSuccess = (message, title = 'Success') => {
   })
 }
 
-const onApproval = async (token, amount, spender) => {
+const onApproval = async (token: Token, amount: bigint, spender: string) => {
   try {
     const tx = await approve(token, spender, amount)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
@@ -168,7 +166,7 @@ const onApproval = async (token, amount, spender) => {
 
 const onApprovalLiquidity = async () => {
   try {
-    const tx = await approveLiquidity(poolOld.value, config.value.address, liquidityOldBalance.value)
+    const tx = await approveLiquidity(poolOld.value!, config.value.address, liquidityOldBalance.value)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     return true
   } catch (err) {
@@ -177,12 +175,12 @@ const onApprovalLiquidity = async () => {
   }
 }
 
-const checkAllowance = async (token, amount, spender) => {
+const checkAllowance = async (token: Token, amount: bigint, spender: string) => {
   const allowed = await allowance(token, account.value, spender)
   return allowed >= amount
 }
 
-const ensureApproved = async (token, amount, spender) => {
+const ensureApproved = async (token: Token, amount: bigint, spender: string) => {
   let approved = await checkAllowance(token, amount, spender)
   if (!approved) {
     const success = await onApproval(token, amount, spender)
@@ -197,13 +195,13 @@ const ensureApproved = async (token, amount, spender) => {
 }
 
 const ensureApprovedLiquidity = async () => {
-  let approved = await checkLiquidityAllowance(poolOld.value, account.value, liquidityOldBalance.value, config.value.address)
+  let approved = await checkLiquidityAllowance(poolOld.value!, account.value, liquidityOldBalance.value, config.value.address)
   if (!approved) {
     const success = await onApprovalLiquidity()
     if (success) {
       showSuccess('Approve success')
       updateNativeBalance()
-      approved = await checkLiquidityAllowance(poolOld.value, account.value, liquidityOldBalance.value, config.value.address)
+      approved = await checkLiquidityAllowance(poolOld.value!, account.value, liquidityOldBalance.value, config.value.address)
     }
   }
 
@@ -214,7 +212,7 @@ const ensureLiquidity = async (legacy = true) => {
   loading.value = legacy ? ACTION_WITHDRAW_LEGACY : ACTION_WITHDRAW_OLD
   let approved
   if (legacy) {
-    approved = await ensureApproved(liquidityLegacyToken.value, liquidityLegacyBalance.value, config.value.address)
+    approved = await ensureApproved(liquidityLegacyToken.value!, liquidityLegacyBalance.value, config.value.address)
     if (!approved) {
       loading.value = ''
       return false
@@ -230,7 +228,7 @@ const ensureLiquidity = async (legacy = true) => {
   return true
 }
 
-const onWithdrawLiquidity = async (legacy = true) => {
+const onWithdrawLiquidity = async (legacy: boolean) => {
   const ensured = await ensureLiquidity(legacy)
   if (!ensured) {
     return
@@ -239,7 +237,7 @@ const onWithdrawLiquidity = async (legacy = true) => {
   const pool = legacy ? poolLegacy.value : poolOld.value
   try {
     await wait(1000)
-    const tx = await removeLiquidity(pool.chainId, pool.key)
+    const tx = await removeLiquidity(pool!.chainId, pool!.key)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     showSuccess('Withdraw success')
 
@@ -252,7 +250,7 @@ const onWithdrawLiquidity = async (legacy = true) => {
   loading.value = ''
 }
 
-const onMigrateLiquidity = async (legacy = true) => {
+const onMigrateLiquidity = async (legacy: boolean) => {
   const ensured = await ensureLiquidity(legacy)
   if (!ensured) {
     return
@@ -261,7 +259,7 @@ const onMigrateLiquidity = async (legacy = true) => {
   const pool = legacy ? poolLegacy.value : poolOld.value
   try {
     await wait(1000)
-    const tx = await migrateLiquidity(pool.chainId, pool.key)
+    const tx = await migrateLiquidity(pool!.chainId, pool!.key)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     showSuccess('Migrate success')
 
@@ -274,10 +272,7 @@ const onMigrateLiquidity = async (legacy = true) => {
   loading.value = ''
 }
 
-/**
- * @param {import('@/types').Token} token
- */
-const onWithdrawToken = async token => {
+const onWithdrawToken = async (token: Token & { origin: string }) => {
   loading.value = token.address
   const approved = await ensureApproved(token, allBalances.value[token.address], config.value.address)
   if (!approved) {
@@ -308,7 +303,7 @@ onMounted(async () => {
   await configReady()
 
   supportedChains.value = getSupportedChains()
-  debounceUpdateLiquidity.value()
-  debounceUpdateBalances.value()
+  debounceUpdateLiquidity.value!()
+  debounceUpdateBalances.value!()
 })
 </script>

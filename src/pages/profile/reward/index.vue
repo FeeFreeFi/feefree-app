@@ -15,8 +15,8 @@
   </div>
 </template>
 
-<script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+<script setup lang="ts">
+import type { Claim, ClaimAction, Reward } from '@/types'
 import { useNotification } from 'naive-ui'
 import pMap from 'p-map'
 import { getClaims, getRewards } from '@/api'
@@ -44,26 +44,20 @@ const rewards = ref({
   current: 0n,
   claimed: 0n,
   available: 0n,
-  /**
-   * @type {(import('@/types').Reward & {valid:boolean})[]}
-   */
-  list: [],
+  list: [] as (Reward & { valid: boolean })[],
 })
 
-/**
- * @type {import('vue').Ref<import('@/types').Claim[]>}
- */
-const claims = ref([])
+const claims = ref<Claim[]>([])
 
-const claimAction = ref({ show: false })
+const claimAction = ref<ClaimAction>({ show: false })
+
 const claiming = ref(false)
 
 const switching = ref(false)
-/**
- * @param {number} chainId
- */
-const onSwitchNetwork = async chainId => {
+
+const onSwitchNetwork = async (chainId: number) => {
   switching.value = await doSwitchNetwork(notification, chainId)
+  return true
 }
 
 const reset = () => {
@@ -142,10 +136,7 @@ const fetchData = async () => {
   ])
 }
 
-/**
- * @param {import('@/types').Reward} reward
- */
-const onClaim = async reward => {
+const onClaim = async (reward: Reward) => {
   const { chainId } = reward
   if (chainId !== appChainId.value) {
     const success = await onSwitchNetwork(chainId)
@@ -163,10 +154,7 @@ const onClaim = async reward => {
   }
 }
 
-/**
- * @param {number} page
- */
-const onUpdatePage = page => {
+const onUpdatePage = (page: number) => {
   pagination.value = {
     ...pagination.value,
     page,

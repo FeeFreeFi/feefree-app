@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
-const name = defineModel('name', { type: String, required: true })
-const symbol = defineModel('symbol', { type: String, required: true })
+<script setup lang="ts">
+const name = defineModel<string>('name', { required: true })
+const symbol = defineModel<string>('symbol', { required: true })
 </script>

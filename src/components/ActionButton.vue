@@ -6,30 +6,22 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
 import { useNotification } from 'naive-ui'
 import { account, walletChainId } from '@/hooks/useWallet'
 import { open as openWalletConnector } from '@/hooks/useWalletConnector'
 import { doSwitchNetwork } from '@/hooks/useInteraction'
 import ZButton from '@/components/ZButton.vue'
 
-const props = defineProps({
-  chainId: {
-    type: Number,
-    default: 0,
-  },
-  chains: {
-    /**
-     * @type {import('vue').PropType<{chainId:number}[]>}
-     */
-    type: Array,
-    required: true,
-  },
-  btnClass: {
-    type: String,
-    default: '',
-  },
+interface Props {
+  chainId?: number
+  chains: { chainId: number }[]
+  btnClass?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  chainId: 0,
+  btnClass: '',
 })
 
 const notification = useNotification()

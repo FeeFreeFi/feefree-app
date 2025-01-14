@@ -7,14 +7,14 @@
       <LockLiquidity v-model="duration" class="mt-3 sm:mt-6" />
       <div class="mt-10">
         <ActionButton :chain-id="appChainId" :chains="supportedChains">
-          <router-link v-if="initialized" :to="{ name: PAGE_POOL_DEPOSIT, params: { id: encodePoolId(appChainId, poolInitState.id) } }">
+          <router-link v-if="initialized" :to="{ name: PAGE_POOL_DEPOSIT, params: { id: encodePoolId(appChainId, poolInitState!.id) } }">
             <ZButton class="h-10 sm:h-12 w-full" aria-label="Create">Pool exists, go deposit</ZButton>
           </router-link>
           <ZButton v-else-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
           <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
           <div v-else-if="!approved" class="h-10 sm:h-12 w-full flex gap-3">
-            <ZButton v-if="!approved0" class="h-full flex-1" :disabled="approving0 || approving1" :loading="approving0" :aria-label="`Approve ${inputToken0.symbol}`" @click="() => onApproval(true)">Approve {{ inputToken0.symbol }}</ZButton>
-            <ZButton v-if="!approved1" class="h-full flex-1" :disabled="approving0 || approving1" :loading="approving1" :aria-label="`Approve ${inputToken1.symbol}`" @click="() => onApproval(false)">Approve {{ inputToken1.symbol }}</ZButton>
+            <ZButton v-if="!approved0" class="h-full flex-1" :disabled="approving0 || approving1" :loading="approving0" :aria-label="`Approve ${inputToken0!.symbol}`" @click="() => onApproval(true)">Approve {{ inputToken0!.symbol }}</ZButton>
+            <ZButton v-if="!approved1" class="h-full flex-1" :disabled="approving0 || approving1" :loading="approving1" :aria-label="`Approve ${inputToken1!.symbol}`" @click="() => onApproval(false)">Approve {{ inputToken1!.symbol }}</ZButton>
           </div>
           <ZButton v-else class="h-10 sm:h-12 w-full" :loading="creating" aria-label="Create" @click="onCreate">Create</ZButton>
         </ActionButton>
@@ -27,8 +27,9 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+<script setup lang="ts">
+import type { DebouncedFunc } from 'lodash-es'
+import type { ApprovalAction, Callback, CreateAction, Token } from '@/types'
 import { useRoute, useRouter } from 'vue-router'
 import { PAGE_POOL_DEPOSIT } from '@/config'
 import { encodePoolId, parseAmount, uuid, isNative, isSame } from '@/utils'
@@ -54,12 +55,9 @@ const containerId = `#el-${uuid()}`
 const route = useRoute()
 const router = useRouter()
 
-/** @type {import('vue').Ref<{chainId:number}[]>} */
-const supportedChains = ref([])
-/** @type {import('vue').Ref<import('@/types').Token>} */
-const inputToken0 = ref(null)
-/** @type {import('vue').Ref<import('@/types').Token>} */
-const inputToken1 = ref(null)
+const supportedChains = ref<{ chainId: number }[]>([])
+const inputToken0 = ref<Token>()
+const inputToken1 = ref<Token>()
 
 const inputAmount0 = ref('')
 const inputAmount1 = ref('')
@@ -77,20 +75,18 @@ const approved1 = ref(false)
 
 const creating = ref(false)
 
-const approveAction = ref({ show: false })
-const createAction = ref({ show: false })
+const approveAction = ref<ApprovalAction>({ show: false })
+const createAction = ref<CreateAction>({ show: false })
 
 const currentToken = computed(() => isForZero.value ? inputToken0.value : inputToken1.value)
 const inputTokens = computed(() => [inputToken0.value, inputToken1.value])
-/** @type {import('vue').Ref<{id:string, initialized:boolean}>} */
-const poolInitState = ref(null)
+const poolInitState = ref<{ id: string, initialized: boolean }>()
 const initialized = computed(() => poolInitState.value?.initialized)
 
 const balances = ref([0n, 0n])
 const inputBalance0 = computed(() => balances.value[0])
 const inputBalance1 = computed(() => balances.value[1])
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateBalances = ref(null)
+const debounceUpdateBalances = ref<DebouncedFunc<Callback>>()
 
 const approved = computed(() => approved0.value && approved1.value)
 const amountIn0 = computed(() => inputToken0.value ? parseAmount(inputAmount0.value || 0, inputToken0.value.decimals) : 0n)
@@ -110,7 +106,7 @@ const inputHint = computed(() => {
   }
 
   if (amountIn1.value > inputBalance1.value) {
-    return `${inputToken1.value.symbol} insufficient balance`
+    return `${inputToken1.value!.symbol} insufficient balance`
   }
 
   return ''
@@ -119,13 +115,13 @@ const isInputValid = computed(() => {
   return amountIn0.value && amountIn0.value <= inputBalance0.value && amountIn1.value && amountIn1.value <= inputBalance1.value
 })
 
-const doCheckAllowanceOne = async isZero => {
+const doCheckAllowanceOne = async (isZero: boolean) => {
   const _approved = isZero ? approved0 : approved1
   const token = isZero ? inputToken0.value : inputToken1.value
   const amount = isZero ? amountIn0.value : amountIn1.value
-  const spender = getManagerAddress(token.chainId)
+  const spender = getManagerAddress(token!.chainId)
 
-  const allowed = await allowance(token, account.value, spender)
+  const allowed = await allowance(token!, account.value, spender)
   _approved.value = allowed >= amount
 }
 const checkAllowance = async () => {
@@ -139,12 +135,12 @@ const onCheckApproval = async () => {
   await checkAllowance()
   approvalChecking.value = false
 }
-const onApproval = async isZero => {
+const onApproval = async (isZero: boolean) => {
   const token = isZero ? inputToken0.value : inputToken1.value
   const amount = isZero ? amountIn0.value : amountIn1.value
-  const spender = getManagerAddress(token.chainId)
+  const spender = getManagerAddress(token!.chainId)
   const approving = isZero ? approving0 : approving1
-  const success = await doApproval(approveAction, approving, token, spender, amount)
+  const success = await doApproval(approveAction, approving, token!, spender, amount)
   if (success) {
     doCheckAllowanceOne(isZero)
     updateNativeBalance()
@@ -169,26 +165,26 @@ const updateRouteForInputs = () => {
 const handleRoute = async () => {
   const { chain, input0, input1 } = route.query
 
-  const chainId = getChainIdByKey(chain)
+  const chainId = getChainIdByKey(chain as string)
   if (!chainId) {
     const nativeToken = getNativeToken(appChainId.value)
     inputToken0.value = nativeToken
-    inputToken1.value = null
+    inputToken1.value = undefined
   } else if (!isSupportChain(chainId)) {
-    inputToken0.value = null
-    inputToken1.value = null
+    inputToken0.value = undefined
+    inputToken1.value = undefined
   } else {
     const nativeToken = getNativeToken(chainId)
 
     const [token0, token1] = await Promise.all([
-      input0 ? (input0 === nativeToken.symbol ? nativeToken : fetchToken(chainId, input0)) : null,
-      input1 ? (input1 === nativeToken.symbol ? nativeToken : fetchToken(chainId, input1)) : null,
+      input0 ? (input0 === nativeToken!.symbol ? nativeToken : fetchToken(chainId, input0 as string)) : undefined,
+      input1 ? (input1 === nativeToken!.symbol ? nativeToken : fetchToken(chainId, input1 as string)) : undefined,
     ])
 
     inputToken0.value = token0 || nativeToken
-    inputToken1.value = isSame(token0, token1) ? null : token1
+    inputToken1.value = isSame(token0, token1) ? undefined : token1
 
-    cacheTokens([token0, token1])
+    cacheTokens([token0, token1].filter(it => !!it))
   }
 
   debounceUpdateBalances.value && debounceUpdateBalances.value()
@@ -241,7 +237,7 @@ const onReverse = () => {
   debounceUpdateBalances.value && debounceUpdateBalances.value()
 }
 
-const onSelectToken = async token => {
+const onSelectToken = async (token: Token) => {
   const targetToken = isForZero.value ? inputToken0 : inputToken1
   const otherToken = isForZero.value ? inputToken1 : inputToken0
   const targetAmount = isForZero.value ? inputAmount0 : inputAmount1
@@ -273,8 +269,8 @@ const onSelectToken1 = () => {
 
 const onCreate = async () => {
   const params = {
-    currency0: inputToken0.value.address,
-    currency1: inputToken1.value.address,
+    currency0: inputToken0.value!.address,
+    currency1: inputToken1.value!.address,
     amount0: amountIn0.value,
     amount1: amountIn1.value,
     recipient: recipient.value || account.value,
@@ -282,8 +278,9 @@ const onCreate = async () => {
   }
 
   createAction.value.data = {
-    token0: inputToken0.value,
-    token1: inputToken1.value,
+    chainId: inputToken0.value!.chainId,
+    token0: inputToken0.value!,
+    token1: inputToken1.value!,
     amount0: params.amount0,
     amount1: params.amount1,
     duration: params.duration,
@@ -304,9 +301,9 @@ const onAppChainIdChange = () => {
   reset()
 
   const allTokens = getTokens(appChainId.value)
-  inputToken0.value = allTokens[0] || null
-  inputToken1.value = allTokens[1] || null
-  poolInitState.value = null
+  inputToken0.value = allTokens[0] || undefined
+  inputToken1.value = allTokens[1] || undefined
+  poolInitState.value = undefined
 
   debounceUpdateBalances.value && debounceUpdateBalances.value()
   updateRouteForInputs()
@@ -314,7 +311,7 @@ const onAppChainIdChange = () => {
 
 const onTokensChange = async () => {
   if (!inputToken0.value || !inputToken1.value) {
-    poolInitState.value = null
+    poolInitState.value = undefined
     return
   }
 

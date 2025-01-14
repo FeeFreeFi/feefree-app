@@ -9,6 +9,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import noTokenBg from '@/assets/images/no-token-bg.svg'
 </script>

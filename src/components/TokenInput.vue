@@ -18,8 +18,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch, onMounted, computed } from 'vue'
+<script setup lang="ts">
+import type { Token } from '@/types'
 import { parseAmount, toAmount } from '@/utils'
 import { account } from '@/hooks/useWallet'
 import { appChainId } from '@/hooks/useAppState'
@@ -28,26 +28,22 @@ import ZTokenBalance from '@/components/ZTokenBalance.vue'
 import AmountButtonGroup from '@/components/AmountButtonGroup.vue'
 import TokenSelectorTrigger from '@/components/TokenSelector/TokenSelectorTrigger.vue'
 
-const props = defineProps({
-  token: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    default: () => null,
-  },
-  balance: {
-    /** @type {import('vue').PropType<bigint>} */
-    type: BigInt,
-    required: true,
-  },
-  label: {
-    type: String,
-    required: true,
-  },
+interface Props {
+  token?: Token
+  balance: bigint
+  label: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  token: undefined,
 })
 
-const emit = defineEmits(['change', 'select'])
+const emit = defineEmits<{
+  (e: 'change'): void
+  (e: 'select'): void
+}>()
 
-const modelValue = defineModel({ type: String, required: true })
+const modelValue = defineModel<string>({ required: true })
 
 const amount = ref(Number.parseFloat(modelValue.value) || null)
 const maxAmount = computed(() => account.value && props.token ? toAmount(props.balance, props.token.decimals) : undefined)
@@ -66,7 +62,7 @@ const onInputBlur = () => {
   }
 
   const { token } = props
-  modelValue.value = toAmount(amountValue.value, token.decimals)
+  modelValue.value = toAmount(amountValue.value, token!.decimals)
 
   emit('change')
 }
@@ -75,15 +71,15 @@ const onTriggerSelect = () => {
   emit('select')
 }
 
-const onPickAmount = value => {
+const onPickAmount = (value: bigint) => {
   const { token } = props
-  modelValue.value = toAmount(value, token.decimals)
+  modelValue.value = toAmount(value, token!.decimals)
   emit('change')
 }
 
 onMounted(() => {
   watch(modelValue, () => {
-    amount.value = !modelValue.value || modelValue.value === '0' ? null : Number.parseFloat(modelValue.value, 10) || null
+    amount.value = !modelValue.value || modelValue.value === '0' ? null : Number.parseFloat(modelValue.value) || null
   })
 })
 </script>

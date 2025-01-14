@@ -8,27 +8,21 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { debounce } from 'lodash-es'
-import { onBeforeUnmount, onMounted } from 'vue'
 
-const props = defineProps({
-  placeholder: {
-    type: String,
-    required: true,
-  },
-  delay: {
-    type: Number,
-    default: 100,
-  },
-  onSearch: {
-    /** @type {import('vue').PropType<(value:string) => Promise<void>>} */
-    type: Function,
-    default: () => {},
-  },
+interface Props {
+  placeholder: string
+  delay?: number
+  onSearch: (value: string) => void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  delay: 100,
+  onSearch: () => {},
 })
 
-const modelValue = defineModel({ type: String, required: true })
+const modelValue = defineModel<string>({ required: true })
 
 const debounceSearch = debounce(() => props.onSearch(modelValue.value), props.delay)
 

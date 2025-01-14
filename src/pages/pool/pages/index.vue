@@ -7,7 +7,7 @@
   </ZContainer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ZContainer from '@/components/ZContainer.vue'
 import PoolNav from '../components/PoolNav.vue'
 </script>

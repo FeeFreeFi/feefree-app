@@ -21,8 +21,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch, onMounted, computed } from 'vue'
+<script setup lang="ts">
+import type { PoolMeta } from '@/types'
 import { account } from '@/hooks/useWallet'
 import { fromValue, parseAmount, toAmount } from '@/utils'
 import ZBalance from '@/components/ZBalance.vue'
@@ -30,26 +30,18 @@ import AmountButtonGroup from '@/components/AmountButtonGroup.vue'
 import AmountSlider from './AmountSlider.vue'
 import ZPoolIcon from '@/components/ZPoolIcon.vue'
 
-const props = defineProps({
-  pool: {
-    /**
-     * @type {import('vue').PropType<import('@/types').PoolMeta>}
-     */
-    type: Object,
-    required: true,
-  },
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-})
+interface Props {
+  pool: PoolMeta
+  balance: bigint
+}
 
-const emit = defineEmits(['change'])
+const props = defineProps<Props>()
 
-const modelValue = defineModel({ type: String, required: true })
+const emit = defineEmits<{
+  (e: 'change'): void
+}>()
+
+const modelValue = defineModel<string>({ required: true })
 
 const amount = ref(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, 0) : undefined)
@@ -57,7 +49,7 @@ const amountValue = computed(() => parseAmount(amount.value || 0, 0))
 
 const onInputBlur = () => {
   if (!amountValue.value) {
-    amount.value = null
+    amount.value = 0
     return
   }
 
@@ -65,12 +57,12 @@ const onInputBlur = () => {
   emit('change')
 }
 
-const onSliderChange = value => {
+const onSliderChange = (value: bigint) => {
   modelValue.value = toAmount(value, 0)
   emit('change')
 }
 
-const onPickAmount = value => {
+const onPickAmount = (value: bigint) => {
   modelValue.value = toAmount(value, 0)
   emit('change')
 }

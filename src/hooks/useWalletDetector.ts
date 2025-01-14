@@ -279,8 +279,8 @@ export const addWallet = (info: WalletInfo, provider: EIP1193Provider) => {
   }
 }
 
-const onAnnounceProvider = (e: CustomEvent) => {
-  const { info, provider } = e.detail as Wallet
+const onAnnounceProvider = (e: Event) => {
+  const { info, provider } = (e as CustomEvent).detail as Wallet
   const { id, name, icon } = info
   addWallet({ id, name, icon, hidden: false }, provider as EIP1193Provider)
 }

@@ -9,35 +9,18 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
 import { fromValue } from '@/utils'
 import { account } from '@/hooks/useWallet'
 import RightArrow from '@/components/Arrow/RightArrow.vue'
 
-const props = defineProps({
-  amount: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-  total: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-})
+interface Props {
+  amount: bigint
+  balance: bigint
+  total: bigint
+}
+
+const props = defineProps<Props>()
 
 const currentPercent = computed(() => {
   const { balance, total } = props
@@ -45,7 +28,7 @@ const currentPercent = computed(() => {
     return '0%'
   }
 
-  return `${fromValue(balance).times(100).div(total).dp(4).toFormat()}%`
+  return `${fromValue(balance).times(100).div(total.toString(10)).dp(4).toFormat()}%`
 })
 
 const afterPercent = computed(() => {
@@ -54,6 +37,6 @@ const afterPercent = computed(() => {
     return '0%'
   }
 
-  return `${fromValue(balance - amount).times(100).div(total - amount).dp(4).toFormat()}%`
+  return `${fromValue(balance - amount).times(100).div((total - amount).toString(10)).dp(4).toFormat()}%`
 })
 </script>

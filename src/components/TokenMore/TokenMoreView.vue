@@ -72,8 +72,8 @@
   </ZModalView>
 </template>
 
-<script setup>
-import { ref, onMounted, watch, computed } from 'vue'
+<script setup lang="ts">
+import type { Token } from '@/types'
 import { useNotification } from 'naive-ui'
 import { shortString, formatPrice, isNative } from '@/utils'
 import { account, getWalletClient, walletChainId } from '@/hooks/useWallet'
@@ -88,29 +88,21 @@ import { open as openWalletConnector } from '@/hooks/useWalletConnector'
 import { doSwitchNetwork } from '@/hooks/useInteraction'
 import { getPrice } from '@/hooks/usePrices'
 
-const props = defineProps({
-  token: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    required: true,
-  },
-  onClose: {
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  token: Token
+  onClose: () => void
+}
+
+const props = defineProps<Props>()
 
 const notification = useNotification()
 
 const balance = ref(0n)
 const total = ref(0n)
-const price = computed(() => getPrice(props.token.key))
+const price = computed(() => getPrice(props.token.key || ''))
 
 const getViewUrl = computed(() => {
-  /**
-   * @param {import('@/types').Token} token
-   */
-  return token => {
+  return (token: Token) => {
     if (isNative(token.address)) {
       return account.value ? getAccountUrl(token.chainId, account.value) : ''
     }

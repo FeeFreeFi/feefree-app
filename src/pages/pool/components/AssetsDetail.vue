@@ -7,33 +7,18 @@
   </ItemBox>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Token } from '@/types'
 import ItemBox from './ItemBox.vue'
 import TokenPercentage from './TokenPercentage.vue'
 
-defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-  currency0: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    required: true,
-  },
-  currency1: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    required: true,
-  },
-  data: {
-    /** @type {import('vue').PropType<{balance0:bigint, balance1:bigint, percent0:string, percent1:string}>} */
-    type: Object,
-    required: true,
-  },
-  holder: {
-    type: String,
-    required: true,
-  },
-})
+interface Props {
+  label: string
+  currency0: Token
+  currency1: Token
+  data: { balance0: bigint, balance1: bigint, percent0: string, percent1: string }
+  holder: string
+}
+
+defineProps<Props>()
 </script>

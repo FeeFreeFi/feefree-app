@@ -36,7 +36,8 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Claim } from '@/types'
 import dayjs from 'dayjs'
 import { shortString, ETH } from '@/utils'
 import { screen } from '@/hooks/useScreen'
@@ -46,28 +47,12 @@ import ZTokenBalance from '@/components/ZTokenBalance.vue'
 import ZChainIcon from '@/components/ZChainIcon.vue'
 import NoRecords from './NoRecords.vue'
 
-defineProps({
-  total: {
-    type: Number,
-    required: true,
-  },
-  page: {
-    type: Number,
-    required: true,
-  },
-  list: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Claim[]>}
-     */
-    type: Array,
-    required: true,
-  },
-  onUpdatePage: {
-    /**
-     * @type {import('vue').PropType<(page:number) => Promise>}
-     */
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  total: number
+  page: number
+  list: Claim[]
+  onUpdatePage: (page: number) => void
+}
+
+defineProps<Props>()
 </script>

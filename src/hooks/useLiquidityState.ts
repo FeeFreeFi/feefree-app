@@ -23,7 +23,7 @@ const reset = () => {
   cache.reset()
 }
 
-export const createLiquidityState = (account: Ref<string>, pool: Ref<PoolMeta>, state: Ref<bigint>) => {
+export const createLiquidityState = (account: Ref<string>, pool: Ref<PoolMeta | undefined>, state: Ref<bigint>) => {
   state.value = 0n
 
   const doUpdate = async () => {

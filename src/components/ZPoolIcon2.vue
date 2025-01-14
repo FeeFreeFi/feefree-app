@@ -7,20 +7,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Token } from '@/types'
 import ZTokenIcon from './ZTokenIcon.vue'
 
-defineProps({
-  asset: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-  symbol: {
-    type: String,
-    required: true,
-  },
-})
+interface Props {
+  asset: Token
+  symbol: string
+}
+
+defineProps<Props>()
 </script>

@@ -47,8 +47,8 @@
   </ZContainer>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+<script setup lang="ts">
+import type { PoolData, PoolMeta } from '@/types'
 import { PAGE_POOL_OVERVIEW } from '@/config'
 import { toBalance, encodePoolId } from '@/utils'
 import { appChainId, syncRouteChain } from '@/hooks/useAppState'
@@ -69,15 +69,13 @@ const TAB_HOT = '#hot'
 const TAB_MY = '#my'
 const tab = ref(TAB_HOT)
 
-const isActiveTab = computed(() => active => tab.value === active)
-/** @type {import('vue').Ref<import('@/types').PoolMeta[]>} */
-const hotPools = ref([])
-/** @type {import('vue').Ref<import('@/types').PoolMeta[]>} */
-const myPools = ref([])
+const isActiveTab = computed(() => (active: string) => tab.value === active)
+
+const hotPools = ref<PoolMeta[]>([])
+const myPools = ref<PoolMeta[]>([])
 const pools = computed(() => tab.value === TAB_HOT ? hotPools.value : myPools.value)
 
-/** @type {import('vue').Ref<{[id:string]: import('@/types').PoolData}>} */
-const poolDatas = ref({})
+const poolDatas = ref<Record<string, PoolData>>({})
 
 const totalTVL = computed(() => Object.values(poolDatas.value).map(p => p.tvl).reduce((sum, item) => sum + item, 0n))
 
@@ -89,7 +87,7 @@ const loadMyPools = async () => {
   myPools.value = await _loadMyPools(appChainId.value, account.value)
 }
 
-const onSwitchPoolTab = active => {
+const onSwitchPoolTab = (active: string) => {
   tab.value = active
 }
 

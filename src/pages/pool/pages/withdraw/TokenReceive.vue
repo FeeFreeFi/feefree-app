@@ -8,24 +8,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Token } from '@/types'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 
-defineProps({
-  token: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-})
+interface Props {
+  token: Token
+  balance: bigint
+}
+
+defineProps<Props>()
 </script>

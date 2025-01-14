@@ -63,7 +63,7 @@
           <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_REWARD }">
             <n-text class="text-xs" depth="1">Reward</n-text>
             <div class="flex-y-center gap-1">
-              <ZTokenBalance class="!font-normal text-primary/80" :token="nativeCurrency" :dp="8" :balance="BigInt(profile?.reward || 0)" />
+              <ZTokenBalance class="!font-normal text-primary/80" :token="nativeCurrency" :dp="8" :balance="profile?.reward || 0n" />
               <i-ff-reward class="size-4" />
             </div>
           </router-link>
@@ -100,8 +100,7 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
 import { useMessage } from 'naive-ui'
 import { PAGE_PROFILE_FANS, PAGE_PROFILE_POINTS, PAGE_PROFILE_REWARD } from '@/config'
 import { shortString } from '@/utils'

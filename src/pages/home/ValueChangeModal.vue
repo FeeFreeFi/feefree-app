@@ -42,8 +42,8 @@
   </n-modal>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { ValueChangedData } from '@/types'
 import { formatPrice } from '@/utils'
 import { screen } from '@/hooks/useScreen'
 import ZModalView from '@/components/ZModalView.vue'
@@ -52,20 +52,13 @@ import ZGhostButton from '@/components/ZGhostButton.vue'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 
-const props = defineProps({
-  onConfirm: {
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  onConfirm: () => void
+}
 
-/**
- * @type {import('vue').ModelRef<{show:boolean, data:import('@/types').ValueChangedData}>}
- */
-const modelValue = defineModel({
-  type: Object,
-  required: true,
-})
+const props = defineProps<Props>()
+
+const modelValue = defineModel<{ show: boolean, data?: ValueChangedData }>({ required: true })
 
 const data = computed(() => modelValue.value.data)
 

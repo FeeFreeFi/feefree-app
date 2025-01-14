@@ -198,7 +198,7 @@ export interface Auth {
 }
 
 export interface EIP1193Provider {
-  request: (args: unknown) => Promise<unknown>
+  request: (args: any) => Promise<any>
 }
 
 export type EIP1193ProviderLegacy = EIP1193Provider & Record<string, unknown>
@@ -217,6 +217,8 @@ export interface Wallet {
 }
 
 export type Callback = () => void
+
+export type PromiseCallback = () => Promise<void>
 
 export type TimerId = ReturnType<typeof setInterval | typeof setTimeout> | undefined
 
@@ -243,6 +245,7 @@ export interface Profile {
   referral: string
   inviter: string
   fans: number
+  reward: bigint | string
 }
 
 export interface Fans {
@@ -269,21 +272,15 @@ export interface Reward {
   root: string
   deadline: number
   updatedAt: Date
+  transactionHash: string
 }
 
-type PointsMeta = {
-  chainId: number
-  transactionHash: string
-} | {
-  account: string
-} | {
-  remark: string
-} | {
-  chainId: number
-  transactionHash: string
-  account: string
-  reason: string
-}
+type PointsMeta =
+  | { chainId: number, transactionHash: string }
+  | { account: string }
+  | { remark: string }
+  | { chainId: number, transactionHash: string, account: string, reason: string }
+
 export interface Points {
   value: number
   date: Date
@@ -300,16 +297,16 @@ export interface Claim {
 
 export interface ModalAction {
   show: boolean
-  state: number
-  title: string
-  message: string
-  data: object
-  tx: Tx
-  error: string
+  state?: number
+  title?: string
+  message?: string
+  data?: object
+  tx?: Tx
+  error?: string
 }
 
 export interface ApprovalAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     token: Token
     amount: bigint
@@ -318,7 +315,7 @@ export interface ApprovalAction extends ModalAction {
 }
 
 export interface ApprovalLiquidtyAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     pool: PoolMeta
     amount: bigint
@@ -327,7 +324,7 @@ export interface ApprovalLiquidtyAction extends ModalAction {
 }
 
 export interface LaunchAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     asset: Token
     amount: bigint
@@ -341,7 +338,7 @@ export interface LaunchAction extends ModalAction {
 }
 
 export interface CreateAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     token0: Token
     token1: Token
@@ -353,7 +350,7 @@ export interface CreateAction extends ModalAction {
 }
 
 export interface SwapAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     inputToken: Token
     outputToken: Token
@@ -364,7 +361,7 @@ export interface SwapAction extends ModalAction {
 }
 
 export interface AddLiquidityAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     pool: PoolMeta
     liquidity: bigint
@@ -374,7 +371,7 @@ export interface AddLiquidityAction extends ModalAction {
 }
 
 export interface RemoveLiquidityAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     pool: PoolMeta
     amount0Min: bigint
@@ -383,7 +380,7 @@ export interface RemoveLiquidityAction extends ModalAction {
 }
 
 export interface UnlockAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     pool: PoolMeta
     lock: LockData
@@ -391,17 +388,26 @@ export interface UnlockAction extends ModalAction {
 }
 
 export interface MintAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     nft: Nft
   }
 }
 
 export interface ClaimAction extends ModalAction {
-  data: {
+  data?: {
     chainId: number
     reward: Reward
   }
+}
+
+export interface ValueChangedData {
+  inputToken: Token
+  amountIn: bigint
+  inputValue: number
+  outputToken: Token
+  amountOut: bigint
+  outputValue: number
 }
 
 export interface GeneralResponse {
@@ -450,7 +456,7 @@ interface Rewards {
 }
 export type RewardsResponse = GenericsResponse<Rewards>
 
-export type FansResponse = GenericsResponse<Fans[]>
+export type FansResponse = PageableResponse<Fans>
 
 export type ClaimsResponse = PageableResponse<Claim>
 

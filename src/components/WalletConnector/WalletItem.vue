@@ -15,23 +15,13 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-  icon: {
-    type: String,
-    required: true,
-  },
-  recent: {
-    type: Boolean,
-    required: true,
-  },
-  active: {
-    type: Boolean,
-    required: true,
-  },
-})
+<script setup lang="ts">
+interface Props {
+  name: string
+  icon: string
+  recent: boolean
+  active: boolean
+}
+
+defineProps<Props>()
 </script>

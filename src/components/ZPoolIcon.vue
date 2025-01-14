@@ -9,14 +9,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { PoolMeta } from '@/types'
 import ZTokenIcon from './ZTokenIcon.vue'
 
-defineProps({
-  pool: {
-    /** @type {import('vue').PropType<import('@/types').PoolMeta>} */
-    type: Object,
-    required: true,
-  },
-})
+interface Props {
+  pool: Pick<PoolMeta, 'currency0' | 'currency1'>
+}
+
+defineProps<Props>()
 </script>

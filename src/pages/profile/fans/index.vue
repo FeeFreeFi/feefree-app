@@ -13,8 +13,8 @@
   </div>
 </template>
 
-<script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+<script setup lang="ts">
+import type { Fans } from '@/types'
 import { getFans } from '@/api'
 import { profile } from '@/hooks/useUser'
 import ZBack from '@/components/ZBack.vue'
@@ -27,10 +27,7 @@ const pagination = ref({
   total: 0,
 })
 
-/**
- * @type {import('vue').Ref<import('@/types').Fans[]>}
- */
-const fansList = ref([])
+const fansList = ref<Fans[]>([])
 
 const reset = () => {
   pagination.value = { page: 1, limit: 10, total: 0 }
@@ -60,10 +57,7 @@ const fetchData = async () => {
   await fetchFans()
 }
 
-/**
- * @param {number} page
- */
-const onUpdatePage = page => {
+const onUpdatePage = (page: number) => {
   pagination.value = {
     ...pagination.value,
     page,

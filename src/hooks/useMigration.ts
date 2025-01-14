@@ -69,7 +69,7 @@ const CONFIGS: Record<number, Config> = {
 
 export const getMigration = (chainId: number) => CONFIGS[chainId]
 
-export const unexchange = async (token: Token) => {
+export const unexchange = async (token: Pick<Token, 'chainId' | 'address'>) => {
   const { chainId } = token
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()

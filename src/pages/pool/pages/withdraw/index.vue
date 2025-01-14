@@ -32,12 +32,13 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+<script setup lang="ts">
+import type { DebouncedFunc } from 'lodash-es'
+import type { ApprovalLiquidtyAction, Callback, PoolData, PoolMeta, QuoteRemoveLiquidityData, RemoveLiquidityAction } from '@/types'
 import { useNotification } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { PAGE_NOT_FOUND } from '@/config'
-import { parseAmount, decodePoolId } from '@/utils'
+import { parseAmount, decodePoolId, getErrorMessage } from '@/utils'
 import { screen } from '@/hooks/useScreen'
 import { account, updateNativeBalance } from '@/hooks/useWallet'
 import { appChainId } from '@/hooks/useAppState'
@@ -62,21 +63,14 @@ const route = useRoute()
 const router = useRouter()
 const notification = useNotification()
 
-/** @type {import('vue').Ref<{chainId:number}[]>} */
-const supportedChains = ref([])
+const supportedChains = ref<{ chainId: number }[]>([])
 
-/** @type {import('vue').Ref<import('@/types').PoolMeta>} */
-const pool = ref(null)
-/** @type {import('vue').Ref<import('@/types').PoolData>} */
-const poolData = ref(getPoolData())
-/** @type {import('vue').Ref<import('@/types').QuoteRemoveLiquidityData>} */
-const quoteData = ref(null)
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateQuote = ref(null)
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceCheckApproval = ref(null)
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateLiquidity = ref(null)
+const pool = ref<PoolMeta>()
+const poolData = ref<PoolData>(getPoolData())
+const quoteData = ref<QuoteRemoveLiquidityData>()
+const debounceUpdateQuote = ref<DebouncedFunc<Callback>>()
+const debounceCheckApproval = ref<DebouncedFunc<Callback>>()
+const debounceUpdateLiquidity = ref<DebouncedFunc<Callback>>()
 
 const liquidity = ref(0n)
 
@@ -88,22 +82,27 @@ const isInputValid = computed(() => amount.value && amount.value <= liquidity.va
 const approvalChecking = ref(false)
 const approving = ref(false)
 const approved = ref(false)
-const approveAction = ref({ show: false })
+const approveAction = ref<ApprovalLiquidtyAction>({ show: false })
 
 const withdrawing = ref(false)
-const withdrawAction = ref({ show: false })
+const withdrawAction = ref<RemoveLiquidityAction>({ show: false })
 
 const checkAllowance = async () => {
   approved.value = pool.value ? await checkLiquidityAllowance(pool.value, account.value, amount.value) : false
 }
 
 const onApproval = async () => {
-  const { chainId } = pool.value
+  const { chainId } = pool.value!
   const spender = getManagerAddress(chainId)
 
-  approveAction.value.data = { chainId, pool: pool.value, amount: amount.value, spender }
+  approveAction.value.data = {
+    chainId,
+    pool: pool.value!,
+    amount: amount.value,
+    spender,
+  }
 
-  const success = await doSend(approveAction, approving, 'Approve', () => approveLiquidity(pool.value, spender, amount.value))
+  const success = await doSend(approveAction, approving, 'Approve', () => approveLiquidity(pool.value!, spender, amount.value))
 
   if (success) {
     checkAllowance()
@@ -113,16 +112,16 @@ const onApproval = async () => {
 
 const updateQuoteData = async () => {
   if (!amount.value || amount.value > liquidity.value) {
-    quoteData.value = null
+    quoteData.value = undefined
     return
   }
 
   try {
-    quoteData.value = await quoteRemoveLiquidity(pool.value.chainId, pool.value.currency0.address, pool.value.currency1.address, amount.value)
+    quoteData.value = await quoteRemoveLiquidity(pool.value!.chainId, pool.value!.currency0.address, pool.value!.currency1.address, amount.value)
   } catch (err) {
     notification.error({
       title: 'Error',
-      content: err.shortMessage || err.details || err.message,
+      content: getErrorMessage(err, 'Error'),
       duration: 3000,
     })
   }
@@ -130,12 +129,12 @@ const updateQuoteData = async () => {
 
 const reset = () => {
   withdrawing.value = false
-  quoteData.value = null
+  quoteData.value = undefined
 }
 
 const onAmountChange = () => {
   if (!amount.value || amount.value > liquidity.value) {
-    quoteData.value = null
+    quoteData.value = undefined
     return
   }
 
@@ -144,10 +143,15 @@ const onAmountChange = () => {
 }
 
 const onWithdraw = async () => {
-  const { currency0, currency1, liquidity, amount0Min, amount1Min } = quoteData.value
+  const { currency0, currency1, liquidity, amount0Min, amount1Min } = quoteData.value!
   const params = { currency0, currency1, liquidity, amount0Min, amount1Min, recipient: account.value }
 
-  withdrawAction.value.data = { chainId: pool.value.chainId, pool: pool.value, amount0Min, amount1Min }
+  withdrawAction.value.data = {
+    chainId: pool.value!.chainId,
+    pool: pool.value!,
+    amount0Min,
+    amount1Min,
+  }
 
   const success = await doSend(withdrawAction, withdrawing, 'Withdraw', () => removeLiquidity(params))
 
@@ -177,13 +181,13 @@ onMounted(async () => {
   supportedChains.value = getSupportedChains()
 
   try {
-    const { valid, chainId, poolId } = decodePoolId(route.params.id)
-    if (!valid || !isSupportChain(chainId)) {
+    const { valid, chainId, poolId } = decodePoolId(route.params.id as string)
+    if (!valid || !isSupportChain(chainId!)) {
       router.replace({ name: PAGE_NOT_FOUND })
       return
     }
 
-    pool.value = await fetchPoolMeta(chainId, poolId)
+    pool.value = await fetchPoolMeta(chainId!, poolId!)
   } catch {
     router.replace({ name: PAGE_NOT_FOUND })
   }

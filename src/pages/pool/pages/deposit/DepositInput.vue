@@ -20,33 +20,25 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch, onMounted, computed } from 'vue'
+<script setup lang="ts">
+import type { Token } from '@/types'
 import { fromValue, parseAmount, toAmount } from '@/utils'
 import { account } from '@/hooks/useWallet'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
 
-const props = defineProps({
-  token: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-})
+interface Props {
+  token: Token
+  balance: bigint
+}
 
-const emit = defineEmits(['change'])
+const props = defineProps<Props>()
 
-const modelValue = defineModel({ type: String, required: true })
+const emit = defineEmits<{
+  (e: 'change'): void
+}>()
+
+const modelValue = defineModel<string>({ required: true })
 
 const amount = ref(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, props.token.decimals) : undefined)
@@ -60,7 +52,7 @@ const onMax = () => {
 
 const onInputBlur = () => {
   if (!amountValue.value) {
-    amount.value = null
+    amount.value = 0
     return
   }
 

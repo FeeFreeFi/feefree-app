@@ -4,8 +4,7 @@
   </ZModalWrapper>
 </template>
 
-<script setup>
-import { watch, onMounted, onBeforeUnmount } from 'vue'
+<script setup lang="ts">
 import { acceptInvite } from '@/api'
 import { show, close } from '@/hooks/useWalletConnector'
 import { reset } from '@/hooks/useConnecting'

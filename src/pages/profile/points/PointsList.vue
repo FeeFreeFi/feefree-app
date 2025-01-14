@@ -18,12 +18,12 @@
           <div class="flex-1 sm:w-20 text-xs text-center">
             <n-text v-if="screen.sm" :depth="1">{{ NAMES[item.reason] }}</n-text>
             <div v-else>
-              <div v-if="item.meta.transactionHash">
+              <div v-if="'transactionHash' in item.meta">
                 <a class="flex-1 underline text-xs text-primary text-right" :href="getTransactionUrl(item.meta.chainId, item.meta.transactionHash)" target="_blank">
                   <n-text type="primary">{{ NAMES[item.reason] }}</n-text>
                 </a>
               </div>
-              <div v-else-if="item.meta.account" class="flex-y-center justify-center gap-1">
+              <div v-else-if="'account' in item.meta" class="flex-y-center justify-center gap-1">
                 <n-text class="text-xs" :depth="1">{{ NAMES[item.reason] }}</n-text>
                 <ZCopyable class="flex justify-end cursor-pointer" :text="item.meta.account">
                   <template #copied>
@@ -46,13 +46,13 @@
             </div>
           </div>
           <div v-if="screen.sm" class="flex-1 text-center text-sm">
-            <div v-if="item.meta.transactionHash">
+            <div v-if="'transactionHash' in item.meta">
               <a class="flex-1 underline text-xs text-primary text-right" :href="getTransactionUrl(item.meta.chainId, item.meta.transactionHash)" target="_blank">
                 <n-text type="primary">{{ shortString(item.meta.transactionHash, 8, -4) }}</n-text>
               </a>
             </div>
-            <div v-else-if="item.meta.account" class="flex-y-center justify-center gap-1">
-              <a class="no-underline hover:underline hover:text-primary transition-colors" :href="getAccountUrl(appChainId, item.meta.account)" target="_blank" :aria-label="getAccountUrl(appChainId, item.account)">
+            <div v-else-if="'account' in item.meta" class="flex-y-center justify-center gap-1">
+              <a class="no-underline hover:underline hover:text-primary transition-colors" :href="getAccountUrl(appChainId, item.meta.account)" target="_blank" :aria-label="getAccountUrl(appChainId, item.meta.account)">
                 <n-text class="text-xs text-basic hover:text-primary transition-colors">{{ shortString(item.meta.account, 6, -4) }}</n-text>
               </a>
               <ZCopyable class="flex justify-end cursor-pointer" :text="item.meta.account">
@@ -83,7 +83,8 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Points } from '@/types'
 import dayjs from 'dayjs'
 import { shortString } from '@/utils'
 import { screen } from '@/hooks/useScreen'
@@ -93,32 +94,16 @@ import ZPagination from '@/components/ZPagination.vue'
 import ZCopyable from '@/components/ZCopyable.vue'
 import NoRecords from './NoRecords.vue'
 
-defineProps({
-  total: {
-    type: Number,
-    required: true,
-  },
-  page: {
-    type: Number,
-    required: true,
-  },
-  list: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Points[]>}
-     */
-    type: Array,
-    required: true,
-  },
-  onUpdatePage: {
-    /**
-     * @type {import('vue').PropType<(page:number) => Promise>}
-     */
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  total: number
+  page: number
+  list: Points[]
+  onUpdatePage: (page: number) => void
+}
 
-const NAMES = {
+defineProps<Props>()
+
+const NAMES: Record<string, string> = {
   101: 'Genesis NFT',
   102: 'Week NFT',
   103: 'Add liquidity',

@@ -46,8 +46,9 @@
   </ZContainer>
 </template>
 
-<script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+<script setup lang="ts">
+import type { Callback, MintAction, Nft } from '@/types'
+import type { DebouncedFunc } from 'lodash-es'
 import { States } from '@/config'
 import { fromValue, toBalance, toBalanceWithUnit } from '@/utils'
 import { createNftStates, fetchNfts, getNfts, getSupportedChains, mint } from '@/hooks/useNft'
@@ -64,25 +65,19 @@ import NftImage from './NftImage.vue'
 import MintModal from './MintModal.vue'
 import { configReady } from '@/hooks/useConfig'
 
-/** @type {import('vue').Ref<{chainId:number}[]>} */
-const supportedChains = ref([])
+const supportedChains = ref<{ chainId: number }[]>([])
 
-/** @type {import('vue').Ref<import('@/types').Nft[]>} */
-const nfts = ref([])
+const nfts = ref<Nft[]>([])
 const feeToken = computed(() => getNativeCurrency(appChainId.value))
 const balances = ref(nfts.value.map(() => 0n))
 
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateNfts = ref(null)
+const debounceUpdateNfts = ref<DebouncedFunc<Callback>>()
 
-/**
- * @param {bigint|number|string} value
- */
-const getFeeValue = value => {
-  return fromValue(getPrice(feeToken.value.symbol)).times(value).div(1e18).dp(4).toNumber()
+const getFeeValue = (value: bigint | number | string) => {
+  return fromValue(getPrice(feeToken.value.symbol)).times(value.toString(10)).div(1e18).dp(4).toNumber()
 }
 
-const mintAction = ref({ show: false, state: States.INITIAL, title: 'Mint' })
+const mintAction = ref<MintAction>({ show: false, state: States.INITIAL, title: 'Mint' })
 const minting = ref(false)
 const operatingIndex = ref(-1)
 
@@ -91,11 +86,7 @@ const reset = () => {
   operatingIndex.value = -1
 }
 
-/**
- * @param {number} index
- * @param {import('@/types').Nft} nft
- */
-const onMint = async (index, nft) => {
+const onMint = async (index: number, nft: Nft) => {
   operatingIndex.value = index
 
   mintAction.value.data = { chainId: nft.chainId, nft }

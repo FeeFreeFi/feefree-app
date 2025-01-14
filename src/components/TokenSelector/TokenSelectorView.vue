@@ -8,7 +8,7 @@
         <div v-if="displayTokens.length > 0" class="size-full absolute top-0 left-0">
           <n-scrollbar class="p-4">
             <div class="flex flex-col gap-2">
-              <TokenItem v-for="token in displayTokens" :key="token.address" :token="token" :balance="balances[token.address] || 0n" :active="isSame(current, token)" @click="() => onTokenClick(token)" />
+              <TokenItem v-for="token in displayTokens" :key="token.address" :token="token" :balance="balances[token.address] || 0n" :active="isSame(current!, token)" @click="() => onTokenClick(token)" />
             </div>
           </n-scrollbar>
         </div>
@@ -18,8 +18,8 @@
   </ZModalView>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import type { Token } from '@/types'
 import { Patterns } from '@/config'
 import { isSame } from '@/utils'
 import { account } from '@/hooks/useWallet'
@@ -31,29 +31,19 @@ import ZSearch from '@/components/ZSearch.vue'
 import TokenItem from './TokenItem.vue'
 import NoToken from './NoToken.vue'
 
-const props = defineProps({
-  current: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    default: () => null,
-  },
-  onClose: {
-    type: Function,
-    required: true,
-  },
-  onSelect: {
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  current?: Token
+  onClose: () => void
+  onSelect: (token: Token) => void
+}
+
+const props = defineProps<Props>()
 
 const search = ref('')
 
-/** @type {import('vue').Ref<import('@/types').Token[]>} */
-const tokens = ref([])
+const tokens = ref<Token[]>([])
 
-/** @type {import('vue').Ref<{[address:string]: [balance:bigint]}>} */
-const balances = ref({})
+const balances = ref<Record<string, bigint>>({})
 
 const displayTokens = computed(() => {
   const key = search.value
@@ -67,7 +57,7 @@ const displayTokens = computed(() => {
   return tokens.value.filter(it => reg.test(it.name) || reg.test(it.symbol) || addressReg.test(it.address))
 })
 
-const onSearch = async value => {
+const onSearch = async (value: string) => {
   const key = search.value
   if (!key || !Patterns.Address.test(value)) {
     return
@@ -83,10 +73,7 @@ const onSearch = async value => {
   cacheTokens([token])
 }
 
-/**
- * @param {import('@/types').Token} token
- */
-const onTokenClick = token => {
+const onTokenClick = (token: Token) => {
   props.onSelect(token)
   props.onClose()
 }

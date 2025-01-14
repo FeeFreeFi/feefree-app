@@ -14,7 +14,7 @@
         <TokenSelectorTrigger :token="outputToken" :disabled="!isSupported" @select="onTriggerSelect" />
       </div>
       <div v-if="isSupported && quote" class="sm:h-[52px] py-3 px-4 sm:px-6 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between bg-card rounded-lg">
-        <TokenPrice :input-token="inputToken" :output-token="outputToken" :price="price" />
+        <TokenPrice :input-token="inputToken!" :output-token="outputToken!" :price="price" />
         <n-divider v-if="screen.lt.sm" class="!my-0" />
         <div class="flex-y-center gap-2">
           <i-ff-fee class="size-4" />
@@ -27,8 +27,8 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { QuoteSwapData, Token } from '@/types'
 import { byDecimals, fromValue } from '@/utils'
 import { appChainId } from '@/hooks/useAppState'
 import { isSupportChain } from '@/hooks/useManager'
@@ -39,49 +39,23 @@ import TokenPrice from '@/components/TokenPrice.vue'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
 import TokenSelectorTrigger from '@/components/TokenSelector/TokenSelectorTrigger.vue'
 
-const props = defineProps({
-  inputToken: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    default: () => null,
-  },
-  outputToken: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    default: () => null,
-  },
-  outputBalance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-  quote: {
-    /**
-     * @type {import('vue').PropType<import('@/types').QuoteSwapData>}
-     */
-    type: Object,
-    default: () => null,
-  },
-  fee: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-})
-const emit = defineEmits(['select'])
+interface Props {
+  inputToken?: Token
+  outputToken?: Token
+  outputBalance: bigint
+  quote?: QuoteSwapData
+  fee: bigint
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<{
+  (e: 'select'): void
+}>()
 
 const isSupported = computed(() => isSupportChain(appChainId.value))
 
 const gasToken = computed(() => props.outputToken ? getNativeCurrency(props.outputToken.chainId) : null)
-const feeValue = computed(() => gasToken.value ? fromValue(getPrice(gasToken.value.symbol)).times(props.fee).div(1e18).dp(4).toNumber() : 0)
+const feeValue = computed(() => gasToken.value ? fromValue(getPrice(gasToken.value.symbol)).times(props.fee.toString(10)).div(1e18).dp(4).toNumber() : 0)
 const amountIn = computed(() => props.quote?.amountIn || 0n)
 const amountOut = computed(() => props.quote?.amountOut || 0n)
 
@@ -91,8 +65,8 @@ const price = computed(() => {
     return 0
   }
 
-  const input = byDecimals(amountIn.value, inputToken.decimals)
-  const output = byDecimals(amountOut.value, outputToken.decimals)
+  const input = byDecimals(amountIn.value, inputToken!.decimals)
+  const output = byDecimals(amountOut.value, outputToken!.decimals)
 
   return output.div(input).toNumber()
 })

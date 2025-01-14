@@ -27,7 +27,8 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Reward } from '@/types'
 import dayjs from 'dayjs'
 import { ETH } from '@/utils'
 import { screen } from '@/hooks/useScreen'
@@ -36,24 +37,11 @@ import ZTokenBalance from '@/components/ZTokenBalance.vue'
 import ZChainIcon from '@/components/ZChainIcon.vue'
 import ZButton from '@/components/ZButton.vue'
 
-defineProps({
-  claiming: {
-    type: Boolean,
-    required: true,
-  },
-  list: {
-    /**
-     * @type {import('vue').PropType<(import('@/types').Reward & {valid:boolean})[]>}
-     */
-    type: Array,
-    required: true,
-  },
-  onClaim: {
-    /**
-     * @type {import('vue').PropType<(item:import('@/types').Reward) => Promise>}
-     */
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  claiming: boolean
+  list: (Reward & { valid: boolean })[]
+  onClaim: (reward: Reward) => void
+}
+
+defineProps<Props>()
 </script>

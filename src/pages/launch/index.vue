@@ -9,7 +9,7 @@
         <ActionButton :chain-id="assetToken?.chainId" :chains="supportedChains">
           <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
           <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-          <ZButton v-else-if="!approved" class="h-10 sm:h-12 w-full" :disabled="approving" :loading="approving" :aria-label="`Approve ${assetToken.symbol}`" @click="onApproval">Approve {{ assetToken.symbol }}</ZButton>
+          <ZButton v-else-if="!approved" class="h-10 sm:h-12 w-full" :disabled="approving" :loading="approving" :aria-label="`Approve ${assetToken!.symbol}`" @click="onApproval">Approve {{ assetToken!.symbol }}</ZButton>
           <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="launching" :loading="launching" aria-label="Launch" @click="onLaunch">Launch</ZButton>
         </ActionButton>
       </div>
@@ -21,8 +21,9 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+<script setup lang="ts">
+import type { Callback, LaunchAction, Token } from '@/types'
+import type { DebouncedFunc } from 'lodash-es'
 import { useRoute, useRouter } from 'vue-router'
 import { parseAmount, uuid, isNative, isSame } from '@/utils'
 import { TOTAL_SUPPLY } from '@/config'
@@ -49,10 +50,8 @@ const containerId = `#el-${uuid()}`
 const route = useRoute()
 const router = useRouter()
 
-/** @type {import('vue').Ref<{chainId:number}[]>} */
-const supportedChains = ref([])
-/** @type {import('vue').Ref<import('@/types').Token>} */
-const assetToken = ref(null)
+const supportedChains = ref<{ chainId: number }[]>([])
+const assetToken = ref<Token>()
 const assetAmount = ref('')
 const name = ref('')
 const symbol = ref('')
@@ -66,11 +65,10 @@ const approved = ref(false)
 const approveAction = ref({ show: false })
 
 const launching = ref(false)
-const launchAction = ref({ show: false })
+const launchAction = ref<LaunchAction>({ show: false })
 
 const assetBalance = ref(0n)
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateBalance = ref(null)
+const debounceUpdateBalance = ref<DebouncedFunc<Callback>>()
 
 const amountAsset = computed(() => assetToken.value ? parseAmount(assetAmount.value || 0, assetToken.value.decimals) : 0n)
 
@@ -80,7 +78,7 @@ const inputHint = computed(() => {
   }
 
   if (amountAsset.value > assetBalance.value) {
-    return `${assetToken.value.symbol} insufficient balance`
+    return `${assetToken.value!.symbol} insufficient balance`
   }
 
   if (!name.value) {
@@ -98,7 +96,7 @@ const isInputValid = computed(() => {
 })
 
 const checkAllowance = async () => {
-  const allowed = await allowance(assetToken.value, account.value, getManagerAddress(assetToken.value.chainId))
+  const allowed = await allowance(assetToken.value!, account.value, getManagerAddress(assetToken.value!.chainId))
   approved.value = allowed >= amountAsset.value
 }
 const onCheckApproval = async () => {
@@ -107,7 +105,7 @@ const onCheckApproval = async () => {
   approvalChecking.value = false
 }
 const onApproval = async () => {
-  const success = await doApproval(approveAction, approving, assetToken.value, getManagerAddress(assetToken.value.chainId), amountAsset.value)
+  const success = await doApproval(approveAction, approving, assetToken.value!, getManagerAddress(assetToken.value!.chainId), amountAsset.value)
   if (success) {
     checkAllowance()
     updateNativeBalance()
@@ -131,16 +129,16 @@ const updateRouteForAsset = () => {
 const handleRoute = async () => {
   const { chain, asset } = route.query
 
-  const chainId = getChainIdByKey(chain)
+  const chainId = getChainIdByKey(chain as string)
   if (!chainId) {
     assetToken.value = getNativeToken(appChainId.value)
   } else if (!isSupportChain(chainId)) {
-    assetToken.value = null
+    assetToken.value = undefined
   } else {
     const nativeToken = getNativeToken(chainId)
-    assetToken.value = (!asset || asset === nativeToken.symbol) ? nativeToken : await fetchToken(chainId, asset)
+    assetToken.value = (!asset || asset === nativeToken!.symbol) ? nativeToken : await fetchToken(chainId, asset as string)
 
-    cacheTokens([assetToken.value])
+    cacheTokens([assetToken.value!])
   }
 
   debounceUpdateBalance.value && debounceUpdateBalance.value()
@@ -169,8 +167,8 @@ const onAmountChange = () => {
   onCheckApproval()
 }
 
-const onSelectAsset = async token => {
-  if (isSame(token, assetToken.value)) {
+const onSelectAsset = async (token: Token) => {
+  if (isSame(token, assetToken.value!)) {
     return
   }
 
@@ -189,7 +187,7 @@ const onLaunch = async () => {
   const params = {
     name: name.value,
     symbol: symbol.value,
-    asset: assetToken.value.address,
+    asset: assetToken.value!.address,
     amount: amountAsset.value,
     totalSupply: TOTAL_SUPPLY,
     recipient: recipient.value || account.value,
@@ -197,10 +195,11 @@ const onLaunch = async () => {
   }
 
   launchAction.value.data = {
+    chainId: assetToken.value!.chainId,
+    asset: assetToken.value!,
+    amount: params.amount,
     name: params.name,
     symbol: params.symbol,
-    asset: assetToken.value,
-    amount: params.amount,
     decimals: 18,
     totalSupply: params.totalSupply,
     duration: params.duration,

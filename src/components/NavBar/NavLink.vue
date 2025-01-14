@@ -10,33 +10,26 @@
   </router-link>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router'
 import { screen } from '@/hooks/useScreen'
 import { useRoute } from 'vue-router'
 
-const props = defineProps({
-  to: {
-    type: Object,
-    required: true,
-  },
-  label: {
-    type: String,
-    required: true,
-  },
-  icon: {
-    type: String,
-    default: '',
-  },
-  exact: {
-    type: Boolean,
-    default: false,
-  },
+interface Props {
+  to: RouteLocationRaw
+  label: string
+  icon?: string
+  exact?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  icon: '',
+  exact: false,
 })
 
 const route = useRoute()
 
 const isActive = computed(() => {
-  return href => props.exact ? route.path === href : route.path.startsWith(href)
+  return (href: string) => props.exact ? route.path === href : route.path.startsWith(href)
 })
 </script>

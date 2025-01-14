@@ -8,14 +8,18 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+<script setup lang="ts">
+interface Props {
+  disabled: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
 })
-const emit = defineEmits(['reverse'])
+
+const emit = defineEmits<{
+  (e: 'reverse'): void
+}>()
 
 const onReverse = () => {
   if (props.disabled) {

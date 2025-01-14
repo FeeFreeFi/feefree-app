@@ -8,25 +8,24 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Token } from '@/types'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import DownArrow from '@/components/Arrow/DownArrow.vue'
 
-const props = defineProps({
-  token: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    default: () => null,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+interface Props {
+  token?: Pick<Token, 'icon' | 'symbol'>
+  disabled?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  token: undefined,
+  disabled: false,
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits<{
+  (e: 'select'): void
+}>()
 
 const onSelect = () => {
   if (props.disabled) {

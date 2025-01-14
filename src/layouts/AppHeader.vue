@@ -17,7 +17,7 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { screen } from '@/hooks/useScreen'
 import NavBar from '@/components/NavBar/index.vue'
 import AccountCenter from '@/components/AccountCenter/index.vue'

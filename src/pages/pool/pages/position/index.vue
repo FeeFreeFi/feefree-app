@@ -11,21 +11,21 @@
         <!-- Total Liquidity -->
         <ItemBox class="flex-1" label="Total Liquidity">
           <div class="flex-y-center gap-2">
-            <ZPoolIcon :pool="pool" />
+            <ZPoolIcon :pool="pool!" />
             <ZBalance :value="totalLiquidity" />
           </div>
         </ItemBox>
         <!-- Total Value -->
         <ItemBox class="flex-1" label="Total Value">
           <div>
-            <n-text>${{ toBalance(positionData.tvl) }}</n-text>
+            <n-text>${{ toBalance(positionData!.tvl) }}</n-text>
           </div>
         </ItemBox>
       </div>
       <!-- Assets in Position -->
-      <AssetsDetail label="Assets in Position" :currency0="pool.currency0" :currency1="pool.currency1" :data="positionData" :holder="account" />
+      <AssetsDetail label="Assets in Position" :currency0="pool!.currency0" :currency1="pool!.currency1" :data="positionData!" :holder="account" />
       <div v-if="lockDatas.length > 0" class="flex flex-col gap-4">
-        <LockedLiquidity v-for="item, index in lockDatas" :key="index" :pool="pool" :data="item" :unlocking="unlocking" @unlock="onUnlock" />
+        <LockedLiquidity v-for="item, index in lockDatas" :key="index" :pool="pool!" :data="item" :unlocking="unlocking" @unlock="onUnlock" />
       </div>
     </div>
     <NoPosition v-else />
@@ -33,8 +33,9 @@
   </div>
 </template>
 
-<script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+<script setup lang="ts">
+import type { DebouncedFunc } from 'lodash-es'
+import type { Callback, LockData, PoolData, PoolMeta, UnlockAction } from '@/types'
 import { useRoute, useRouter } from 'vue-router'
 import { PAGE_NOT_FOUND } from '@/config'
 import { toBalance, decodePoolId } from '@/utils'
@@ -59,24 +60,20 @@ import UnlockModal from './UnlockModal.vue'
 const route = useRoute()
 const router = useRouter()
 
-/** @type {import('vue').Ref<import('@/types').PoolMeta>} */
-const pool = ref(null)
-/** @type {import('vue').Ref<import('@/types').PoolData>} */
-const poolData = ref(getPoolData())
+const pool = ref<PoolMeta>()
+const poolData = ref<PoolData>(getPoolData())
 
 const freeLiquidity = ref(0n)
-/** @type {import('vue').Ref<import('@/types').LockData[]>} */
-const lockDatas = ref([])
+const lockDatas = ref<LockData[]>([])
 const totalLiquidity = computed(() => lockDatas.value.reduce((sum, item) => sum + item.amount, freeLiquidity.value))
 
 const hasPosition = computed(() => totalLiquidity.value > 0n)
-const positionData = computed(() => hasPosition.value ? getPositionData(pool.value.id, poolData.value.sqrtPriceX96, totalLiquidity.value) : null)
+const positionData = computed(() => hasPosition.value ? getPositionData(pool.value!.id, poolData.value.sqrtPriceX96, totalLiquidity.value) : undefined)
 
 const unlocking = ref(false)
-const unlockAction = ref({ show: false })
+const unlockAction = ref<UnlockAction>({ show: false })
 
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateLiquidity = ref(null)
+const debounceUpdateLiquidity = ref<DebouncedFunc<Callback>>()
 
 const fetchLockDatas = async (force = false) => {
   if (!pool.value || !account.value) {
@@ -87,11 +84,12 @@ const fetchLockDatas = async (force = false) => {
   lockDatas.value = await getLockDatas(pool.value, account.value, force)
 }
 
-/**
- * @param {import('@/types').LockData} lockData
- */
-const onUnlock = async lockData => {
-  unlockAction.value.data = { pool, lock: lockData }
+const onUnlock = async (lockData: LockData) => {
+  unlockAction.value.data = {
+    chainId: pool.value!.chainId,
+    pool: pool.value!,
+    lock: lockData,
+  }
 
   const success = await doSend(unlockAction, unlocking, 'Unlock', () => unlock(lockData.lockId, account.value))
 
@@ -109,18 +107,18 @@ onMounted(async () => {
 
   debounceUpdateLiquidity.value = createLiquidityState(account, pool, freeLiquidity)
 
-  watch([pool, account], fetchLockDatas)
+  watch([pool, account], () => fetchLockDatas())
 
   await configReady()
 
   try {
-    const { valid, chainId, poolId } = decodePoolId(route.params.id)
-    if (!valid || !isSupportChain(chainId)) {
+    const { valid, chainId, poolId } = decodePoolId(route.params.id as string)
+    if (!valid || !isSupportChain(chainId!)) {
       router.replace({ name: PAGE_NOT_FOUND })
       return
     }
 
-    pool.value = await fetchPoolMeta(chainId, poolId)
+    pool.value = await fetchPoolMeta(chainId!, poolId!)
   } catch {
     router.replace({ name: PAGE_NOT_FOUND })
   }

@@ -8,23 +8,19 @@
   </ZModalWrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { Token } from '@/types'
 import ZModalWrapper from '@/components/ZModalWrapper.vue'
 import TokenSelectorView from './TokenSelectorView.vue'
 
-defineProps({
-  current: {
-    /** @type {import('vue').PropType<import('@/types').Token>} */
-    type: Object,
-    default: () => null,
-  },
-  onSelect: {
-    type: Function,
-    required: true,
-  },
-})
+interface Props {
+  current?: Token
+  onSelect: (token: Token) => void
+}
 
-const show = defineModel('show', { type: Boolean, default: false })
+defineProps<Props>()
+
+const show = defineModel<boolean>('show', { default: false })
 
 const onClose = () => {
   show.value = false

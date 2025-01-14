@@ -19,35 +19,17 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-  symbol: {
-    type: String,
-    required: true,
-  },
-  decimals: {
-    type: Number,
-    required: true,
-  },
-  totalSupply: {
-    /** @type {import('vue').PropType<bigint>} */
-    type: BigInt,
-    required: true,
-  },
-  price: {
-    type: String,
-    required: true,
-  },
-  asset: {
-    /**
-     * @type {import('vue').PropType<import('@/types').Token>}
-     */
-    type: Object,
-    required: true,
-  },
-})
+<script setup lang="ts">
+import type { Token } from '@/types'
+
+interface Props {
+  name: string
+  symbol: string
+  decimals: number
+  totalSupply: bigint
+  price: string
+  asset: Pick<Token, 'symbol'>
+}
+
+defineProps<Props>()
 </script>

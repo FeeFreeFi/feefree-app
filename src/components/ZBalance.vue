@@ -4,22 +4,17 @@
   </n-text>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { toBalanceWithUnit } from '@/utils'
 
-defineProps({
-  value: {
-    /** @type {import('vue').PropType<bigint|string>} */
-    type: [BigInt, String],
-    required: true,
-  },
-  decimals: {
-    type: Number,
-    default: 0,
-  },
-  dp: {
-    type: Number,
-    default: 6,
-  },
+interface Props {
+  value: bigint | string
+  decimals?: number
+  dp?: number
+}
+
+withDefaults(defineProps<Props>(), {
+  decimals: 0,
+  dp: 6,
 })
 </script>

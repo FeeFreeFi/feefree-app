@@ -1,8 +1,8 @@
 <template>
   <div>
-    <n-popselect class="w-[240px] max-h-[360px] rounded-lg" trigger="click" :value="current.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
+    <n-popselect class="w-[240px] max-h-[360px] rounded-lg" trigger="click" :value="current?.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
       <ZActionButton class="size-9 relative " aria-label="select chain">
-        <ZChainIcon v-if="!walletChainId || chainSupported" class="size-6" :chain-id="current.value" />
+        <ZChainIcon v-if="!walletChainId || chainSupported" class="size-6" :chain-id="current?.value || 0" />
         <i-ion-warning v-else class="size-4 text-warning" />
         <div class="absolute right-[2px] bottom-[2px]">
           <DownArrow class="!size-3" />
@@ -12,8 +12,7 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, h, watch, onMounted } from 'vue'
+<script setup lang="ts">
 import { useNotification } from 'naive-ui'
 import { getChainName, getChains, isSupportChain } from '@/hooks/useChains'
 import { walletChainId, chainSupported } from '@/hooks/useWallet'
@@ -25,7 +24,7 @@ import ZChainIcon from '@/components/ZChainIcon.vue'
 
 const notification = useNotification()
 
-const renderLabel = option => {
+const renderLabel = (option: { name: string, value: number }) => {
   return h('div', {
     class: 'flex-y-center gap-2',
   }, [
@@ -49,17 +48,11 @@ const current = computed(() => options.find(it => it.value === appChainId.value)
 
 const switching = ref(false)
 
-/**
- * @param {number} chainId
- */
-const onSwitchNetwork = async chainId => {
+const onSwitchNetwork = async (chainId: number) => {
   switching.value = await doSwitchNetwork(notification, chainId)
 }
 
-/**
- * @param {number} chainId
- */
-const onSelect = chainId => {
+const onSelect = (chainId: number) => {
   if (appChainId.value !== chainId) {
     setAppChainId(chainId)
   }
@@ -71,11 +64,7 @@ const onSelect = chainId => {
   onSwitchNetwork(chainId)
 }
 
-/**
- * @param {number} newChainId
- * @param {number} oldChainId
- */
-const onChainChange = (newChainId, oldChainId) => {
+const onChainChange = (newChainId: number, oldChainId: number) => {
   if (!newChainId || !isSupportChain(newChainId)) {
     return
   }

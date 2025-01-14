@@ -23,22 +23,17 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
 import { shortString } from '@/utils'
 import { getContractUrl } from '@/hooks/useChains'
 import ZCopyable from '@/components/ZCopyable.vue'
 
-const props = defineProps({
-  chainId: {
-    type: Number,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
-  },
-})
+interface Props {
+  chainId: number
+  address: string
+}
+
+const props = defineProps<Props>()
 
 const url = computed(() => getContractUrl(props.chainId, props.address))
 </script>

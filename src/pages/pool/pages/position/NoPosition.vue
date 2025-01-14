@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { PAGE_POOL_DEPOSIT } from '@/config'
 import ZGhostButton from '@/components/ZGhostButton.vue'
 import noPositionBg from '@/assets/images/no-position-bg.svg'

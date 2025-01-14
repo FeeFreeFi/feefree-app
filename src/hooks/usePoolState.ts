@@ -3,12 +3,12 @@ import type { PoolData, PoolMeta } from '@/types'
 import { createDebounceUpdate } from './useTimer'
 import { getPoolData, getPoolDatas, updatePoolDatas } from './usePool'
 
-export const createPoolState = (pool: Ref<PoolMeta>, state: Ref<PoolData>) => {
+export const createPoolState = (pool: Ref<PoolMeta | undefined>, state: Ref<PoolData>) => {
   state.value = getPoolData(pool.value)
 
   const doUpdate = async () => {
     state.value = getPoolData(pool.value)
-    const items = [pool.value].filter(Boolean)
+    const items = [pool.value].filter(it => !!it)
     if (items.length === 0) {
       return
     }

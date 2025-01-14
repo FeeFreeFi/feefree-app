@@ -4,8 +4,7 @@
   </main>
 </template>
 
-<script setup>
-import { watch, onBeforeMount, onMounted, onBeforeUnmount } from 'vue'
+<script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { useNotification } from 'naive-ui'
 import { wait } from '@/utils'
@@ -88,7 +87,7 @@ onMounted(() => {
   doAutoConnect()
 
   const { referral } = route.query
-  referral && saveReferral(referral)
+  referral && saveReferral(referral as string)
 })
 
 onMounted(() => {

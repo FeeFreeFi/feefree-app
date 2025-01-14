@@ -4,6 +4,6 @@
   </router-link>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { PAGE_HOME } from '@/config'
 </script>

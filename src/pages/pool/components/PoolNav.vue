@@ -11,13 +11,13 @@
     </div>
     <!-- Pools -->
     <div class="flex-1 lg:max-h-[calc(100vh-232px)] lg:p-6 flex lg:flex-col gap-2 items-center lg:bg-card lg:rounded-20">
-      <LinkButton v-for="item, index in tabs" :key="index" class="flex-1 lg:flex-initial" :to="item.route" :aria-label="item.label">{{ item.label }}</LinkButton>
+      <LinkButton v-for="item, index in tabs" :key="index" class="flex-1 lg:flex-initial" :to="item.route" :label="item.label">{{ item.label }}</LinkButton>
     </div>
     <n-divider v-if="screen.lt.lg" class="!my-0" />
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   PAGE_POOL_HOME,
   PAGE_POOL_OVERVIEW,

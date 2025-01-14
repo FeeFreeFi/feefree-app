@@ -5,23 +5,21 @@
   </n-text>
 </template>
 
-<script setup>
-import { ref, onBeforeUnmount } from 'vue'
+<script setup lang="ts">
+import type { TimerId } from '@/types'
 import { copyText } from '@/utils'
 
-const props = defineProps({
-  text: {
-    type: [String, Function],
-    required: true,
-  },
-  delay: {
-    type: Number,
-    default: 1000,
-  },
+interface Props {
+  text: string | (() => string)
+  delay?: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  delay: 1000,
 })
 
 const copied = ref(false)
-const timeId = ref(null)
+const timeId = ref<TimerId>()
 
 const delayReset = () => {
   if (timeId.value) {
@@ -30,7 +28,7 @@ const delayReset = () => {
   timeId.value = setTimeout(() => {
     copied.value = false
     clearTimeout(timeId.value)
-    timeId.value = null
+    timeId.value = undefined
   }, props.delay)
 }
 

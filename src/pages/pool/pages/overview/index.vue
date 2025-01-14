@@ -17,8 +17,8 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue'
+<script setup lang="ts">
+import type { PoolData, PoolMeta } from '@/types'
 import { useRoute, useRouter } from 'vue-router'
 import { PAGE_NOT_FOUND } from '@/config'
 import { toBalance, decodePoolId } from '@/utils'
@@ -35,10 +35,8 @@ import AssetsDetail from '../../components/AssetsDetail.vue'
 const route = useRoute()
 const router = useRouter()
 
-/** @type {import('vue').Ref<import('@/types').PoolMeta>} */
-const pool = ref(null)
-/** @type {import('vue').Ref<import('@/types').PoolData>} */
-const poolData = ref(getPoolData())
+const pool = ref<PoolMeta>()
+const poolData = ref<PoolData>(getPoolData())
 
 onMounted(async () => {
   const debounceUpdatePool = createPoolState(pool, poolData)
@@ -47,13 +45,13 @@ onMounted(async () => {
   await configReady()
 
   try {
-    const { valid, chainId, poolId } = decodePoolId(route.params.id)
-    if (!valid || !isSupportChain(chainId)) {
+    const { valid, chainId, poolId } = decodePoolId(route.params.id as string)
+    if (!valid || !isSupportChain(chainId!)) {
       router.replace({ name: PAGE_NOT_FOUND })
       return
     }
 
-    pool.value = await fetchPoolMeta(chainId, poolId)
+    pool.value = await fetchPoolMeta(chainId!, poolId!)
   } catch (err) {
     console.log(err)
     router.replace({ name: PAGE_NOT_FOUND })

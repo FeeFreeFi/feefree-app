@@ -13,7 +13,7 @@ const getValue = (token: Token) => {
   return cache.getValue(getKey(token), 0n) as bigint
 }
 
-const getValues = (tokens: Token[]) => {
+const getValues = (tokens: (Token | undefined)[]) => {
   return tokens.map(token => token ? getValue(token) : 0n)
 }
 
@@ -26,9 +26,9 @@ const updateValue = async (account: string, token: Token) => {
   cache.setValue(getKey(token), balance)
 }
 
-const updateValues = async (account: string, tokens: Token[]) => {
+const updateValues = async (account: string, tokens: (Token | undefined)[]) => {
   const values: Record<string, bigint> = {}
-  await pMap(tokens.filter(Boolean), async token => {
+  await pMap(tokens.filter(it => !!it), async token => {
     const balance = await balanceOf(token, account)
     values[getKey(token)] = balance
   }, { concurrency: 3 })
@@ -40,7 +40,7 @@ const reset = () => {
   cache.reset()
 }
 
-export const createTokenState = (account: Ref<string>, token: Ref<Token>, state: Ref<bigint>) => {
+export const createTokenState = (account: Ref<string>, token: Ref<Token | undefined>, state: Ref<bigint>) => {
   state.value = 0n
 
   const doUpdate = async () => {
@@ -73,7 +73,7 @@ export const createTokenState = (account: Ref<string>, token: Ref<Token>, state:
   return debounceUpdate
 }
 
-export const createTokenStates = (account: Ref<string>, tokens: Ref<Token[]>, states: Ref<bigint[]>) => {
+export const createTokenStates = (account: Ref<string>, tokens: Ref<(Token | undefined)[]>, states: Ref<bigint[]>) => {
   const getDefaults = () => tokens.value.map(() => 0n)
 
   states.value = getDefaults()

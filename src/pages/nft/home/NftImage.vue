@@ -5,29 +5,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ZChainIcon from '@/components/ZChainIcon.vue'
 
-defineProps({
-  src: {
-    type: String,
-    required: true,
-  },
-  label: {
-    type: String,
-    required: true,
-  },
-  chainId: {
-    type: Number,
-    required: true,
-  },
-  imgClass: {
-    type: String,
-    default: 'rounded-t-lg',
-  },
-  chainClass: {
-    type: String,
-    default: 'size-4',
-  },
+interface Props {
+  src: string
+  label: string
+  chainId: number
+  imgClass?: string
+  chainClass?: string
+}
+
+withDefaults(defineProps<Props>(), {
+  imgClass: 'rounded-t-lg',
+  chainClass: 'size-4',
 })
 </script>

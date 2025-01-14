@@ -8,26 +8,18 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
+import type { PoolMeta } from '@/types'
 import { formatPrice } from '@/utils'
 import ZTokenIcon from '@/components/ZTokenIcon.vue'
 
-const props = defineProps({
-  pool: {
-    /** @type {import('vue').PropType<import('@/types').PoolMeta>} */
-    type: Object,
-    required: true,
-  },
-  price0: {
-    type: Number,
-    required: true,
-  },
-  price1: {
-    type: Number,
-    required: true,
-  },
-})
+interface Props {
+  pool: PoolMeta
+  price0: number
+  price1: number
+}
+
+const props = defineProps<Props>()
 
 const showPrice0 = ref(true)
 

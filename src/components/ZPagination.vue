@@ -10,23 +10,16 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  page: {
-    type: Number,
-    default: 1,
-  },
-  total: {
-    type: Number,
-    required: true,
-  },
-  onUpdatePage: {
-    /**
-     * @type {import('vue').PropType<(page:number) => Promise>}
-     */
-    type: Function,
-    required: true,
-  },
+<script setup lang="ts">
+interface Props {
+  page?: number
+  total?: number
+  onUpdatePage: (page: number) => void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  page: 1,
+  total: 1,
 })
 
 const onSkipPrevious = () => {

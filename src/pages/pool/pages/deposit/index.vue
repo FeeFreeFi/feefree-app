@@ -31,12 +31,13 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+<script setup lang="ts">
+import type { DebouncedFunc } from 'lodash-es'
+import type { AddLiquidityAction, Callback, PoolData, PoolMeta, QuoteAddLiquidityData } from '@/types'
 import { useRoute, useRouter } from 'vue-router'
 import { useNotification } from 'naive-ui'
 import { PAGE_NOT_FOUND } from '@/config'
-import { parseAmount, toAmount, decodePoolId, getAmount0FromAmount1AndSqrtPrice, getAmount1FromAmount0AndSqrtPrice } from '@/utils'
+import { parseAmount, toAmount, decodePoolId, getAmount0FromAmount1AndSqrtPrice, getAmount1FromAmount0AndSqrtPrice, getErrorMessage } from '@/utils'
 import { screen } from '@/hooks/useScreen'
 import { allowance } from '@/hooks/useToken'
 import { account, updateNativeBalance } from '@/hooks/useWallet'
@@ -62,31 +63,25 @@ const notification = useNotification()
 
 const approveAction = ref({ show: false })
 
-/** @type {import('vue').Ref<{chainId:number}[]>} */
-const supportedChains = ref([])
+const supportedChains = ref<{ chainId: number }[]>([])
 
-/** @type {import('vue').Ref<import('@/types').PoolMeta>} */
-const pool = ref(null)
-/** @type {import('vue').Ref<import('@/types').PoolData>} */
-const poolData = ref(getPoolData())
-/** @type {import('vue').Ref<import('@/types').QuoteAddLiquidityData>} */
-const quoteData = ref(null)
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateQuote = ref(null)
+const pool = ref<PoolMeta>()
+const poolData = ref<PoolData>(getPoolData())
+const quoteData = ref<QuoteAddLiquidityData>()
+const debounceUpdateQuote = ref<DebouncedFunc<Callback>>()
 
 const liquidity = ref(0n)
 
-const tokens = computed(() => pool.value ? [pool.value.currency0, pool.value.currency1] : [null, null])
+const tokens = computed(() => pool.value ? [pool.value.currency0, pool.value.currency1] : [undefined, undefined])
 const balances = ref([0n, 0n])
 const balance0 = computed(() => balances.value[0])
 const balance1 = computed(() => balances.value[1])
-/** @type {import('vue').Ref<() => Promise<void>>} */
-const debounceUpdateBalances = ref(null)
+const debounceUpdateBalances = ref<DebouncedFunc<Callback>>()
 
 const inputAmount0 = ref('')
 const inputAmount1 = ref('')
 const depositing = ref(false)
-const depositAction = ref({ show: false })
+const depositAction = ref<AddLiquidityAction>({ show: false })
 
 const approvalChecking = ref(false)
 const approving0 = ref(false)
@@ -102,11 +97,11 @@ const inputHint = computed(() => {
   }
 
   if (amount0.value > balance0.value) {
-    return `${pool.value.currency0.symbol} insufficient balance`
+    return `${pool.value!.currency0.symbol} insufficient balance`
   }
 
   if (amount1.value > balance1.value) {
-    return `${pool.value.currency1.symbol} insufficient balance`
+    return `${pool.value!.currency1.symbol} insufficient balance`
   }
 
   return ''
@@ -117,9 +112,9 @@ const isInputValid = computed(() => {
 
 const approved = computed(() => approved0.value && approved1.value)
 
-const doCheckAllowanceOne = async isZero => {
+const doCheckAllowanceOne = async (isZero: boolean) => {
   const _approved = isZero ? approved0 : approved1
-  const token = isZero ? pool.value.currency0 : pool.value.currency1
+  const token = isZero ? pool.value!.currency0 : pool.value!.currency1
   const spender = getManagerAddress(token.chainId)
   const amount = isZero ? amount0.value : amount1.value
 
@@ -137,8 +132,8 @@ const onCheckApproval = async () => {
   await checkAllowance()
   approvalChecking.value = false
 }
-const onApproval = async isZero => {
-  const token = isZero ? pool.value.currency0 : pool.value.currency1
+const onApproval = async (isZero: boolean) => {
+  const token = isZero ? pool.value!.currency0 : pool.value!.currency1
   const amount = isZero ? amount0.value : amount1.value
   const approving = isZero ? approving0 : approving1
   const spender = getManagerAddress(token.chainId)
@@ -160,16 +155,16 @@ const reset = () => {
 
 const updateQuoteData = async () => {
   if (!amount0.value || !amount1.value) {
-    quoteData.value = null
+    quoteData.value = undefined
     return
   }
 
   try {
-    quoteData.value = await quoteAddLiquidity(pool.value.chainId, pool.value.currency0.address, pool.value.currency1.address, amount0.value, amount1.value)
+    quoteData.value = await quoteAddLiquidity(pool.value!.chainId, pool.value!.currency0.address, pool.value!.currency1.address, amount0.value, amount1.value)
   } catch (err) {
     notification.error({
       title: 'Error',
-      content: err.shortMessage || err.details || err.message,
+      content: getErrorMessage(err, 'Error'),
       duration: 3000,
     })
   }
@@ -181,7 +176,7 @@ const onAmount0Change = () => {
   }
 
   const _amount1 = getAmount1FromAmount0AndSqrtPrice(amount0.value, poolData.value.sqrtPriceX96)
-  inputAmount1.value = toAmount(_amount1, pool.value.currency1.decimals, pool.value.currency1.decimals)
+  inputAmount1.value = toAmount(_amount1, pool.value!.currency1.decimals, pool.value!.currency1.decimals)
   debounceUpdateQuote.value && debounceUpdateQuote.value()
 
   onCheckApproval()
@@ -193,22 +188,28 @@ const onAmount1Change = () => {
   }
 
   const _amount0 = getAmount0FromAmount1AndSqrtPrice(amount1.value, poolData.value.sqrtPriceX96)
-  inputAmount0.value = toAmount(_amount0, pool.value.currency0.decimals, pool.value.currency0.decimals)
+  inputAmount0.value = toAmount(_amount0, pool.value!.currency0.decimals, pool.value!.currency0.decimals)
   debounceUpdateQuote.value && debounceUpdateQuote.value()
 
   onCheckApproval()
 }
 
 const onDeposit = async () => {
-  const { currency0, currency1, liquidity, amount0Max, amount1Max } = quoteData.value
+  const { currency0, currency1, liquidity, amount0Max, amount1Max } = quoteData.value!
   const params = { currency0, currency1, liquidity, amount0Max, amount1Max, recipient: account.value }
 
-  depositAction.value.data = { chainId: pool.value.chainId, pool: pool.value, amount0Max, amount1Max }
+  depositAction.value.data = {
+    chainId: pool.value!.chainId,
+    pool: pool.value!,
+    liquidity,
+    amount0Max,
+    amount1Max,
+  }
 
   const success = await doSend(depositAction, depositing, 'Deposit', () => addLiquidity(params))
 
   if (success) {
-    quoteData.value = null
+    quoteData.value = undefined
     inputAmount0.value = ''
     inputAmount1.value = ''
     reset()
@@ -233,13 +234,13 @@ onMounted(async () => {
   supportedChains.value = getSupportedChains()
 
   try {
-    const { valid, chainId, poolId } = decodePoolId(route.params.id)
-    if (!valid || !isSupportChain(chainId)) {
+    const { valid, chainId, poolId } = decodePoolId(route.params.id as string)
+    if (!valid || !isSupportChain(chainId!)) {
       router.replace({ name: PAGE_NOT_FOUND })
       return
     }
 
-    pool.value = await fetchPoolMeta(chainId, poolId)
+    pool.value = await fetchPoolMeta(chainId!, poolId!)
   } catch {
     router.replace({ name: PAGE_NOT_FOUND })
   }

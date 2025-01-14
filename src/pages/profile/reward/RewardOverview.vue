@@ -19,25 +19,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ETH } from '@/utils'
 import { account } from '@/hooks/useWallet'
 import ZTokenBalance from '@/components/ZTokenBalance.vue'
 
-defineProps({
-  current: {
-    /**
-     * @type {import('vue').PropType<bigint|string>}
-     */
-    type: [BigInt, String],
-    required: true,
-  },
-  claimed: {
-    /**
-     * @type {import('vue').PropType<bigint|string>}
-     */
-    type: [BigInt, String],
-    required: true,
-  },
-})
+interface Props {
+  current: bigint | string
+  claimed: bigint | string
+}
+
+defineProps<Props>()
 </script>

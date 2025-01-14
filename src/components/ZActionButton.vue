@@ -4,11 +4,12 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  ariaLabel: {
-    type: String,
-    default: '',
-  },
+<script setup lang="ts">
+interface Props {
+  ariaLabel?: string
+}
+
+withDefaults(defineProps<Props>(), {
+  ariaLabel: '',
 })
 </script>

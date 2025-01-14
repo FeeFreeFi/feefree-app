@@ -14,7 +14,7 @@ export const loadSafeWallet = () => {
 
     const provider = new SafeAppProvider(safeInfo, sdk)
     const info = {
-      uuid: uuid(16),
+      id: uuid(16),
       name: 'Safe',
       icon: '',
       origin,

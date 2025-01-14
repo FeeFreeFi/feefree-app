@@ -6,15 +6,11 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-  active: {
-    type: Boolean,
-    required: true,
-  },
-})
+<script setup lang="ts">
+interface Props {
+  label: string
+  active: boolean
+}
+
+defineProps<Props>()
 </script>

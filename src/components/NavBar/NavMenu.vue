@@ -13,8 +13,7 @@
   </n-popover>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 import { screen } from '@/hooks/useScreen'
 import DownArrow from '@/components/Arrow/DownArrow.vue'
 import NavMemuView from './NavMemuView.vue'
@@ -22,7 +21,7 @@ import NavMemuView from './NavMemuView.vue'
 const show = ref(false)
 const maskClosable = ref(true)
 
-const onUpdateShow = value => {
+const onUpdateShow = (value: boolean) => {
   if (!value) {
     maskClosable.value = false
   }

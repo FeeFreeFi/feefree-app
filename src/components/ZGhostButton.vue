@@ -4,15 +4,14 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  ariaLabel: {
-    type: String,
-    default: '',
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+<script setup lang="ts">
+interface Props {
+  ariaLabel?: string
+  disabled?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  ariaLabel: '',
+  disabled: false,
 })
 </script>

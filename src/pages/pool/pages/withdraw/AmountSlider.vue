@@ -6,38 +6,27 @@
   </n-slider>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { fromValue, parseAmount } from '@/utils'
-import { computed } from 'vue'
 
-const props = defineProps({
-  amount: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-  balance: {
-    /**
-     * @type {import('vue').PropType<bigint>}
-     */
-    type: BigInt,
-    required: true,
-  },
-})
+interface Props {
+  amount: bigint
+  balance: bigint
+}
+
+const props = defineProps<Props>()
 
 const emit = defineEmits(['change'])
 
-const percent = computed(() => props.balance ? fromValue(props.amount).times(100).div(props.balance).toNumber() : 0)
+const percent = computed(() => props.balance ? fromValue(props.amount).times(100).div(props.balance.toString(10)).toNumber() : 0)
 
-const onUpdate = ratio => {
+const onUpdate = (ratio: number) => {
   const { balance } = props
   if (!balance) {
     return
   }
 
-  const value = parseAmount(fromValue(ratio).times(balance).div(100), 0)
+  const value = parseAmount(fromValue(ratio).times(balance.toString(10)).div(100), 0)
   emit('change', value)
 }
 </script>
