@@ -35,7 +35,7 @@ export default {
     alias: {
       '@': dirs.src,
     },
-    extensions: ['.ts', '.js', '.vue', '.json', '.css', '.scss'],
+    extensions: ['.ts', '.js', '.json', '.css', '.scss', '.vue'],
   },
   module: {
     rules: [
@@ -63,6 +63,7 @@ export default {
             loader: 'ts-loader',
             options: {
               appendTsSuffixTo: [/\.vue$/],
+              transpileOnly: true,
             },
           },
         ],

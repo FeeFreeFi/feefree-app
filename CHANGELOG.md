@@ -5,6 +5,9 @@
 ### Features
 - `TypeScript`: Migrate vue files to typescript.
 
+### Chores
+- `Build`: Skip type checking to improve build speed.
+
 
 ## 0.7.2 (2025-01-10)
 

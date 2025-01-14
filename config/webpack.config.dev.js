@@ -39,7 +39,9 @@ const devConfig = {
   performance: {
     hints: false,
   },
-  cache: { type: 'memory' },
+  cache: {
+    type: 'memory',
+  },
   optimization: {
     splitChunks: {
       chunks: 'all',
