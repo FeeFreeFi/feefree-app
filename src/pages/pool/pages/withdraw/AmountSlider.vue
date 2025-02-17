@@ -16,7 +16,9 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const emit = defineEmits(['change'])
+const emit = defineEmits<{
+  (e: 'change', value: bigint): void
+}>()
 
 const percent = computed(() => props.balance ? fromValue(props.amount).times(100).div(props.balance.toString(10)).toNumber() : 0)
 

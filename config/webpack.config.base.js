@@ -11,6 +11,7 @@ import UnpluginIcons from 'unplugin-icons/webpack'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import UnpluginIconsResolver from 'unplugin-icons/resolver'
 import { FileSystemIconLoader } from 'unplugin-icons/loaders'
+import { EsbuildPlugin } from 'esbuild-loader'
 
 import { getDefinition, dirs, appMeta } from './environment.js'
 
@@ -60,31 +61,32 @@ export default {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader',
+            loader: 'esbuild-loader',
             options: {
-              appendTsSuffixTo: [/\.vue$/],
-              transpileOnly: true,
+              loader: 'ts',
+              target: 'es2020',
+              tsconfigRaw: {
+                compilerOptions: {
+                  experimentalDecorators: true,
+                  useDefineForClassFields: true,
+                },
+              },
             },
           },
         ],
-        resolve: {
-          fullySpecified: false,
-        },
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'esbuild-loader',
             options: {
-              cacheDirectory: true,
+              loader: 'js',
+              target: 'es2020',
             },
           },
         ],
-        resolve: {
-          fullySpecified: false,
-        },
       },
       {
         test: /\.scss$/,
@@ -163,6 +165,7 @@ export default {
       extensions: ['ts', 'js', 'vue'],
       formatter,
     }),
+    new EsbuildPlugin(),
     AutoImport({
       imports: ['vue', 'vue-router'],
       dts: path.resolve(dirs.src, 'types/auto-imports.d.ts'),

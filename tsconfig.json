@@ -1,27 +1,43 @@
 {
   "compilerOptions": {
+    // Basic Compiler Options
     "target": "ESNext",
     "module": "ESNext",
-    "strict": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "jsx": "preserve",
+
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": true,
+
+    // Module Resolution
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "allowJs": true,
+    "isolatedModules": true,
+
+    // Paths and Output
     "baseUrl": "./",
     "rootDir": "src",
     "outDir": "dist",
     "paths": {
       "@/*": ["src/*"]
     },
+    "sourceMap": true,
+
+    // Additional Options
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
     "types": [
       "web",
       "naive-ui/volar"
-    ],
-    "lib": ["DOM", "ESNext"]
+    ]
   },
   "include": ["src/**/*"],
   "exclude": [

@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 0.7.4 (2025-01-14)
+
+### Features
+- `BlockExplorer`: Replace default explorer with [BlockScout](https://blockscout.com/).
+- `TypeScript`: Add [vue-tsc](https://github.com/vuejs/language-tools/tree/master/packages/tsc) for type checking.
+
+### Builds
+- `esbuild-loader`: Migrate to [esbuild-loader](https://github.com/privatenumber/esbuild-loader) for faster builds.
+
+### Chores
+- `Dependencies`: Upgrade dependencies.
+
+
 ## 0.7.3 (2025-01-14)
 
 ### Features

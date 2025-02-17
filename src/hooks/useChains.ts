@@ -22,6 +22,7 @@ interface ChainExtra {
   key: string
   name: string
   rpcUrls: string[]
+  blockExplorer: string
 }
 
 const CHAINS = Object.freeze([
@@ -42,6 +43,7 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
       'https://rpc.zora.energy',
       'https://zora.drpc.org',
     ],
+    blockExplorer: 'https://explorer.zora.energy',
   },
   [CHAIN_ID_BASE]: {
     id: CHAIN_ID_BASE,
@@ -57,6 +59,7 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
       'https://base-mainnet.public.blastapi.io',
       'https://1rpc.io/base',
     ],
+    blockExplorer: 'https://base.blockscout.com',
   },
   [CHAIN_ID_SCROLL]: {
     id: CHAIN_ID_SCROLL,
@@ -71,6 +74,7 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
       'https://1rpc.io/scroll',
       'https://rpc.scroll.io',
     ],
+    blockExplorer: 'https://scroll.blockscout.com',
   },
   [CHAIN_ID_LINEA]: {
     id: CHAIN_ID_LINEA,
@@ -83,6 +87,7 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
       'https://linea.blockpi.network/v1/rpc/public',
       'https://1rpc.io/linea',
     ],
+    blockExplorer: 'https://explorer.linea.build',
   },
   [CHAIN_ID_ZKSYNC]: {
     id: CHAIN_ID_ZKSYNC,
@@ -93,6 +98,7 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
       'https://zksync.drpc.org',
       'https://zksync-era.blockpi.network/v1/rpc/public',
     ],
+    blockExplorer: 'https://zksync.blockscout.com',
   },
 }
 
@@ -119,10 +125,8 @@ export const getChainName = (chainId: number) => getChainExtra(chainId)?.name ||
 export const getNativeCurrency = (chainId: number) => CHAINS_MAP[chainId].nativeCurrency as TokenMetadata
 
 export const getExplorerUrl = (chainId: number) => {
-  const chain = getChain(chainId)
-  const url = chain.blockExplorers!.default.url
-
-  return url.endsWith('/') ? url.slice(0, -1) : url
+  const { blockExplorer } = getChainExtra(chainId)
+  return blockExplorer
 }
 
 export const getChainIdByKey = (key: string) => Object.values(CHAIN_EXTRAS).find(it => it.key === key)?.id || 0

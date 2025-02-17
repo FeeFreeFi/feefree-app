@@ -25,7 +25,7 @@ import ZTokenIcon from '@/components/ZTokenIcon.vue'
 import { openTokenMore } from '@/hooks/useTokenMore'
 
 interface Props {
-  token: Pick<Token, 'icon' | 'symbol'>
+  token: Token
   balance: bigint
   active: boolean
 }

@@ -2,10 +2,12 @@ import { merge } from 'webpack-merge'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
-import TerserPlugin from 'terser-webpack-plugin'
+import { EsbuildPlugin } from 'esbuild-loader'
 
 import baseConfig from './webpack.config.base.js'
 import { dirs } from './environment.js'
+
+const APP_DEBUG = process.env.APP_DEBUG === 'true'
 
 const chunksConfig = {
   viem: [
@@ -84,7 +86,12 @@ const prodConfig = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserPlugin(),
+      new EsbuildPlugin({
+        target: 'esnext',
+        css: true,
+        drop: APP_DEBUG ? [] : ['console', 'debugger'],
+        legalComments: 'none',
+      }),
       new CssMinimizerPlugin(),
     ],
     splitChunks: {
@@ -126,8 +133,8 @@ const prodConfig = {
     },
   },
   performance: {
-    maxEntrypointSize: 1024 * 1024 * 10,
-    maxAssetSize: 1024 * 1024 * 20,
+    maxEntrypointSize: 1024 * 1024 * 4,
+    maxAssetSize: 1024 * 1024 * 8,
     hints: 'warning',
   },
 }

@@ -1,4 +1,7 @@
-# https://github.com/browserslist/browserslist
+# Modern browser baseline
+> 1%
+last 2 versions
+not dead
 
-# last 3 versions
-defaults and fully supports es6-module
+# Required modern features
+supports es6-module

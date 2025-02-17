@@ -1,10 +1,6 @@
-const format = ['eslint --fix']
-
 /**
- * @type {import('lint-staged').Config}
+ * @type {import('lint-staged').Configuration}
  */
 export default {
-  'src/**/*.{ts,js,vue}': format,
-  'config/**/*.js': format,
-  '*.config.js': format,
+  '*.{ts,js}': 'eslint --fix',
 }

@@ -20,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Slots } from 'vue'
 import CloseButton from '@/components/CloseButton.vue'
 import gradientBg from '@/assets/images/dialog-gradient-bg.svg'
 
@@ -36,7 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   contentClass: '',
 })
 
-const slots = useSlots()
+const slots: Slots = useSlots()
 
 const hasTitle = computed(() => !!props.title || !!slots.title)
 </script>
