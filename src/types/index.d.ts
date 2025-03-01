@@ -197,8 +197,24 @@ export interface Auth {
   refreshToken: JwtToken
 }
 
+export interface EIP6963ProviderInfo {
+  uuid: string
+  name: string
+  icon: string
+  rdns: string
+}
+
 export interface EIP1193Provider {
   request: (args: any) => Promise<any>
+}
+
+export interface EIP6963ProviderDetail {
+  info: EIP6963ProviderInfo
+  provider: EIP1193Provider
+}
+
+export interface EIP6963AnnounceProviderEvent extends CustomEvent<EIP6963ProviderDetail> {
+  type: 'eip6963:announceProvider'
 }
 
 export type EIP1193ProviderLegacy = EIP1193Provider & Record<string, unknown>

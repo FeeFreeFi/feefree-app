@@ -19,6 +19,9 @@ const APP_META = {
   APP_VERSION: JSON.stringify(version),
 }
 
+/**
+ * @type {{version: string, name: string, productName: string, description: string}}
+ */
 export const appMeta = { version, name, productName, description }
 
 export const getDefinition = (dev = false) => {

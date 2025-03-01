@@ -1,4 +1,4 @@
-import type { Wallet, EIP1193Provider, WalletInfo, EIP1193ProviderLegacy } from '@/types'
+import type { Wallet, EIP1193Provider, WalletInfo, EIP1193ProviderLegacy, EIP6963AnnounceProviderEvent } from '@/types'
 import { ref } from 'vue'
 import { uuid } from '@/utils'
 
@@ -279,10 +279,10 @@ export const addWallet = (info: WalletInfo, provider: EIP1193Provider) => {
   }
 }
 
-const onAnnounceProvider = (e: Event) => {
-  const { info, provider } = (e as CustomEvent).detail as Wallet
-  const { id, name, icon } = info
-  addWallet({ id, name, icon, hidden: false }, provider as EIP1193Provider)
+const onAnnounceProvider = (e: EIP6963AnnounceProviderEvent) => {
+  const { info, provider } = e.detail
+  const { rdns, name, icon } = info
+  addWallet({ id: rdns, name, icon, hidden: false }, provider)
 }
 
 const detect = () => {

@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## 0.7.5 (2025-03-01)
+
+### Refactor
+- **Config**: Migrate configuration files from JavaScript to TypeScript
+  - Convert `eslint.config.js` to `eslint.config.ts`
+  - Convert `postcss.config.js` to `postcss.config.ts`
+  - Convert `tailwind.config.js` to `tailwind.config.ts`
+  - Remove `babel.config.js` (no longer needed)
+
+### Dependencies
+- **Core**: Upgrade key dependencies
+  - Upgrade `jose` to v6.0.8
+  - Upgrade `viem` to v2.23.5
+  - Upgrade `@antfu/eslint-config` and other dev dependencies
+
+### Types
+- **Wallet**: Improve TypeScript types and implementations
+  - Add EIP6963 provider types
+  - Enhance window type declarations for wallet detection
+  - Update useWalletDetector to properly handle EIP6963 announce events
+  - Use rdns as wallet id in EIP6963 provider detection
+  - Add JSDoc type annotations in environment config
+
+### Chore
+- **Editor**: Clean up `.editorconfig` by removing redundant markdown rules
+
+
 ## 0.7.4 (2025-01-14)
 
 ### Features

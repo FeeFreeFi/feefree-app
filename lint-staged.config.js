@@ -1,6 +1,8 @@
 /**
  * @type {import('lint-staged').Configuration}
  */
-export default {
+const config = {
   '*.{ts,js}': 'eslint --fix',
 }
+
+export default config

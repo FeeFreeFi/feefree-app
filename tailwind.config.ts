@@ -1,12 +1,7 @@
-// https://tailwindcss.com/docs/configuration
-// https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/config.full.js
-
+import type { Config } from 'tailwindcss'
 import plugin from 'tailwindcss/plugin'
-import animate from 'tailwindcss-animate'
 
-/** @type {import('tailwindcss').Config} */
-export default {
-  // darkMode: 'class',
+const config: Config = {
   content: ['./src/**/*.{html,js,vue}'],
   theme: {
     extend: {
@@ -47,7 +42,6 @@ export default {
     },
   },
   plugins: [
-    animate,
     plugin(({ addUtilities }) => {
       addUtilities({
         '.translate-center': {
@@ -84,3 +78,5 @@ export default {
     preflight: false,
   },
 }
+
+export default config

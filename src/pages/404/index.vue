@@ -1,9 +1,9 @@
 <template>
-  <div class="margin-center w-full max-w-[444px] p-8 flex-center flex-col bg-container rounded-20">
-    <div class="relative w-[272px] sm:w-[380px] flex flex-col items-center justify-center">
-      <div class="w-[272px] sm:w-[380px] relative">
+  <div class="flex-col flex-center bg-container p-8 rounded-20 w-full max-w-[444px] margin-center">
+    <div class="relative flex flex-col justify-center items-center w-[272px] sm:w-[380px]">
+      <div class="relative w-[272px] sm:w-[380px]">
         <img class="size-full aspect-square" :src="notFoundBg" loading="lazy" alt="Not found">
-        <div class="absolute w-full bottom-8 text-center">
+        <div class="bottom-8 absolute w-full text-center">
           <n-text depth="1">Page not found!</n-text>
         </div>
       </div>

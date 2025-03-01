@@ -1,9 +1,12 @@
-import type { EIP1193ProviderLegacy } from './index.d'
+import type { EIP1193ProviderLegacy, EIP6963AnnounceProviderEvent } from './index.d'
 
 declare global {
   interface Window {
     ethereum: EIP1193ProviderLegacy
-    addEventListener: (type: 'eip6963:announceProvider', listener: (e: CustomEvent) => void) => void
+  }
+
+  interface WindowEventMap {
+    'eip6963:announceProvider': EIP6963AnnounceProviderEvent
   }
 
   interface ProcessEnv {
