@@ -1,10 +1,10 @@
 <template>
   <div>
-    <n-popselect class="w-[240px] max-h-[360px] rounded-lg" trigger="click" :value="current?.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
-      <ZActionButton class="size-9 relative " aria-label="select chain">
+    <n-popselect class="rounded-lg w-[240px] max-h-[360px]" trigger="click" :value="current?.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
+      <ZActionButton class="relative size-9" aria-label="select chain">
         <ZChainIcon v-if="!walletChainId || chainSupported" class="size-6" :chain-id="current?.value || 0" />
         <i-ion-warning v-else class="size-4 text-warning" />
-        <div class="absolute right-[2px] bottom-[2px]">
+        <div class="right-[2px] bottom-[2px] absolute">
           <DownArrow class="!size-3" />
         </div>
       </ZActionButton>

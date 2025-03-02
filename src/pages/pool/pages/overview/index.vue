@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-1 lg:bg-card lg:rounded-20">
-    <div v-if="pool" class="lg:p-6 flex flex-col gap-4">
+  <div class="flex-1 lg:bg-card lg:rounded-2xl">
+    <div v-if="pool" class="flex flex-col gap-4 lg:p-6">
       <!-- Header -->
       <PoolHeader :pool="pool" />
       <!-- Pool Price -->

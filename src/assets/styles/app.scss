@@ -2,6 +2,26 @@ body {
   @apply bg-body;
 }
 
+.token-input-amount {
+  .n-input__input {
+    @apply font-medium text-base;
+  }
+}
+
+.z-search {
+  .n-input__prefix {
+    @apply mr-3;
+  }
+
+  .n-input__input-el {
+    @apply text-sm;
+  }
+
+  .n-input__placeholder {
+    @apply text-font-60 text-sm;
+  }
+}
+
 .n-scrollbar > .n-scrollbar-rail.n-scrollbar-rail--vertical,
 .n-scrollbar + .n-scrollbar-rail.n-scrollbar-rail--vertical {
   right: 0 !important;

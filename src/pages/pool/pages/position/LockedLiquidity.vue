@@ -1,16 +1,16 @@
 <template>
-  <div class="p-4 lg:p-6 flex flex-col gap-3 bg-box lg:bg-tab rounded">
-    <div class="h-5 flex items-center justify-between">
+  <div class="flex flex-col gap-3 bg-box lg:bg-tab p-4 lg:p-6 rounded">
+    <div class="flex justify-between items-center h-5">
       <n-text class="text-xs" depth="1">Locked Liquidity</n-text>
       <n-countdown v-if="duration > 0 && disabled" :render="renderCountdown" :duration="duration" :on-finish="onFinish" />
     </div>
-    <div class="flex flex-col sm:flex-row gap-4">
+    <div class="flex sm:flex-row flex-col gap-4">
       <div class="flex-1 flex-y-center gap-2">
         <ZPoolIcon :pool="pool" />
         <ZBalance :value="data.amount" />
       </div>
-      <div class="flex-1 flex justify-center sm:justify-end">
-        <ZButton class="h-8 w-24" :disabled="disabled" :loading="unlocking" size="small" aria-label="Unlock" @click="onUnlock">Unlock</ZButton>
+      <div class="flex flex-1 justify-center sm:justify-end">
+        <ZButton class="w-24 h-8" :disabled="disabled" :loading="unlocking" size="small" aria-label="Unlock" @click="onUnlock">Unlock</ZButton>
       </div>
     </div>
   </div>

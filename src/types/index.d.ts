@@ -311,111 +311,91 @@ export interface Claim {
   claimedAt?: Date
 }
 
-export interface ModalAction {
+export interface ModalAction<T> {
   show: boolean
   state?: number
   title?: string
   message?: string
-  data?: object
+  data?: T
   tx?: Tx
   error?: string
 }
 
-export interface ApprovalAction extends ModalAction {
-  data?: {
-    chainId: number
-    token: Token
-    amount: bigint
-    spender: string
-  }
-}
+export type ApprovalAction = ModalAction<{
+  chainId: number
+  token: Token
+  amount: bigint
+  spender: string
+}>
 
-export interface ApprovalLiquidtyAction extends ModalAction {
-  data?: {
-    chainId: number
-    pool: PoolMeta
-    amount: bigint
-    spender: string
-  }
-}
+export type ApprovalLiquidtyAction = ModalAction<{
+  chainId: number
+  pool: PoolMeta
+  amount: bigint
+  spender: string
+}>
 
-export interface LaunchAction extends ModalAction {
-  data?: {
-    chainId: number
-    asset: Token
-    amount: bigint
-    name: string
-    symbol: string
-    decimals: number
-    totalSupply: bigint
-    duration: number
-    pools?: PoolMeta[]
-  }
-}
+export type LaunchAction = ModalAction<{
+  chainId: number
+  asset: Token
+  amount: bigint
+  name: string
+  symbol: string
+  decimals: number
+  totalSupply: bigint
+  duration: number
+  pools?: PoolMeta[]
+}>
 
-export interface CreateAction extends ModalAction {
-  data?: {
-    chainId: number
-    token0: Token
-    token1: Token
-    amount0: bigint
-    amount1: bigint
-    duration: number
-    pool?: PoolMeta
-  }
-}
+export type CreateAction = ModalAction<{
+  chainId: number
+  token0: Token
+  token1: Token
+  amount0: bigint
+  amount1: bigint
+  duration: number
+  pool?: PoolMeta
+}>
 
-export interface SwapAction extends ModalAction {
-  data?: {
-    chainId: number
-    inputToken: Token
-    outputToken: Token
-    amountIn: bigint
-    amountOut: bigint
-    fee: bigint
-  }
-}
+export type SwapAction = ModalAction<{
+  chainId: number
+  inputToken: Token
+  outputToken: Token
+  amountIn: bigint
+  amountOut: bigint
+  fee: bigint
+}>
 
-export interface AddLiquidityAction extends ModalAction {
-  data?: {
-    chainId: number
-    pool: PoolMeta
-    liquidity: bigint
-    amount0Max: bigint
-    amount1Max: bigint
-  }
-}
+export type AddLiquidityAction = ModalAction<{
+  chainId: number
+  pool: PoolMeta
+  liquidity: bigint
+  amount0Max: bigint
+  amount1Max: bigint
+}>
 
-export interface RemoveLiquidityAction extends ModalAction {
-  data?: {
-    chainId: number
-    pool: PoolMeta
-    amount0Min: bigint
-    amount1Min: bigint
-  }
-}
+export type RemoveLiquidityAction = ModalAction<{
+  chainId: number
+  pool: PoolMeta
+  amount0Min: bigint
+  amount1Min: bigint
+}>
 
-export interface UnlockAction extends ModalAction {
-  data?: {
-    chainId: number
-    pool: PoolMeta
-    lock: LockData
-  }
-}
+export type UnlockAction = ModalAction<{
+  chainId: number
+  pool: PoolMeta
+  lock: LockData
+}>
 
-export interface MintAction extends ModalAction {
-  data?: {
-    chainId: number
-    nft: Nft
-  }
-}
+export type MintAction = ModalAction<{
+  chainId: number
+  nft: Nft
+}>
 
-export interface ClaimAction extends ModalAction {
-  data?: {
-    chainId: number
-    reward: Reward
-  }
-}
+export type ClaimAction = ModalAction<{
+  chainId: number
+  reward: Reward
+}>
 
 export interface ValueChangedData {
   inputToken: Token

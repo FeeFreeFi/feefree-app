@@ -1,5 +1,5 @@
 <template>
-  <div class="z-search h-11 flex-y-center px-4 bg-card rounded">
+  <div class="z-search flex-y-center bg-card px-4 rounded h-11">
     <n-input v-model:value="modelValue" :placeholder="placeholder" :bordered="false" size="large" :on-input="onInput">
       <template #prefix>
         <i-ff-search class="size-4" />
@@ -36,19 +36,3 @@ onMounted(() => {
   })
 })
 </script>
-
-<style lang="scss">
-.z-search {
-  .n-input__prefix {
-    @apply mr-3;
-  }
-
-  .n-input__input-el {
-    @apply text-sm;
-  }
-
-  .n-input__placeholder {
-    @apply text-sm text-basic/60;
-  }
-}
-</style>

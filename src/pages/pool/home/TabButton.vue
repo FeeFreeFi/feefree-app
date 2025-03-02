@@ -1,7 +1,7 @@
 <template>
-  <div class="cursor-pointer hover:text-basic transition-colors" :class="[active ? 'text-basic' : 'text-basic-1']">
+  <div class="hover:text-font transition-colors cursor-pointer" :class="[active ? 'text-font' : 'text-font-70']">
     <slot>
-      <n-text class="text-sm font-medium text-inherit">{{ label }}</n-text>
+      <n-text class="font-medium text-inherit text-sm">{{ label }}</n-text>
     </slot>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <main class="relative flex-1 mx-auto flex flex-col w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4">
+  <main class="relative flex flex-col flex-1 mx-auto px-4 w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
     <slot />
   </main>
 </template>

@@ -2,8 +2,8 @@
   <div class="flex-center gap-2">
     <n-text depth="1">Spender</n-text>
     <div class="inline-flex gap-1">
-      <a class="no-underline flex-y-center gap-2 text-primary/80" :href="url" target="_blank" :aria-label="address">
-        <n-text class="shrink-0 text-inherit">{{ shortString(address) }}</n-text>
+      <a class="flex-y-center gap-2 text-primary/80 no-underline" :href="url" target="_blank" :aria-label="address">
+        <n-text class="text-inherit shrink-0">{{ shortString(address) }}</n-text>
       </a>
       <ZCopyable class="flex justify-end cursor-pointer" :text="address">
         <template #copied>

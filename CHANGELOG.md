@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## 0.7.6 (2025-03-03)
+
+### Features
+- **Tailwind CSS v4**: Migrated from v3, bringing modern CSS features
+  - New `@theme` directive support
+  - Native color-mix functionality
+  - Modern CSS color spaces
+  - Updated theme configuration syntax
+
+- **Color System**:
+  - Implemented OKLCH color space
+  - Standardized color naming convention
+  - Enhanced theme variable system
+
+- **Style Architecture**:
+  - Migrated from SCSS to CSS variables
+  - Removed legacy modules (`variables.module.scss`, `reset.scss`)
+  - Optimized theme definitions
+  - Improved code maintainability
+
+### Improvements
+- **TypeScript**:
+  - Enhanced type definitions
+  - Optimized type checking system
+
+- **Components**:
+  - Unified theme configuration
+  - Standardized style variables
+  - Simplified styling approach
+
+- **Build System**:
+  - Optimized webpack configuration
+  - Removed redundant SCSS modules
+  - Improved build performance
+
+
 ## 0.7.5 (2025-03-01)
 
 ### Refactor

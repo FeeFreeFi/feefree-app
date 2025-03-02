@@ -9,8 +9,3 @@ declare module '*.svg' {
   const src: string
   export default src
 }
-
-declare module '*.module.scss' {
-  const variables: Record<string, string | undefined>
-  export = variables
-}

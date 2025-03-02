@@ -1,7 +1,7 @@
 <template>
   <ZModalView class="h-[480px]" title="Connect Wallet" :on-close="onClose">
-    <div class="h-full relative">
-      <div v-if="wallets.length > 0" class="size-full absolute top-0 left-0">
+    <div class="relative h-full">
+      <div v-if="wallets.length > 0" class="top-0 left-0 absolute size-full">
         <n-scrollbar class="p-4">
           <div class="flex flex-col gap-2">
             <WalletItem v-for="item, index in wallets" :key="index" :name="item.info.name" :icon="item.info.icon!" :active="isActive(item)" :recent="isRecent(item)" @click="() => onConnect(item)" />

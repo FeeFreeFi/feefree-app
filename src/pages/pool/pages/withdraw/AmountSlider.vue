@@ -1,7 +1,7 @@
 <template>
   <n-slider :value="percent" :tooltip="false" :disabled="!balance" :on-update:value="onUpdate">
     <template #thumb>
-      <div class="size-3 rounded-full bg-primary-gradient hover:bg-primary-gradient-hover" />
+      <div class="bg-linear-256 from-[#E7E368] hover:from-[#DFDA2D] to-[#41F5CF] hover:to-[#35EDC6] rounded-full size-3" />
     </template>
   </n-slider>
 </template>

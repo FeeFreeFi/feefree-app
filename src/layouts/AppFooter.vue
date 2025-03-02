@@ -1,7 +1,7 @@
 <template>
-  <footer class="sticky w-full h-16 bg-header/80 backdrop-blur-sm bottom-0 left-0 z-0">
-    <div class="h-full max-w-[--x-content-max-w] mx-auto px-4 sm:px-6 flex-center">
-      <div class="w-full sm:w-auto sm:flex lg:hidden">
+  <footer class="bottom-0 left-0 z-0 sticky bg-header backdrop-blur-sm w-full h-16">
+    <div class="flex-center mx-auto px-4 sm:px-6 max-w-7xl h-full">
+      <div class="lg:hidden sm:flex w-full sm:w-auto">
         <NavBar />
       </div>
     </div>

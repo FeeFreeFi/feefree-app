@@ -1,6 +1,6 @@
 <template>
   <ZContainer class="flex flex-col">
-    <div class="mb-4 flex flex-col sm:flex-row justify-start sm:justify-between gap-4 sm:gap-0">
+    <div class="flex sm:flex-row flex-col justify-start sm:justify-between gap-4 sm:gap-0 mb-4">
       <!-- Pools -->
       <div class="flex items-center gap-3">
         <i-ff-pools class="size-5 sm:size-6" />
@@ -16,27 +16,27 @@
       <!-- TVL -->
       <div class="flex items-center gap-2 sm:gap-3">
         <ZChainIcon :chain-id="appChainId" class="size-5" />
-        <n-text class="text-sm font-medium">TVL ${{ toBalance(totalTVL) }}</n-text>
+        <n-text class="font-medium text-sm">TVL ${{ toBalance(totalTVL) }}</n-text>
       </div>
     </div>
-    <div class="grid gap-y-4 sm:gap-y-8 grid-cols-1 sm:grid-cols-2 sm:gap-x-8 md:grid-cols-2 md:gap-x-32 lg:grid-cols-3 lg:gap-x-14 xl:grid-cols-4 xl:gap-x-8 2xl:grid-cols-5 2xl:gap-x-4 justify-items-center">
-      <div v-for="pool in pools" :key="pool.id" class="relative w-full max-w-[311px] sm:w-[272px] flex flex-col bg-card rounded-lg">
-        <div class="relative w-full h-[78px] flex justify-center overflow-hidden rounded-t-lg">
-          <img class="w-[311px] h-[78px] max-w-max pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
-          <ZChainIcon class="absolute size-4 top-1 right-1" :chain-id="pool.chainId" />
+    <div class="justify-items-center gap-y-4 sm:gap-y-8 sm:gap-x-8 md:gap-x-32 lg:gap-x-14 xl:gap-x-8 2xl:gap-x-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div v-for="pool in pools" :key="pool.id" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
+        <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
+          <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
+          <ZChainIcon class="top-1 right-1 absolute size-4" :chain-id="pool.chainId" />
         </div>
-        <div class="absolute left-4 sm:left-6 top-[65px]">
+        <div class="top-[65px] left-4 sm:left-6 absolute">
           <ZPoolIcon :pool="pool" />
         </div>
-        <div class="flex flex-col px-4 sm:px-6 pb-6 pt-8">
+        <div class="flex flex-col px-4 sm:px-6 pt-8 pb-6">
           <div class="flex">
             <ZPoolName :pool="pool" />
           </div>
-          <div class="mt-4 sm:mt-6 flex justify-between text-xs">
+          <div class="flex justify-between mt-4 sm:mt-6 text-xs">
             <n-text depth="1">TVL</n-text>
             <n-text>${{ toBalance(poolDatas[pool.id]?.tvl || 0n, 0) }}</n-text>
           </div>
-          <div class="mt-6 flex">
+          <div class="flex mt-6">
             <router-link :to="{ name: PAGE_POOL_OVERVIEW, params: { id: encodePoolId(pool.chainId, pool.id) } }" class="w-full">
               <ZButton class="w-full">Enter</ZButton>
             </router-link>

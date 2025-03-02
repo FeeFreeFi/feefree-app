@@ -1,22 +1,22 @@
 <template>
-  <div :id="containerId.slice(1)" class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
+  <div :id="containerId.slice(1)" class="relative bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
     <div class="flex flex-col">
-      <n-text class="text-lg font-medium">Create Pool</n-text>
+      <n-text class="font-medium text-lg">Create Pool</n-text>
       <TokenInput v-model="inputAmount0" class="mt-4 sm:mt-8" :token="inputToken0" :balance="inputBalance0" label="Give" @change="onAmount0Change" @select="onSelectToken0" />
       <TokenInput v-model="inputAmount1" class="mt-4" :token="inputToken1" :balance="inputBalance1" label="And" @change="onAmount1Change" @select="onSelectToken1" />
       <LockLiquidity v-model="duration" class="mt-3 sm:mt-6" />
       <div class="mt-10">
         <ActionButton :chain-id="appChainId" :chains="supportedChains">
           <router-link v-if="initialized" :to="{ name: PAGE_POOL_DEPOSIT, params: { id: encodePoolId(appChainId, poolInitState!.id) } }">
-            <ZButton class="h-10 sm:h-12 w-full" aria-label="Create">Pool exists, go deposit</ZButton>
+            <ZButton class="w-full h-10 sm:h-12" aria-label="Create">Pool exists, go deposit</ZButton>
           </router-link>
-          <ZButton v-else-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
-          <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-          <div v-else-if="!approved" class="h-10 sm:h-12 w-full flex gap-3">
-            <ZButton v-if="!approved0" class="h-full flex-1" :disabled="approving0 || approving1" :loading="approving0" :aria-label="`Approve ${inputToken0!.symbol}`" @click="() => onApproval(true)">Approve {{ inputToken0!.symbol }}</ZButton>
-            <ZButton v-if="!approved1" class="h-full flex-1" :disabled="approving0 || approving1" :loading="approving1" :aria-label="`Approve ${inputToken1!.symbol}`" @click="() => onApproval(false)">Approve {{ inputToken1!.symbol }}</ZButton>
+          <ZButton v-else-if="!isInputValid" class="w-full h-10 sm:h-12" :aria-label="inputHint">{{ inputHint }}</ZButton>
+          <ZButton v-else-if="approvalChecking" class="w-full h-10 sm:h-12" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
+          <div v-else-if="!approved" class="flex gap-3 w-full h-10 sm:h-12">
+            <ZButton v-if="!approved0" class="flex-1 h-full" :disabled="approving0 || approving1" :loading="approving0" :aria-label="`Approve ${inputToken0!.symbol}`" @click="() => onApproval(true)">Approve {{ inputToken0!.symbol }}</ZButton>
+            <ZButton v-if="!approved1" class="flex-1 h-full" :disabled="approving0 || approving1" :loading="approving1" :aria-label="`Approve ${inputToken1!.symbol}`" @click="() => onApproval(false)">Approve {{ inputToken1!.symbol }}</ZButton>
           </div>
-          <ZButton v-else class="h-10 sm:h-12 w-full" :loading="creating" aria-label="Create" @click="onCreate">Create</ZButton>
+          <ZButton v-else class="w-full h-10 sm:h-12" :loading="creating" aria-label="Create" @click="onCreate">Create</ZButton>
         </ActionButton>
       </div>
       <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />

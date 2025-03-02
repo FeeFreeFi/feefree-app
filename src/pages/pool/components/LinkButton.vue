@@ -1,7 +1,7 @@
 <template>
   <router-link class="w-full no-underline" :to="to" #="{ isExactActive }">
-    <div class="relative h-11 rounded flex-center cursor-pointer transition-all lg:hover:bg-dialog/40" :class="[isExactActive ? 'text-primary !bg-dialog' : 'text-basic']" :aria-label="label">
-      <div v-if="screen.lt.lg" class="absolute size-8 margin-center rounded-full" :class="[isExactActive ? 'bg-tab-gradient' : '']" />
+    <div class="relative flex-center lg:hover:bg-dialog/40 rounded h-11 transition-all cursor-pointer" :class="[isExactActive ? 'text-primary !bg-dialog' : 'text-font']" :aria-label="label">
+      <div v-if="screen.lt.lg" class="absolute rounded-full size-8 margin-center" :class="[isExactActive ? 'bg-linear-270 from-[rgba(61,77,74,0.5)] to-[#1C2423]' : '']" />
       <div class="z-0">
         <slot />
       </div>

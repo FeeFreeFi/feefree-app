@@ -1,6 +1,6 @@
 <template>
   <div class="flex gap-4">
-    <div class="flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md">
+    <div class="flex flex-col flex-1 items-center gap-1 bg-card p-2 rounded-md">
       <n-text class="text-xs" depth="1">Current</n-text>
       <div v-if="account" class="flex-y-center gap-1">
         <ZTokenBalance class="!font-normal" :token="ETH" :dp="8" :balance="current" />
@@ -8,7 +8,7 @@
       </div>
       <n-text v-else>N/A</n-text>
     </div>
-    <div class="flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md">
+    <div class="flex flex-col flex-1 items-center gap-1 bg-card p-2 rounded-md">
       <n-text class="text-xs" depth="1">Claimed</n-text>
       <div v-if="account" class="flex-y-center gap-1">
         <ZTokenBalance class="!font-normal" :token="ETH" :dp="8" :balance="claimed" />

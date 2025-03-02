@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-col relative overflow-hidden mx-auto my-4 sm:my-8 flex-1 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
-    <div class="flex-1 flex flex-col">
-      <div class="mb-4 flex items-center justify-between">
-        <n-text class="text-lg font-medium">Fans</n-text>
+  <div class="relative flex flex-col flex-1 bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
+    <div class="flex flex-col flex-1">
+      <div class="flex justify-between items-center mb-4">
+        <n-text class="font-medium text-lg">Fans</n-text>
         <ZBack />
       </div>
-      <div class="mt-4 flex-1 flex flex-col gap-4 sm:gap-8">
+      <div class="flex flex-col flex-1 gap-4 sm:gap-8 mt-4">
         <FansOverview />
         <FansList :total="pagination.total" :page="pagination.page" :list="fansList" :on-update-page="onUpdatePage" />
       </div>

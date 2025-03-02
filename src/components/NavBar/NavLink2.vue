@@ -1,6 +1,6 @@
 <template>
   <a class="flex-1 no-underline" :href="href" :target="blank ? '_blank' : undefined" :aria-label="label">
-    <div class="h-10 flex justify-between items-center px-3 rounded text-basic hover:bg-card-1">
+    <div class="flex justify-between items-center hover:bg-card/60 px-3 rounded h-10 text-font">
       <slot />
     </div>
   </a>

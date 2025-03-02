@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full sm:w-auto flex gap-2">
+  <div class="flex gap-2 w-full sm:w-auto">
     <NavLink v-for="item, index in links" :key="index" :to="item.to" :label="item.label" :icon="item.icon" :exact="item.exact" />
     <NavMenu />
   </div>

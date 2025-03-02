@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 lg:p-6 flex flex-col gap-4 lg:bg-card lg:rounded-20">
+  <div class="flex flex-col flex-1 gap-4 lg:bg-card lg:p-6 lg:rounded-2xl">
     <!-- Header -->
     <div v-if="screen.lg" class="hidden lg:flex justify-between items-center">
       <div class="flex">
@@ -7,7 +7,7 @@
       </div>
     </div>
     <div v-if="hasPosition" class="flex flex-col gap-4">
-      <div class="flex flex-col md:flex-row gap-4">
+      <div class="flex md:flex-row flex-col gap-4">
         <!-- Total Liquidity -->
         <ItemBox class="flex-1" label="Total Liquidity">
           <div class="flex-y-center gap-2">

@@ -1,11 +1,11 @@
 <template>
   <ZModalView class="h-[480px]" title="Select Token" :on-close="onClose">
-    <div class="h-full flex flex-col relative">
+    <div class="relative flex flex-col h-full">
       <div class="px-4">
         <ZSearch v-model="search" placeholder="Search by name or paste address" :on-search="onSearch" />
       </div>
-      <div class="flex-1 relative">
-        <div v-if="displayTokens.length > 0" class="size-full absolute top-0 left-0">
+      <div class="relative flex-1">
+        <div v-if="displayTokens.length > 0" class="top-0 left-0 absolute size-full">
           <n-scrollbar class="p-4">
             <div class="flex flex-col gap-2">
               <TokenItem v-for="token in displayTokens" :key="token.address" :token="token" :balance="balances[token.address] || 0n" :active="isSame(current!, token)" @click="() => onTokenClick(token)" />

@@ -1,20 +1,20 @@
 <template>
-  <div class="p-4 rounded flex flex-col gap-3 bg-card lg:bg-section">
+  <div class="flex flex-col gap-3 bg-card lg:bg-section p-4 rounded">
     <div class="flex-y-center justify-between gap-2">
       <n-input-number v-model:value="amount" class="flex-1" :min="0" :max="maxAmount" :bordered="false" placeholder="0.0" :input-props="{ name: `${token.symbol} amount` }" :show-button="false" :on-blur="onInputBlur" />
-      <div class="w-24 flex justify-end">
+      <div class="flex justify-end w-24">
         <div class="flex-center gap-1">
           <ZTokenIcon :token="token" />
-          <n-text class="text-sm font-medium">{{ token.symbol }}</n-text>
+          <n-text class="font-medium text-sm">{{ token.symbol }}</n-text>
         </div>
       </div>
     </div>
     <n-divider class="!my-0" />
     <div class="flex-y-center justify-between gap-2">
       <n-button class="text-xs" type="primary" text :disabled="!balance" @click="onMax">MAX</n-button>
-      <div class="flex-y-center gap-1 text-xs overflow-hidden">
+      <div class="flex-y-center gap-1 overflow-hidden text-xs">
         <n-text depth="1">Balance</n-text>
-        <ZTokenBalance class="text-basic !font-normal" :token="token" :balance="balance" :show-symbol="false" />
+        <ZTokenBalance class="!font-normal text-font" :token="token" :balance="balance" :show-symbol="false" />
       </div>
     </div>
   </div>
@@ -40,7 +40,7 @@ const emit = defineEmits<{
 
 const modelValue = defineModel<string>({ required: true })
 
-const amount = ref(fromValue(modelValue.value || 0).toNumber())
+const amount = ref<number | null>(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, props.token.decimals) : undefined)
 const amountValue = computed(() => parseAmount(amount.value || 0, props.token.decimals))
 

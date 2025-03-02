@@ -1,9 +1,9 @@
 <template>
   <ActionModal v-model="modelValue">
     <ZSpender :chain-id="data!.chainId" :address="data!.spender" />
-    <div class="mt-4 flex-center gap-1 overflow-hidden">
+    <div class="flex-center gap-1 mt-4 overflow-hidden">
       <ZTokenIcon :token="data!.token" />
-      <ZTokenBalance class="!font-normal text-basic/90" :token="data!.token" :balance="data!.amount" />
+      <ZTokenBalance class="text-font-90 !font-normal" :token="data!.token" :balance="data!.amount" />
     </div>
   </ActionModal>
 </template>

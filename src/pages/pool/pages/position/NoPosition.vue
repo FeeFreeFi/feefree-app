@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col items-center">
-    <div class="w-[240px] sm:w-[320px] relative">
+    <div class="relative w-[240px] sm:w-[320px]">
       <img class="size-full aspect-square" :src="noPositionBg" loading="lazy" alt="No position">
-      <div class="absolute w-full bottom-0 text-center">
+      <div class="bottom-0 absolute w-full text-center">
         <n-text type="primary">You have no position in this pool</n-text>
       </div>
     </div>

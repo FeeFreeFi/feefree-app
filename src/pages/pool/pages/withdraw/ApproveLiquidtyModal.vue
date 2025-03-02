@@ -1,7 +1,7 @@
 <template>
   <ActionModal v-model="modelValue">
     <ZSpender :chain-id="data!.chainId" :address="data!.spender" />
-    <div class="mt-4 flex-center gap-1 overflow-hidden">
+    <div class="flex-center gap-1 mt-4 overflow-hidden">
       <ZPoolIcon :pool="data!.pool" />
       <ZBalance :value="data!.amount" />
     </div>

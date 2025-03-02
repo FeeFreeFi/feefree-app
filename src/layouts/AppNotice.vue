@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="notice" class="bg-card/70 flex-center px-8 py-2 relative">
-      <n-p class="text-orange-500 text-sm mb-0 text-center">{{ notice.content }}</n-p>
-      <span class="size-6 flex-center cursor-pointer absolute translate-y-center right-2 text-error/80" aria-label="close" @click="onClose">
+    <div v-if="notice" class="relative flex-center bg-card/70 px-8 py-2">
+      <n-p class="mb-0 text-orange-500 text-sm text-center">{{ notice.content }}</n-p>
+      <span class="right-2 absolute flex-center size-6 text-error/80 translate-y-center cursor-pointer" aria-label="close" @click="onClose">
         <i-ff-cancel class="size-5" />
       </span>
     </div>

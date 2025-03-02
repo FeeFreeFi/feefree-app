@@ -1,12 +1,12 @@
 <template>
-  <n-popover :show="show" trigger="click" :show-arrow="false" placement="bottom-end" class="w-[240px] !p-2 !rounded-lg !bg-container" :on-update:show="onUpdateShow">
+  <n-popover :show="show" trigger="click" :show-arrow="false" placement="bottom-end" class="!bg-container !p-2 !rounded-lg w-[240px]" :on-update:show="onUpdateShow">
     <template #trigger>
-      <div v-if="screen.sm" class="h-9 px-3 flex-center cursor-pointer rounded-lg hover:bg-primary/5 transition-all" aria-label="more">
+      <div v-if="screen.sm" class="flex-center hover:bg-primary/5 px-3 rounded-lg h-9 transition-all cursor-pointer" aria-label="more">
         <DownArrow class="!size-5 transition-all" :class="[show ? '!rotate-180' : '']" />
       </div>
-      <div v-else class="flex-1 h-12 flex-center flex-col gap-1">
+      <div v-else class="flex-col flex-1 flex-center gap-1 h-12">
         <img class="size-[22px] transition-all" :class="[show ? '' : 'opacity-70 grayscale']" src="/static/tabbars/more.svg" loading="lazy" alt="more">
-        <n-text class="text-xs transition-all" :class="[show ? 'text-primary' : 'text-basic-1']">More</n-text>
+        <n-text class="text-xs transition-all" :class="[show ? 'text-primary' : 'text-font-70']">More</n-text>
       </div>
     </template>
     <NavMemuView />

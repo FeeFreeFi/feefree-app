@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between">
+  <div class="flex justify-between items-center">
     <div class="flex items-center gap-2">
       <ZPoolName :pool="pool" />
       <ZViewUrl :url="url" :label="false" />

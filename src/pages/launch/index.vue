@@ -1,16 +1,16 @@
 <template>
-  <div :id="containerId.slice(1)" class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
+  <div :id="containerId.slice(1)" class="relative bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
     <div class="flex flex-col">
-      <n-text class="text-lg font-medium">Launch Shortable Token</n-text>
+      <n-text class="font-medium text-lg">Launch Shortable Token</n-text>
       <TokenInput v-model="assetAmount" class="mt-4 sm:mt-8" :token="assetToken" :balance="assetBalance" label="Pricing Token" @change="onAmountChange" @select="onShowAssetSelector" />
       <LaunchToken v-model:name="name" v-model:symbol="symbol" class="mt-3 sm:mt-6" />
       <LockLiquidity v-model="duration" class="mt-3 sm:mt-6" />
       <div class="mt-10">
         <ActionButton :chain-id="assetToken?.chainId" :chains="supportedChains">
-          <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
-          <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-          <ZButton v-else-if="!approved" class="h-10 sm:h-12 w-full" :disabled="approving" :loading="approving" :aria-label="`Approve ${assetToken!.symbol}`" @click="onApproval">Approve {{ assetToken!.symbol }}</ZButton>
-          <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="launching" :loading="launching" aria-label="Launch" @click="onLaunch">Launch</ZButton>
+          <ZButton v-if="!isInputValid" class="w-full h-10 sm:h-12" :aria-label="inputHint">{{ inputHint }}</ZButton>
+          <ZButton v-else-if="approvalChecking" class="w-full h-10 sm:h-12" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
+          <ZButton v-else-if="!approved" class="w-full h-10 sm:h-12" :disabled="approving" :loading="approving" :aria-label="`Approve ${assetToken!.symbol}`" @click="onApproval">Approve {{ assetToken!.symbol }}</ZButton>
+          <ZButton v-else class="w-full h-10 sm:h-12" :disabled="launching" :loading="launching" aria-label="Launch" @click="onLaunch">Launch</ZButton>
         </ActionButton>
       </div>
       <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />

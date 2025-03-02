@@ -1,8 +1,8 @@
 <template>
-  <div :id="containerId.slice(1)" class="relative overflow-hidden mx-auto my-4 sm:my-8 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
+  <div :id="containerId.slice(1)" class="relative bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
     <div class="flex flex-col">
       <div class="flex justify-between">
-        <n-text class="text-lg font-medium">Swap</n-text>
+        <n-text class="font-medium text-lg">Swap</n-text>
         <div v-if="account" class="flex-y-center cursor-pointer" @click="onShare">
           <i-ff-share class="size-4" />
         </div>
@@ -12,10 +12,10 @@
       <SwapOutput :input-token="inputToken" :output-token="outputToken" :output-balance="outputBalance" :quote="quoteData" :fee="fee" @select="onSelectOutputToken" />
       <div class="mt-10">
         <ActionButton :chain-id="appChainId" :chains="supportedChains">
-          <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
-          <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-          <ZButton v-else-if="!approved" class="h-10 sm:h-12 w-full" :disabled="approving" :loading="approving" :aria-label="`Approve ${inputToken!.symbol}`" @click="onApproval">Approve {{ inputToken!.symbol }}</ZButton>
-          <ZButton v-else class="h-10 sm:h-12 w-full" :disabled="!quoteData" :loading="swaping" aria-label="Swap" @click="onSwap">Swap</ZButton>
+          <ZButton v-if="!isInputValid" class="h-10 sm:h-12" block :aria-label="inputHint">{{ inputHint }}</ZButton>
+          <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12" block loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
+          <ZButton v-else-if="!approved" class="h-10 sm:h-12" block :disabled="approving" :loading="approving" :aria-label="`Approve ${inputToken!.symbol}`" @click="onApproval">Approve {{ inputToken!.symbol }}</ZButton>
+          <ZButton v-else class="h-10 sm:h-12" block :disabled="!quoteData" :loading="swaping" aria-label="Swap" @click="onSwap">Swap</ZButton>
         </ActionButton>
       </div>
       <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />

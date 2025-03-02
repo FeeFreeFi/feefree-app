@@ -1,19 +1,19 @@
 <template>
-  <div class="flex flex-col overflow-hidden relative">
-    <div class="absolute top-0 left-0 w-full">
-      <img class="absolute w-full top-0 translate-x-center pointer-events-none" :src="gradientBg" loading="lazy" alt="dialog gradient background">
+  <div class="relative flex flex-col overflow-hidden">
+    <div class="top-0 left-0 absolute w-full">
+      <img class="top-0 absolute w-full translate-x-center pointer-events-none" :src="gradientBg" loading="lazy" alt="dialog gradient background">
     </div>
-    <div v-if="hasTitle" class="p-4 flex-y-center justify-between">
+    <div v-if="hasTitle" class="flex-y-center justify-between p-4">
       <span class="size-6" />
       <slot name="title">
-        <div v-if="title" class="h-7 flex-1 text-center" :class="titleClass">
-          <n-text class="text-base sm:text-lg font-medium">{{ title }}</n-text>
+        <div v-if="title" class="flex-1 h-7 text-center" :class="titleClass">
+          <n-text class="font-medium text-base sm:text-lg">{{ title }}</n-text>
         </div>
       </slot>
       <CloseButton :on-close="onClose" />
     </div>
-    <CloseButton v-else class="absolute top-4 right-4 z-[1]" :on-close="onClose" />
-    <div class="flex-1 relative overflow-hidden" :class="contentClass">
+    <CloseButton v-else class="top-4 right-4 z-[1] absolute" :on-close="onClose" />
+    <div class="relative flex-1 overflow-hidden" :class="contentClass">
       <slot />
     </div>
   </div>

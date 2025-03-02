@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import type { NotificationProviderInst } from 'naive-ui'
 import type { ApprovalAction, ModalAction, Token, Tx } from '@/types'
-import { States } from '@/config'
+import { kState } from '@/config'
 import { getChainName } from './useChains'
 import { switchChain } from './useWallet'
 import { approve } from './useToken'
@@ -23,26 +23,26 @@ export const doSwitchNetwork = async (notification: NotificationProviderInst, ch
   }
 }
 
-export const doSend = async (action: Ref<ModalAction>, loading: Ref<boolean>, title: string, sendTx: () => Promise<Tx>) => {
+export const doSend = async <T>(action: Ref<ModalAction<T>>, loading: Ref<boolean>, title: string, sendTx: () => Promise<Tx>) => {
   try {
     loading.value = true
 
     action.value.title = title
-    action.value.state = States.INITIAL
+    action.value.state = kState.initial
     action.value.show = true
 
     const tx = await sendTx()
-    action.value.state = States.PENDING
+    action.value.state = kState.pending
     action.value.tx = tx
     await waitForTransactionReceipt(tx.chainId, tx.hash)
 
     loading.value = false
-    action.value.state = States.SUCCESS
+    action.value.state = kState.success
 
     return true
   } catch (err: unknown) {
     loading.value = false
-    action.value.state = States.FAIL
+    action.value.state = kState.fail
     action.value.error = getErrorMessage(err, 'Internal error')
 
     return false

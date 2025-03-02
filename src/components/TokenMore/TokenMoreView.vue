@@ -1,30 +1,30 @@
 <template>
   <ZModalView :on-close="onClose">
-    <div class="h-full flex flex-col px-4 pt-8 pb-6 relative">
+    <div class="relative flex flex-col px-4 pt-8 pb-6 h-full">
       <!-- Token icon name symbol -->
-      <div class="px-4 flex-y-center gap-3">
+      <div class="flex-y-center gap-3 px-4">
         <ZTokenIcon class="!size-8" :token="token" />
-        <div class="w-20 flex flex-col gap-[2px]">
+        <div class="flex flex-col gap-[2px] w-20">
           <n-text class="font-medium">{{ token.name }}</n-text>
           <n-text class="text-xs" depth="2">{{ token.symbol }}</n-text>
         </div>
       </div>
       <!-- Add to wallet & View on explorer -->
-      <div class="mt-4 h-16 flex bg-card rounded-lg">
-        <div v-if="!isNative(token.address)" class="flex-1 flex-y-center px-4 gap-2 cursor-pointer !text-primary/80" @click="onAddToWallet">
+      <div class="flex bg-card mt-4 rounded-lg h-16">
+        <div v-if="!isNative(token.address)" class="flex-1 flex-y-center gap-2 px-4 !text-primary/80 cursor-pointer" @click="onAddToWallet">
           <i-ff-wallet class="size-5" />
-          <n-text class="text-sm text-inherit">Add to wallet</n-text>
+          <n-text class="text-inherit text-sm">Add to wallet</n-text>
         </div>
-        <div v-if="!isNative(token.address)" class="w-[1px] h-8 bg-dialog self-center" />
-        <ZViewUrl class="flex-1 px-4 text-sm !text-primary/80" icon-class="!size-5" :url="getViewUrl(token)" :underline="false" />
+        <div v-if="!isNative(token.address)" class="self-center bg-dialog w-[1px] h-8" />
+        <ZViewUrl class="flex-1 px-4 !text-primary/80 text-sm" icon-class="!size-5" :url="getViewUrl(token)" :underline="false" />
       </div>
       <!-- Price & Balance -->
-      <div class="mt-3 flex gap-3">
-        <div class="flex-1 flex flex-col p-4 gap-3 bg-box rounded-lg">
+      <div class="flex gap-3 mt-3">
+        <div class="flex flex-col flex-1 gap-3 bg-box p-4 rounded-lg">
           <n-text class="text-xs" depth="1">Price</n-text>
           <n-text class="text-sm">${{ formatPrice(price) }}</n-text>
         </div>
-        <div class="flex-1 flex flex-col p-4 gap-3 bg-box rounded-lg overflow-hidden">
+        <div class="flex flex-col flex-1 gap-3 bg-box p-4 rounded-lg overflow-hidden">
           <n-text class="text-xs" depth="1">Balance</n-text>
           <div class="flex gap-[2px] text-sm">
             <ZBalance :value="balance" :decimals="token.decimals" :dp="token.dp" />
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-3 flex flex-col p-4 gap-3 bg-card rounded-lg text-sm overflow-hidden">
+      <div class="flex flex-col gap-3 bg-card mt-3 p-4 rounded-lg overflow-hidden text-sm">
         <div class="flex justify-between gap-2">
           <n-text depth="1">Decimals:</n-text>
           <n-text>{{ token.decimals }}</n-text>
@@ -62,7 +62,7 @@
           <div v-if="isNative(token.address)" class="flex text-sm">
             <n-text>N/A</n-text>
           </div>
-          <div v-else class="flex gap-[2px] text-sm overflow-hidden">
+          <div v-else class="flex gap-[2px] overflow-hidden text-sm">
             <ZBalance :value="total" :decimals="token.decimals" :dp="0" />
             <n-text>{{ token.symbol }}</n-text>
           </div>

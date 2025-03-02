@@ -1,5 +1,5 @@
 <template>
-  <n-text class="flex truncate font-medium">
+  <n-text class="flex font-medium truncate">
     <n-text class="truncate">{{ toBalanceWithUnit(value, decimals, dp) }}</n-text>
   </n-text>
 </template>

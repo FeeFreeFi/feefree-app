@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-center cursor-pointer transition-all rounded-lg bg-container hover:bg-container/80" :aria-label="ariaLabel">
+  <div class="flex-center bg-container hover:bg-container/80 rounded-lg transition-all cursor-pointer" :aria-label="ariaLabel">
     <slot />
   </div>
 </template>

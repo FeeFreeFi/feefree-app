@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col relative overflow-hidden mx-auto my-4 sm:my-8 flex-1 w-full sm:w-[490px] p-4 sm:p-8 bg-container rounded-20">
-    <div class="mb-4 flex items-center justify-between">
-      <n-text class="text-lg font-medium">Profile</n-text>
+  <div class="relative flex flex-col flex-1 bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
+    <div class="flex justify-between items-center mb-4">
+      <n-text class="font-medium text-lg">Profile</n-text>
       <ZBack />
     </div>
-    <div v-if="account" class="flex-1 flex flex-col gap-8">
+    <div v-if="account" class="flex flex-col flex-1 gap-8">
       <div class="flex flex-col gap-4">
         <div class="flex-y-center gap-2">
           <n-text class="w-14" :depth="1">Account</n-text>
           <div class="flex-y-center gap-2">
-            <n-text class="text-base font-medium">{{ shortString(account, 10, -8) }}</n-text>
+            <n-text class="font-medium text-base">{{ shortString(account, 10, -8) }}</n-text>
             <ZCopyable class="flex justify-end cursor-pointer" :text="account">
               <template #copied>
                 <div class="flex-y-center gap-1" aria-label="Copy address">
@@ -30,13 +30,13 @@
           <n-text class="w-14" :depth="1">Balance</n-text>
           <div class="flex-y-center gap-2">
             <ZTokenBalance :token="nativeCurrency" :dp="6" :balance="nativeBalance" />
-            <ZViewUrl class="shrink-0 !gap-1 text-xs" :url="accountUrl" :label="false" />
+            <ZViewUrl class="!gap-1 text-xs shrink-0" :url="accountUrl" :label="false" />
           </div>
         </div>
         <div class="flex-y-center gap-2">
           <n-text class="w-14" :depth="1">Level</n-text>
           <div class="flex-y-center gap-2">
-            <div class="shrink-0 flex-y-center gap-1">
+            <div class="flex-y-center gap-1 shrink-0">
               <i-ff-dimaond class="size-4" />
               <n-text class="text-sm">Lv{{ profile?.level || 1 }}</n-text>
             </div>
@@ -45,7 +45,7 @@
         <div class="flex-y-center gap-2">
           <n-text class="w-14" :depth="1">Exp</n-text>
           <div class="flex-y-center gap-2">
-            <n-progress class="shrink-0 !w-[200px]" type="line" :percentage="percentage">
+            <n-progress class="!w-[200px] shrink-0" type="line" :percentage="percentage">
               <n-text class="text-sm" depth="1">{{ profile?.exp || 0 }}/{{ profile?.nextExp || 0 }}</n-text>
             </n-progress>
           </div>
@@ -53,14 +53,14 @@
       </div>
       <div class="flex flex-col gap-4">
         <div class="flex gap-4">
-          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_POINTS }">
+          <router-link class="flex flex-col flex-1 items-center gap-1 bg-card p-2 rounded-md no-underline" :to="{ name: PAGE_PROFILE_POINTS }">
             <n-text class="text-xs" depth="1">Points</n-text>
             <div class="flex-y-center gap-1">
               <n-text class="text-primary/80">{{ profile?.points || 0 }}</n-text>
               <i-ff-points class="size-4" />
             </div>
           </router-link>
-          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_REWARD }">
+          <router-link class="flex flex-col flex-1 items-center gap-1 bg-card p-2 rounded-md no-underline" :to="{ name: PAGE_PROFILE_REWARD }">
             <n-text class="text-xs" depth="1">Reward</n-text>
             <div class="flex-y-center gap-1">
               <ZTokenBalance class="!font-normal text-primary/80" :token="nativeCurrency" :dp="8" :balance="profile?.reward || 0n" />
@@ -69,20 +69,20 @@
           </router-link>
         </div>
         <div class="flex gap-4">
-          <div class="flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md">
+          <div class="flex flex-col flex-1 items-center gap-1 bg-card p-2 rounded-md">
             <n-text class="text-xs" depth="1">Inviter</n-text>
             <div class="flex-y-center gap-1">
               <n-text>{{ profile?.inviter || "N/A" }}</n-text>
             </div>
           </div>
-          <router-link class="no-underline flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md" :to="{ name: PAGE_PROFILE_FANS }">
+          <router-link class="flex flex-col flex-1 items-center gap-1 bg-card p-2 rounded-md no-underline" :to="{ name: PAGE_PROFILE_FANS }">
             <n-text class="text-xs" depth="1">Fans</n-text>
             <div class="flex-y-center gap-1">
               <n-text class="text-primary/80">{{ profile?.fans || 0 }}</n-text>
               <i-ff-fans class="size-4" />
             </div>
           </router-link>
-          <div class="flex-1 flex flex-col items-center gap-1 bg-card p-2 rounded-md cursor-pointer" @click="onShare">
+          <div class="flex flex-col flex-1 items-center gap-1 bg-card p-2 rounded-md cursor-pointer" @click="onShare">
             <n-text class="text-xs" depth="1">Referral</n-text>
             <div class="flex-y-center gap-1">
               <n-text class="text-primary/80">{{ referral }}</n-text>

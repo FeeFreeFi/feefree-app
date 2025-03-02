@@ -1,7 +1,7 @@
 <template>
-  <ZContainer class="flex flex-col lg:flex-row gap-4">
+  <ZContainer class="flex lg:flex-row flex-col gap-4">
     <PoolNav />
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex flex-col flex-1 overflow-hidden">
       <router-view />
     </div>
   </ZContainer>

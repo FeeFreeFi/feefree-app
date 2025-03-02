@@ -9,13 +9,7 @@ import {
   linea,
   zksync,
 } from 'viem/chains'
-import {
-  CHAIN_ID_ZORA,
-  CHAIN_ID_BASE,
-  CHAIN_ID_SCROLL,
-  CHAIN_ID_LINEA,
-  CHAIN_ID_ZKSYNC,
-} from '@/config'
+import { kChain } from '@/config'
 
 interface ChainExtra {
   id: number
@@ -35,8 +29,8 @@ const CHAINS = Object.freeze([
 const CHAINS_MAP = Object.fromEntries(CHAINS.map(chain => [chain.id, chain]))
 
 const CHAIN_EXTRAS: Record<number, ChainExtra> = {
-  [CHAIN_ID_ZORA]: {
-    id: CHAIN_ID_ZORA,
+  [kChain.zora]: {
+    id: kChain.zora,
     key: 'zora',
     name: 'Zora',
     rpcUrls: [
@@ -45,8 +39,8 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
     ],
     blockExplorer: 'https://explorer.zora.energy',
   },
-  [CHAIN_ID_BASE]: {
-    id: CHAIN_ID_BASE,
+  [kChain.base]: {
+    id: kChain.base,
     key: 'base',
     name: 'Base',
     rpcUrls: [
@@ -61,8 +55,8 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
     ],
     blockExplorer: 'https://base.blockscout.com',
   },
-  [CHAIN_ID_SCROLL]: {
-    id: CHAIN_ID_SCROLL,
+  [kChain.scroll]: {
+    id: kChain.scroll,
     key: 'scroll',
     name: 'Scroll',
     rpcUrls: [
@@ -76,8 +70,8 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
     ],
     blockExplorer: 'https://scroll.blockscout.com',
   },
-  [CHAIN_ID_LINEA]: {
-    id: CHAIN_ID_LINEA,
+  [kChain.linea]: {
+    id: kChain.linea,
     key: 'linea',
     name: 'Linea',
     rpcUrls: [
@@ -89,8 +83,8 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
     ],
     blockExplorer: 'https://explorer.linea.build',
   },
-  [CHAIN_ID_ZKSYNC]: {
-    id: CHAIN_ID_ZKSYNC,
+  [kChain.zksync]: {
+    id: kChain.zksync,
     key: 'zksync',
     name: 'zkSync Era',
     rpcUrls: [
@@ -108,7 +102,7 @@ export const isSupportChain = (chainId: number) => !!CHAINS_MAP[chainId]
 
 export const getChains = () => CHAINS
 
-export const DEFAULT_CHAIN_ID = CHAIN_ID_ZORA
+export const DEFAULT_CHAIN_ID = kChain.zora
 
 export const getChain = (chainId: number) => {
   if (!isSupportChain(chainId)) {

@@ -2,7 +2,7 @@
   <div class="flex-y-center justify-between">
     <div class="flex-y-center gap-2 sm:gap-3">
       <ZTokenIcon class="!size-6" :token="token" />
-      <n-text class="text-sm font-medium">{{ token.symbol }}</n-text>
+      <n-text class="font-medium text-sm">{{ token.symbol }}</n-text>
     </div>
     <ZTokenBalance :token="token" :balance="balance" :dp="6" :show-symbol="false" />
   </div>

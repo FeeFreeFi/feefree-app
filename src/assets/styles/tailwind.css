@@ -1,0 +1,77 @@
+@import 'tailwindcss/theme.css';
+@import 'tailwindcss/preflight.css';
+@import 'tailwindcss/utilities.css';
+
+@theme {
+  --color-primary: oklch(0.87 0.15 174.76);
+  --color-success: oklch(0.85 0.2 147.21);
+  --color-warning: oklch(0.82 0.15 79.64);
+  --color-error: oklch(0.64 0.22 25.72);
+
+  --color-primary-10: oklch(0.87 0.15 174.76 / 0.1);
+  --color-primary-20: oklch(0.87 0.15 174.76 / 0.2);
+  --color-primary-30: oklch(0.87 0.15 174.76 / 0.3);
+  --color-primary-40: oklch(0.87 0.15 174.76 / 0.4);
+  --color-primary-50: oklch(0.87 0.15 174.76 / 0.5);
+  --color-primary-60: oklch(0.87 0.15 174.76 / 0.6);
+  --color-primary-70: oklch(0.87 0.15 174.76 / 0.7);
+  --color-primary-80: oklch(0.87 0.15 174.76 / 0.8);
+  --color-primary-90: oklch(0.87 0.15 174.76 / 0.9);
+
+  --color-font: oklch(1 0 0);
+  --color-font-10: oklch(1 0 0 / 0.1);
+  --color-font-30: oklch(1 0 0 / 0.3);
+  --color-font-50: oklch(1 0 0 / 0.5);
+  --color-font-60: oklch(1 0 0 / 0.6);
+  --color-font-70: oklch(1 0 0 / 0.7);
+  --color-font-80: oklch(1 0 0 / 0.8);
+  --color-font-90: oklch(1 0 0 / 0.9);
+
+  --color-invert: oklch(0.19 0.02 284.77);
+  --color-invert-30: oklch(0.19 0.02 284.77 / 0.3);
+  --color-invert-50: oklch(0.19 0.02 284.77 / 0.5);
+  --color-invert-80: oklch(0.19 0.02 284.77 / 0.8);
+
+  --color-body: oklch(0.23 0.04 217.36);
+  --color-header: oklch(0.21 0 228.98 / 0.8);
+  --color-container: oklch(0.41 0.02 182.58);
+  --color-tab: oklch(0.27 0.02 176.56);
+  --color-dialog: oklch(0.4 0.02 179.17);
+  --color-section: oklch(0.24 0.01 172.72);
+  --color-card: oklch(0.33 0.02 178.34);
+  --color-divider: oklch(0.47 0.03 182.24);
+  --color-box: oklch(0.29 0.02 176.66 / 0.5);
+}
+
+@utility translate-center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@utility translate-x-center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@utility translate-y-center {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@utility flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@utility flex-x-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@utility flex-y-center {
+  display: flex;
+  align-items: center;
+}

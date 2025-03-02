@@ -1,5 +1,5 @@
 <template>
-  <n-text class="text-base font-medium">{{ pool.currency0.symbol }} vs {{ pool.currency1.symbol }}</n-text>
+  <n-text class="font-medium text-base">{{ pool.currency0.symbol }} vs {{ pool.currency1.symbol }}</n-text>
 </template>
 
 <script setup lang="ts">

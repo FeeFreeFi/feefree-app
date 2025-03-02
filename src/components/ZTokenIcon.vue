@@ -1,5 +1,5 @@
 <template>
-  <img class="size-5 rounded-full" :src="`/static/tokens/${icon}`" loading="lazy" :alt="`${token?.symbol || 'default token'} icon`">
+  <img class="rounded-full size-5" :src="`/static/tokens/${icon}`" loading="lazy" :alt="`${token?.symbol || 'default token'} icon`">
 </template>
 
 <script setup lang="ts">

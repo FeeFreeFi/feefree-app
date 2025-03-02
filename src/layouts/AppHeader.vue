@@ -1,7 +1,7 @@
 <template>
-  <header class="sticky top-0 bg-header/80 backdrop-blur-sm z-[99]">
+  <header class="top-0 z-[99] sticky bg-header backdrop-blur-sm">
     <slot name="notice" />
-    <div class="h-16 max-w-[--x-content-max-w] mx-auto px-4 sm:px-6 grid items-center grid-cols-[auto_1fr_auto]">
+    <div class="items-center grid grid-cols-[auto_1fr_auto] mx-auto px-4 sm:px-6 max-w-7xl h-16">
       <div>
         <slot name="logo" />
       </div>

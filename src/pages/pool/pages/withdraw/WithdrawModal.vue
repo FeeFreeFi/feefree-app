@@ -1,6 +1,6 @@
 <template>
   <ActionModal v-model="modelValue">
-    <div class="flex-center flex-col gap-3">
+    <div class="flex-col flex-center gap-3">
       <div class="flex-center gap-1 overflow-hidden">
         <ZTokenIcon :token="data!.pool.currency0" />
         <ZTokenBalance class="!font-normal" :token="data!.pool.currency0" :balance="data!.amount0Min" :sign="true" />

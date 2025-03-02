@@ -1,7 +1,7 @@
 <template>
   <div>
-    <ZButton v-if="!account" class="h-10 sm:h-12 w-full" :class="btnClass" aria-label="Connect Wallet" @click="openWalletConnector">Connect Wallet</ZButton>
-    <ZButton v-else-if="requireSwitchChain" class="h-10 sm:h-12 w-full" :class="btnClass" :disabled="switching" :loading="switching" aria-label="Switch Network" @click="onSwitchNetwork">Switch Network</ZButton>
+    <ZButton v-if="!account" class="h-10 sm:h-12" :class="btnClass" block aria-label="Connect Wallet" @click="openWalletConnector">Connect Wallet</ZButton>
+    <ZButton v-else-if="requireSwitchChain" class="h-10 sm:h-12" :class="btnClass" block :disabled="switching" :loading="switching" aria-label="Switch Network" @click="onSwitchNetwork">Switch Network</ZButton>
     <slot v-else />
   </div>
 </template>

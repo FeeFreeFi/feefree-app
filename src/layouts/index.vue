@@ -1,5 +1,5 @@
 <template>
-  <n-layout class="app-layout text-sm bg-transparent !fixed" content-class="min-h-full flex flex-col" position="absolute" :native-scrollbar="false">
+  <n-layout class="!fixed !bg-transparent app-layout text-sm" content-class="min-h-full flex flex-col" position="absolute" :native-scrollbar="false">
     <AppBackground />
     <AppHeader>
       <template #notice>

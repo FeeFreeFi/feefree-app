@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 lg:p-6 flex flex-col gap-3 bg-card lg:bg-tab rounded">
+  <div class="flex flex-col gap-3 bg-card lg:bg-tab p-4 lg:p-6 rounded">
     <div class="flex flex-col gap-3">
       <n-text class="text-xs" depth="1">Price</n-text>
       <TokenPrice :input-token="currency0" :output-token="currency1" :price="price0" />

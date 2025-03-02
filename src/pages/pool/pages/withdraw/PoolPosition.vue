@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 lg:p-6 flex flex-col gap-3 bg-card lg:bg-tab rounded">
+  <div class="flex flex-col gap-3 bg-card lg:bg-tab p-4 lg:p-6 rounded">
     <n-text class="text-xs" depth="1">My pool share</n-text>
     <div class="flex-y-center gap-[6px]">
       <n-text>{{ currentPercent }}</n-text>

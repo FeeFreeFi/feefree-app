@@ -1,11 +1,11 @@
 <template>
-  <router-link class="flex-1 sm:flex-initial flex-center no-underline" :to="to" #="{ href }">
-    <n-button v-if="screen.sm" class="h-9 px-4" text :aria-label="label">
-      <n-text class="text-base font-medium hover:text-basic" :class="[isActive(href) ? 'text-basic' : ' text-basic-1']">{{ label }}</n-text>
+  <router-link class="sm:flex-initial flex-1 flex-center no-underline" :to="to" #="{ href }">
+    <n-button v-if="screen.sm" class="px-4 h-9" text :aria-label="label">
+      <n-text class="font-medium hover:text-font text-base" :class="[isActive(href) ? 'text-font' : ' text-font-70']">{{ label }}</n-text>
     </n-button>
-    <div v-else class="h-12 flex-center flex-col gap-1">
+    <div v-else class="flex-col flex-center gap-1 h-12">
       <img class="size-[22px] transition-all" :class="[isActive(href) ? '' : 'opacity-70 grayscale']" :src="`/static/tabbars/${icon}`" loading="lazy" :alt="label">
-      <n-text class="text-xs transition-all" :class="[isActive(href) ? 'text-primary' : 'text-basic-1']">{{ label }}</n-text>
+      <n-text class="text-xs transition-all" :class="[isActive(href) ? 'text-primary' : 'text-font-70']">{{ label }}</n-text>
     </div>
   </router-link>
 </template>

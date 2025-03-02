@@ -1,27 +1,27 @@
 <template>
-  <div class="flex-1 lg:p-6 flex flex-col gap-4 lg:bg-card lg:rounded-20">
+  <div class="flex flex-col flex-1 gap-4 lg:bg-card lg:p-6 lg:rounded-2xl">
     <div v-if="screen.lg" class="hidden lg:flex items-center gap-2">
       <div class="flex">
         <n-text class="font-medium text-base">Withdraw</n-text>
       </div>
     </div>
-    <div v-if="pool" class="flex-1 flex flex-col lg:flex-row gap-8 lg:gap-6">
-      <div class="flex-1 lg:p-6 flex flex-col gap-10 lg:bg-tab lg:rounded">
+    <div v-if="pool" class="flex lg:flex-row flex-col flex-1 gap-8 lg:gap-6">
+      <div class="flex flex-col flex-1 gap-10 lg:bg-tab lg:p-6 lg:rounded">
         <div class="flex flex-col gap-4">
           <n-text class="text-xs" depth="1">Amount to withdraw</n-text>
           <WithdrawInput v-model="inputAmount" :pool="pool" :balance="liquidity" @change="onAmountChange" />
           <n-text class="text-xs" depth="1">Excepted to receive</n-text>
-          <div class="p-4 flex flex-col gap-4 bg-card lg:bg-section rounded-lg">
+          <div class="flex flex-col gap-4 bg-card lg:bg-section p-4 rounded-lg">
             <TokenReceive :token="pool.currency0" :balance="quoteData?.amount0Min || 0n" />
             <TokenReceive :token="pool.currency1" :balance="quoteData?.amount1Min || 0n" />
           </div>
         </div>
         <div>
           <ActionButton :chain-id="pool.chainId" :chains="supportedChains">
-            <ZButton v-if="!isInputValid" class="h-10 sm:h-12 w-full" :aria-label="inputHint">{{ inputHint }}</ZButton>
-            <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12 w-full" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-            <ZButton v-else-if="!approved" class="h-10 sm:h-12 w-full" :disabled="approving" :loading="approving" :aria-label="`Approve ${getPoolName(pool)}`" @click="onApproval">Approve {{ getPoolName(pool) }}</ZButton>
-            <ZButton v-else class="h-10 sm:h-12 w-full" :loading="withdrawing" aria-label="Deposit" @click="onWithdraw">Withdraw</ZButton>
+            <ZButton v-if="!isInputValid" class="w-full h-10 sm:h-12" :aria-label="inputHint">{{ inputHint }}</ZButton>
+            <ZButton v-else-if="approvalChecking" class="w-full h-10 sm:h-12" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
+            <ZButton v-else-if="!approved" class="w-full h-10 sm:h-12" :disabled="approving" :loading="approving" :aria-label="`Approve ${getPoolName(pool)}`" @click="onApproval">Approve {{ getPoolName(pool) }}</ZButton>
+            <ZButton v-else class="w-full h-10 sm:h-12" :loading="withdrawing" aria-label="Deposit" @click="onWithdraw">Withdraw</ZButton>
           </ActionButton>
         </div>
       </div>

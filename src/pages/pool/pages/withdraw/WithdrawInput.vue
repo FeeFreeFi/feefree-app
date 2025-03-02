@@ -1,16 +1,16 @@
 <template>
-  <div class="p-4 flex flex-col gap-4 bg-card lg:bg-section rounded-lg">
-    <div class="rounded flex flex-col bg-block">
+  <div class="flex flex-col gap-4 bg-card lg:bg-section p-4 rounded-lg">
+    <div class="bg-block flex flex-col rounded">
       <div class="flex-y-center gap-2">
         <n-input-number v-model:value="amount" class="flex-1" :min="0" :max="maxAmount" placeholder="0.0" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
         <i-ff-position class="size-6" />
       </div>
       <n-divider class="!my-0" />
-      <div class="mt-3 flex-y-center justify-between">
+      <div class="flex-y-center justify-between mt-3">
         <ZPoolIcon :pool="pool" />
         <div class="flex-y-center gap-1 overflow-hidden text-xs">
           <n-text depth="1">Balance</n-text>
-          <ZBalance class="text-basic-1 !font-normal" :value="balance" />
+          <ZBalance class="text-font-70 !font-normal" :value="balance" />
         </div>
       </div>
       <div class="py-4">
@@ -43,7 +43,7 @@ const emit = defineEmits<{
 
 const modelValue = defineModel<string>({ required: true })
 
-const amount = ref(fromValue(modelValue.value || 0).toNumber())
+const amount = ref<number | null>(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, 0) : undefined)
 const amountValue = computed(() => parseAmount(amount.value || 0, 0))
 

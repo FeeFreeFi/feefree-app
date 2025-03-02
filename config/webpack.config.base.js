@@ -90,37 +90,12 @@ export default {
       },
       {
         test: /\.scss$/,
-        exclude: /\.module\.scss$/,
         use: [
           isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
           {
             loader: 'css-loader',
             options: {
               importLoaders: 2,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              additionalData: '@use "@/assets/styles/variables.module.scss" as *;',
-            },
-          },
-        ],
-      },
-      {
-        test: /\.module\.scss$/,
-        use: [
-          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 2,
-              modules: {
-                mode: 'local',
-              },
             },
           },
           {

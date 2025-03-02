@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <img class="aspect-square" :class="imgClass" :src="`/static/nfts/${src}`" loading="lazy" :alt="label">
-    <ZChainIcon class="absolute top-1 right-1" :class="chainClass" :chain-id="chainId" />
+    <ZChainIcon class="top-1 right-1 absolute" :class="chainClass" :chain-id="chainId" />
   </div>
 </template>
 

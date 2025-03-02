@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-col flex-center bg-container p-8 rounded-20 w-full max-w-[444px] margin-center">
+  <div class="flex-col flex-center bg-container p-8 rounded-2xl w-full max-w-[444px] margin-center">
     <div class="relative flex flex-col justify-center items-center w-[272px] sm:w-[380px]">
       <div class="relative w-[272px] sm:w-[380px]">
         <img class="size-full aspect-square" :src="notFoundBg" loading="lazy" alt="Not found">
