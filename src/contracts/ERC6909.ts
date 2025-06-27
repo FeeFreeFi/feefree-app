@@ -210,13 +210,6 @@ export const setOperator = async (client: { publicClient: PublicClient, walletCl
   return { chainId: publicClient.chain!.id, hash }
 }
 
-/**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
- * @param {string} address
- * @param {string} receiver
- * @param {bigint} id
- * @param {bigint} amount
- */
 export const transfer = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, receiver: string, id: bigint, amount: bigint) => {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address

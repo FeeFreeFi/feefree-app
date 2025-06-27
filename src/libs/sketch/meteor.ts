@@ -1,10 +1,10 @@
 import { debounce } from 'lodash-es'
-import '@/vendors/q5'
+// @ts-expect-error ignore
+import Q5 from '@/vendors/q5'
 
-const meteor = (id: string) => {
+const meteor = async (id: string) => {
   const el = document.querySelector(id)
-  // @ts-expect-error ignore
-  const q = new window.Q5('ff', el)
+  const q = new Q5('ff', el)
 
   const { createCanvas, resizeCanvas, opacity, background, translate, random, map, dist, norm, color, lerpColor, stroke, strokeWeight, line } = q
 

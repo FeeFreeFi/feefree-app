@@ -1,22 +1,3 @@
-<template>
-  <div class="flex-1 lg:bg-card lg:rounded-2xl">
-    <div v-if="pool" class="flex flex-col gap-4 lg:p-6">
-      <!-- Header -->
-      <PoolHeader :pool="pool" />
-      <!-- Pool Price -->
-      <PoolPrice :pool="pool" :price0="poolData.price0" :price1="poolData.price1" />
-      <!-- TVL -->
-      <ItemBox class="!bg-card lg:!bg-box" label="TVL">
-        <div>
-          <n-text>${{ toBalance(poolData.tvl) }}</n-text>
-        </div>
-      </ItemBox>
-      <!-- Assets in Pool -->
-      <AssetsDetail class="!bg-card lg:!bg-box" label="Assets in Pool" :currency0="pool.currency0" :currency1="pool.currency1" :data="poolData" :holder="getPoolAddress(pool.chainId)" />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { PoolData, PoolMeta } from '@/types'
 import { useRoute, useRouter } from 'vue-router'
@@ -58,3 +39,22 @@ onMounted(async () => {
   }
 })
 </script>
+
+<template>
+  <div class="flex-1 lg:bg-card lg:rounded-2xl">
+    <div v-if="pool" class="flex flex-col gap-4 lg:p-6">
+      <!-- Header -->
+      <PoolHeader :pool="pool" />
+      <!-- Pool Price -->
+      <PoolPrice :pool="pool" :price0="poolData.price0" :price1="poolData.price1" />
+      <!-- TVL -->
+      <ItemBox class="!bg-card lg:!bg-box" label="TVL">
+        <div>
+          <n-text>${{ toBalance(poolData.tvl) }}</n-text>
+        </div>
+      </ItemBox>
+      <!-- Assets in Pool -->
+      <AssetsDetail class="!bg-card lg:!bg-box" label="Assets in Pool" :currency0="pool.currency0" :currency1="pool.currency1" :data="poolData" :holder="getPoolAddress(pool.chainId)" />
+    </div>
+  </div>
+</template>

@@ -1,9 +1,3 @@
-<template>
-  <n-text class="flex font-medium truncate">
-    <n-text class="truncate">{{ toBalanceWithUnit(value, decimals, dp) }}</n-text>
-  </n-text>
-</template>
-
 <script setup lang="ts">
 import { toBalanceWithUnit } from '@/utils'
 
@@ -18,3 +12,11 @@ withDefaults(defineProps<Props>(), {
   dp: 6,
 })
 </script>
+
+<template>
+  <n-text class="flex font-medium truncate">
+    <n-text class="truncate">
+      {{ toBalanceWithUnit(value, decimals, dp) }}
+    </n-text>
+  </n-text>
+</template>

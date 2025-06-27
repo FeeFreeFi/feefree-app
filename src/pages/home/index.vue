@@ -1,32 +1,3 @@
-<template>
-  <div :id="containerId.slice(1)" class="relative bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
-    <div class="flex flex-col">
-      <div class="flex justify-between">
-        <n-text class="font-medium text-lg">Swap</n-text>
-        <div v-if="account" class="flex-y-center cursor-pointer" @click="onShare">
-          <i-ff-share class="size-4" />
-        </div>
-      </div>
-      <TokenInput v-model="inputAmount" class="mt-4 sm:mt-8" :token="inputToken" :balance="inputBalance" label="Give" @change="onAmountChange" @select="onSelectInputToken" />
-      <ReverseButton class="my-3" :disabled="!inputToken && !outputToken" @reverse="onReverse" />
-      <SwapOutput :input-token="inputToken" :output-token="outputToken" :output-balance="outputBalance" :quote="quoteData" :fee="fee" @select="onSelectOutputToken" />
-      <div class="mt-10">
-        <ActionButton :chain-id="appChainId" :chains="supportedChains">
-          <ZButton v-if="!isInputValid" class="h-10 sm:h-12" block :aria-label="inputHint">{{ inputHint }}</ZButton>
-          <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12" block loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-          <ZButton v-else-if="!approved" class="h-10 sm:h-12" block :disabled="approving" :loading="approving" :aria-label="`Approve ${inputToken!.symbol}`" @click="onApproval">Approve {{ inputToken!.symbol }}</ZButton>
-          <ZButton v-else class="h-10 sm:h-12" block :disabled="!quoteData" :loading="swaping" aria-label="Swap" @click="onSwap">Swap</ZButton>
-        </ActionButton>
-      </div>
-      <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />
-    </div>
-    <TokenSelector v-model:show="showTokenSelector" :current="currentToken" :on-select="onSelectToken" />
-    <ApproveModal v-model="approveAction" />
-    <SwapModal v-model="swapAction" />
-    <ValueChangeModal v-model="valueChangeAction" :on-confirm="doSwap" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { ApprovalAction, Callback, QuoteSwapData, SwapAction, Token, ValueChangedData } from '@/types'
 import type { DebouncedFunc } from 'lodash-es'
@@ -351,3 +322,42 @@ onMounted(async () => {
   handleRoute()
 })
 </script>
+
+<template>
+  <div :id="containerId.slice(1)" class="relative bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
+    <div class="flex flex-col">
+      <div class="flex justify-between">
+        <n-text class="font-medium text-lg">
+          Swap
+        </n-text>
+        <div v-if="account" class="flex-y-center cursor-pointer" @click="onShare">
+          <i-ff-share class="size-4" />
+        </div>
+      </div>
+      <TokenInput v-model="inputAmount" class="mt-4 sm:mt-8" :token="inputToken" :balance="inputBalance" label="Give" @change="onAmountChange" @select="onSelectInputToken" />
+      <ReverseButton class="my-3" :disabled="!inputToken && !outputToken" @reverse="onReverse" />
+      <SwapOutput :input-token="inputToken" :output-token="outputToken" :output-balance="outputBalance" :quote="quoteData" :fee="fee" @select="onSelectOutputToken" />
+      <div class="mt-10">
+        <ActionButton :chain-id="appChainId" :chains="supportedChains">
+          <ZButton v-if="!isInputValid" class="h-10 sm:h-12" block :aria-label="inputHint">
+            {{ inputHint }}
+          </ZButton>
+          <ZButton v-else-if="approvalChecking" class="h-10 sm:h-12" block loading disabled aria-label="Checking for Approval">
+            Checking for Approval
+          </ZButton>
+          <ZButton v-else-if="!approved" class="h-10 sm:h-12" block :disabled="approving" :loading="approving" :aria-label="`Approve ${inputToken!.symbol}`" @click="onApproval">
+            Approve {{ inputToken!.symbol }}
+          </ZButton>
+          <ZButton v-else class="h-10 sm:h-12" block :disabled="!quoteData" :loading="swaping" aria-label="Swap" @click="onSwap">
+            Swap
+          </ZButton>
+        </ActionButton>
+      </div>
+      <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />
+    </div>
+    <TokenSelector v-model:show="showTokenSelector" :current="currentToken" :on-select="onSelectToken" />
+    <ApproveModal v-model="approveAction" />
+    <SwapModal v-model="swapAction" />
+    <ValueChangeModal v-model="valueChangeAction" :on-confirm="doSwap" />
+  </div>
+</template>

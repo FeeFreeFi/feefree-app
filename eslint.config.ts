@@ -1,6 +1,7 @@
 import antfu from '@antfu/eslint-config'
+import pluginOxlint from 'eslint-plugin-oxlint'
 
-export default antfu(
+const antfuConfig = antfu(
   {
     typescript: true,
     stylistic: {
@@ -13,8 +14,8 @@ export default antfu(
       markdown: true,
     },
     ignores: [
-      'dist/**/*',
-      'src/vendors/**/*',
+      '**/{dist,coverage,playwright-report,test-results}/**',
+      'src/vendors/*.{js,ts}',
     ],
   },
   {
@@ -28,8 +29,6 @@ export default antfu(
   {
     rules: {
       'ts/ban-ts-comment': ['off'],
-
-      'node/prefer-global/process': ['error', 'always'],
 
       'no-console': ['off'],
       'regexp/prefer-range': ['off'],
@@ -56,4 +55,8 @@ export default antfu(
       'style/no-multiple-empty-lines': ['warn'],
     },
   },
+
+  ...pluginOxlint.configs['flat/recommended'],
 )
+
+export default antfuConfig

@@ -267,12 +267,6 @@ export const addLiquidity = async (client: { publicClient: PublicClient, walletC
   return { chainId: publicClient.chain!.id, hash }
 }
 
-/**
- * @param {{publicClient: import('viem').PublicClient, walletClient: import('viem').WalletClient}} client
- * @param {string} address
- * @param {string} data
- * @param {number} deadline
- */
 export const removeLiquidity = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, deadline: number) => {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address

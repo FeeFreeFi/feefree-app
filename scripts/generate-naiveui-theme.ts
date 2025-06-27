@@ -1,8 +1,7 @@
 #!/usr/bin/env -S npx tsx
 
-/// <reference types="node" />
-
 import type { GlobalThemeOverrides } from 'naive-ui'
+import process from 'node:process'
 import Color from 'colorjs.io'
 
 const toRGBHex = (color: string) => new Color(color).to('srgb').toString({ format: 'hex' })

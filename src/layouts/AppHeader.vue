@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { screen } from '@/hooks/useScreen'
+import NavBar from '@/components/NavBar/index.vue'
+import AccountCenter from '@/components/AccountCenter/index.vue'
+</script>
+
 <template>
   <header class="top-0 z-[99] sticky bg-header backdrop-blur-sm">
     <slot name="notice" />
@@ -16,9 +22,3 @@
     </div>
   </header>
 </template>
-
-<script setup lang="ts">
-import { screen } from '@/hooks/useScreen'
-import NavBar from '@/components/NavBar/index.vue'
-import AccountCenter from '@/components/AccountCenter/index.vue'
-</script>

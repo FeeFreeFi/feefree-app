@@ -1,11 +1,3 @@
-<template>
-  <n-slider :value="percent" :tooltip="false" :disabled="!balance" :on-update:value="onUpdate">
-    <template #thumb>
-      <div class="bg-linear-256 from-[#E7E368] hover:from-[#DFDA2D] to-[#41F5CF] hover:to-[#35EDC6] rounded-full size-3" />
-    </template>
-  </n-slider>
-</template>
-
 <script setup lang="ts">
 import { fromValue, parseAmount } from '@/utils'
 
@@ -32,3 +24,11 @@ const onUpdate = (ratio: number) => {
   emit('change', value)
 }
 </script>
+
+<template>
+  <n-slider :value="percent" :tooltip="false" :disabled="!balance" :on-update:value="onUpdate">
+    <template #thumb>
+      <div class="bg-linear-256 from-[#E7E368] hover:from-[#DFDA2D] to-[#41F5CF] hover:to-[#35EDC6] rounded-full size-3" />
+    </template>
+  </n-slider>
+</template>

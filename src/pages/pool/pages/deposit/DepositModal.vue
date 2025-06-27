@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import type { AddLiquidityAction } from '@/types'
+import ActionModal from '@/components/ActionModal/index.vue'
+import ZTokenIcon from '@/components/ZTokenIcon.vue'
+import ZTokenBalance from '@/components/ZTokenBalance.vue'
+
+const modelValue = defineModel<AddLiquidityAction>({ required: true })
+
+const data = computed(() => modelValue.value.data)
+</script>
+
 <template>
   <ActionModal v-model="modelValue">
     <div class="flex-col flex-center gap-3">
@@ -13,14 +24,3 @@
     </div>
   </ActionModal>
 </template>
-
-<script setup lang="ts">
-import type { AddLiquidityAction } from '@/types'
-import ActionModal from '@/components/ActionModal/index.vue'
-import ZTokenIcon from '@/components/ZTokenIcon.vue'
-import ZTokenBalance from '@/components/ZTokenBalance.vue'
-
-const modelValue = defineModel<AddLiquidityAction>({ required: true })
-
-const data = computed(() => modelValue.value.data)
-</script>

@@ -1,13 +1,3 @@
-<template>
-  <div class="flex-y-center justify-between">
-    <a class="flex-y-center gap-2 no-underline" :href="url" target="_blank" aria-label="token holder">
-      <ZTokenIcon :token="token" />
-      <ZTokenBalance :token="token" :balance="balance" :dp="dp" />
-    </a>
-    <n-text depth="1">{{ percent }}</n-text>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { Token } from '@/types'
 import { isNative } from '@/utils'
@@ -32,3 +22,15 @@ const url = computed(() => {
   return isNative(token.address) ? getAccountUrl(token.chainId, holder) : getHolderUrl(token.chainId, token.address, holder)
 })
 </script>
+
+<template>
+  <div class="flex-y-center justify-between">
+    <a class="flex-y-center gap-2 no-underline" :href="url" target="_blank" aria-label="token holder">
+      <ZTokenIcon :token="token" />
+      <ZTokenBalance :token="token" :balance="balance" :dp="dp" />
+    </a>
+    <n-text depth="1">
+      {{ percent }}
+    </n-text>
+  </div>
+</template>

@@ -1,9 +1,10 @@
-import '@/assets/styles/index.scss'
+import '@/assets/styles/index.css'
 
-import '@/libs/dayjs'
 import { createApp } from 'vue'
+import '@/libs/dayjs'
 
 import App from './App.vue'
+
 import router from '@/router'
 import usePage from '@/hooks/usePage'
 import useScreen from '@/hooks/useScreen'

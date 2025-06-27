@@ -121,10 +121,6 @@ const mapPool = (pool: PoolMeta, currency: string) => {
   }
 }
 
-/**
- * @param {number} chainId
- * @param {boolean} hot
- */
 export const getPools = (chainId: number | undefined = undefined, hot: boolean | undefined = undefined) => {
   const list = Object.values(config.value)
   return list.filter(it => (!chainId || it.chainId === chainId) && (hot === undefined || it.hot === hot))

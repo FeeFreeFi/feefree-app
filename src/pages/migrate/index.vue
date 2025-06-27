@@ -1,92 +1,3 @@
-<template>
-  <ZContainer class="flex flex-col">
-    <div class="flex sm:flex-row flex-col justify-start sm:justify-between gap-4 sm:gap-0 mb-4">
-      <div class="flex items-center gap-3">
-        <i-ff-migration class="size-5 sm:size-6" />
-        <n-text>Migrate</n-text>
-      </div>
-    </div>
-    <div v-if="config" class="justify-items-center gap-y-4 sm:gap-y-8 sm:gap-x-8 md:gap-x-32 lg:gap-x-14 xl:gap-x-8 2xl:gap-x-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-      <div v-if="poolOld" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
-        <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
-          <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
-          <ZChainIcon class="top-1 right-1 absolute size-4" :chain-id="poolOld.chainId" />
-        </div>
-        <div class="top-[65px] left-4 sm:left-6 absolute">
-          <ZPoolIcon :pool="poolOld" />
-        </div>
-        <div class="flex flex-col px-4 sm:px-6 pt-8 pb-6">
-          <div class="flex-y-center gap-2">
-            <ZPoolName :pool="poolOld" />
-            <n-text depth="1">Old</n-text>
-          </div>
-          <div class="flex justify-between mt-4 sm:mt-6 text-xs">
-            <n-text depth="1">Liquidity</n-text>
-            <ZBalance :value="liquidityOldBalance" :decimals="0" :dp="0" />
-          </div>
-          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="poolOld.chainId" :chains="supportedChains">
-            <div class="flex gap-4">
-              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityOldBalance" :loading="loading === ACTION_WITHDRAW_OLD" aria-label="Withdraw" @click="() => onWithdrawLiquidity(false)">Withdraw</ZButton>
-              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityOldBalance" :loading="loading === ACTION_MIGRATE_OLD" aria-label="Migrate" @click="() => onMigrateLiquidity(false)">Migrate</ZButton>
-            </div>
-          </ActionButton>
-        </div>
-      </div>
-
-      <div class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
-        <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
-          <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
-          <ZChainIcon class="top-1 right-1 absolute size-4" :chain-id="poolLegacy!.chainId" />
-        </div>
-        <div class="top-[65px] left-4 sm:left-6 absolute">
-          <ZPoolIcon :pool="poolLegacy!" />
-        </div>
-        <div class="flex flex-col px-4 sm:px-6 pt-8 pb-6">
-          <div class="flex-y-center gap-2">
-            <ZPoolName :pool="poolLegacy!" />
-            <n-text depth="1">Legacy</n-text>
-          </div>
-          <div class="flex justify-between mt-4 sm:mt-6 text-xs">
-            <n-text depth="1">Liquidity</n-text>
-            <ZBalance :value="liquidityLegacyBalance" :decimals="0" :dp="0" />
-          </div>
-          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="poolLegacy!.chainId" :chains="supportedChains">
-            <div class="flex gap-4">
-              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityLegacyBalance" :loading="loading === ACTION_WITHDRAW_LEGACY" aria-label="Withdraw" @click="() => onWithdrawLiquidity(true)">Withdraw</ZButton>
-              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityLegacyBalance" :loading="loading === ACTION_MIGRATE_LEGACY" aria-label="Migrate" @click="() => onMigrateLiquidity(true)">Migrate</ZButton>
-            </div>
-          </ActionButton>
-        </div>
-      </div>
-
-      <div v-for="token in config.tokens" :key="token.address" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
-        <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
-          <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Item background">
-          <ZChainIcon class="top-1 right-1 absolute size-4" :chain-id="token.chainId" />
-        </div>
-        <div class="top-[65px] left-4 sm:left-6 absolute">
-          <ZTokenIcon class="!size-6" :token="token" />
-        </div>
-        <div class="flex flex-col px-4 sm:px-6 pt-8 pb-6">
-          <div class="flex-y-center gap-2">
-            <n-text class="text-sm">{{ token.symbol }}</n-text>
-            <n-text depth="1">Legacy</n-text>
-          </div>
-          <div class="flex justify-between mt-4 sm:mt-6 text-xs">
-            <n-text depth="1">Balance</n-text>
-            <ZBalance :value="allBalances[token.address] || 0n" :decimals="token.decimals" :dp="4" />
-          </div>
-          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="token?.chainId" :chains="supportedChains">
-            <div class="flex gap-4">
-              <ZButton class="flex-1 h-10" :disabled="!!loading || !allBalances[token.address]" :loading="loading === token.address" aria-label="Withdraw" @click="() => onWithdrawToken(token)">Withdraw</ZButton>
-            </div>
-          </ActionButton>
-        </div>
-      </div>
-    </div>
-  </ZContainer>
-</template>
-
 <script setup lang="ts">
 import type { Callback, Token } from '@/types'
 import type { DebouncedFunc } from 'lodash-es'
@@ -307,3 +218,116 @@ onMounted(async () => {
   debounceUpdateBalances.value!()
 })
 </script>
+
+<template>
+  <ZContainer class="flex flex-col">
+    <div class="flex sm:flex-row flex-col justify-start sm:justify-between gap-4 sm:gap-0 mb-4">
+      <div class="flex items-center gap-3">
+        <i-ff-migration class="size-5 sm:size-6" />
+        <n-text>Migrate</n-text>
+      </div>
+    </div>
+    <div v-if="config" class="justify-items-center gap-y-4 sm:gap-y-8 sm:gap-x-8 md:gap-x-32 lg:gap-x-14 xl:gap-x-8 2xl:gap-x-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div v-if="poolOld" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
+        <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
+          <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
+          <ZChainIcon class="top-1 right-1 absolute size-4" :chain-id="poolOld.chainId" />
+        </div>
+        <div class="top-[65px] left-4 sm:left-6 absolute">
+          <ZPoolIcon :pool="poolOld" />
+        </div>
+        <div class="flex flex-col px-4 sm:px-6 pt-8 pb-6">
+          <div class="flex-y-center gap-2">
+            <ZPoolName :pool="poolOld" />
+            <n-text depth="1">
+              Old
+            </n-text>
+          </div>
+          <div class="flex justify-between mt-4 sm:mt-6 text-xs">
+            <n-text depth="1">
+              Liquidity
+            </n-text>
+            <ZBalance :value="liquidityOldBalance" :decimals="0" :dp="0" />
+          </div>
+          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="poolOld.chainId" :chains="supportedChains">
+            <div class="flex gap-4">
+              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityOldBalance" :loading="loading === ACTION_WITHDRAW_OLD" aria-label="Withdraw" @click="() => onWithdrawLiquidity(false)">
+                Withdraw
+              </ZButton>
+              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityOldBalance" :loading="loading === ACTION_MIGRATE_OLD" aria-label="Migrate" @click="() => onMigrateLiquidity(false)">
+                Migrate
+              </ZButton>
+            </div>
+          </ActionButton>
+        </div>
+      </div>
+
+      <div class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
+        <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
+          <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">
+          <ZChainIcon class="top-1 right-1 absolute size-4" :chain-id="poolLegacy!.chainId" />
+        </div>
+        <div class="top-[65px] left-4 sm:left-6 absolute">
+          <ZPoolIcon :pool="poolLegacy!" />
+        </div>
+        <div class="flex flex-col px-4 sm:px-6 pt-8 pb-6">
+          <div class="flex-y-center gap-2">
+            <ZPoolName :pool="poolLegacy!" />
+            <n-text depth="1">
+              Legacy
+            </n-text>
+          </div>
+          <div class="flex justify-between mt-4 sm:mt-6 text-xs">
+            <n-text depth="1">
+              Liquidity
+            </n-text>
+            <ZBalance :value="liquidityLegacyBalance" :decimals="0" :dp="0" />
+          </div>
+          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="poolLegacy!.chainId" :chains="supportedChains">
+            <div class="flex gap-4">
+              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityLegacyBalance" :loading="loading === ACTION_WITHDRAW_LEGACY" aria-label="Withdraw" @click="() => onWithdrawLiquidity(true)">
+                Withdraw
+              </ZButton>
+              <ZButton class="flex-1 h-10 shrink-0" :disabled="!!loading || !liquidityLegacyBalance" :loading="loading === ACTION_MIGRATE_LEGACY" aria-label="Migrate" @click="() => onMigrateLiquidity(true)">
+                Migrate
+              </ZButton>
+            </div>
+          </ActionButton>
+        </div>
+      </div>
+
+      <div v-for="token in config.tokens" :key="token.address" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
+        <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
+          <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Item background">
+          <ZChainIcon class="top-1 right-1 absolute size-4" :chain-id="token.chainId" />
+        </div>
+        <div class="top-[65px] left-4 sm:left-6 absolute">
+          <ZTokenIcon class="!size-6" :token="token" />
+        </div>
+        <div class="flex flex-col px-4 sm:px-6 pt-8 pb-6">
+          <div class="flex-y-center gap-2">
+            <n-text class="text-sm">
+              {{ token.symbol }}
+            </n-text>
+            <n-text depth="1">
+              Legacy
+            </n-text>
+          </div>
+          <div class="flex justify-between mt-4 sm:mt-6 text-xs">
+            <n-text depth="1">
+              Balance
+            </n-text>
+            <ZBalance :value="allBalances[token.address] || 0n" :decimals="token.decimals" :dp="4" />
+          </div>
+          <ActionButton class="mt-6" btn-class="!h-10" :chain-id="token?.chainId" :chains="supportedChains">
+            <div class="flex gap-4">
+              <ZButton class="flex-1 h-10" :disabled="!!loading || !allBalances[token.address]" :loading="loading === token.address" aria-label="Withdraw" @click="() => onWithdrawToken(token)">
+                Withdraw
+              </ZButton>
+            </div>
+          </ActionButton>
+        </div>
+      </div>
+    </div>
+  </ZContainer>
+</template>

@@ -1,9 +1,3 @@
-<template>
-  <main class="relative flex flex-col flex-1 mx-auto px-4 w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
-    <slot />
-  </main>
-</template>
-
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { useNotification } from 'naive-ui'
@@ -98,3 +92,9 @@ onMounted(() => {
   onBeforeUnmount(stopWatch)
 })
 </script>
+
+<template>
+  <main class="relative flex flex-col flex-1 mx-auto px-4 w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+    <slot />
+  </main>
+</template>

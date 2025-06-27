@@ -1,26 +1,3 @@
-<template>
-  <div :id="containerId.slice(1)" class="relative bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
-    <div class="flex flex-col">
-      <n-text class="font-medium text-lg">Launch Shortable Token</n-text>
-      <TokenInput v-model="assetAmount" class="mt-4 sm:mt-8" :token="assetToken" :balance="assetBalance" label="Pricing Token" @change="onAmountChange" @select="onShowAssetSelector" />
-      <LaunchToken v-model:name="name" v-model:symbol="symbol" class="mt-3 sm:mt-6" />
-      <LockLiquidity v-model="duration" class="mt-3 sm:mt-6" />
-      <div class="mt-10">
-        <ActionButton :chain-id="assetToken?.chainId" :chains="supportedChains">
-          <ZButton v-if="!isInputValid" class="w-full h-10 sm:h-12" :aria-label="inputHint">{{ inputHint }}</ZButton>
-          <ZButton v-else-if="approvalChecking" class="w-full h-10 sm:h-12" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-          <ZButton v-else-if="!approved" class="w-full h-10 sm:h-12" :disabled="approving" :loading="approving" :aria-label="`Approve ${assetToken!.symbol}`" @click="onApproval">Approve {{ assetToken!.symbol }}</ZButton>
-          <ZButton v-else class="w-full h-10 sm:h-12" :disabled="launching" :loading="launching" aria-label="Launch" @click="onLaunch">Launch</ZButton>
-        </ActionButton>
-      </div>
-      <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />
-    </div>
-    <TokenSelector v-model:show="showAssetSelector" :current="assetToken" :on-select="onSelectAsset" />
-    <ApproveModal v-model="approveAction" />
-    <LaunchModal v-model="launchAction" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { Callback, LaunchAction, Token } from '@/types'
 import type { DebouncedFunc } from 'lodash-es'
@@ -239,3 +216,36 @@ onMounted(async () => {
   await loadMyPools(appChainId.value, account.value)
 })
 </script>
+
+<template>
+  <div :id="containerId.slice(1)" class="relative bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
+    <div class="flex flex-col">
+      <n-text class="font-medium text-lg">
+        Launch Shortable Token
+      </n-text>
+      <TokenInput v-model="assetAmount" class="mt-4 sm:mt-8" :token="assetToken" :balance="assetBalance" label="Pricing Token" @change="onAmountChange" @select="onShowAssetSelector" />
+      <LaunchToken v-model:name="name" v-model:symbol="symbol" class="mt-3 sm:mt-6" />
+      <LockLiquidity v-model="duration" class="mt-3 sm:mt-6" />
+      <div class="mt-10">
+        <ActionButton :chain-id="assetToken?.chainId" :chains="supportedChains">
+          <ZButton v-if="!isInputValid" class="w-full h-10 sm:h-12" :aria-label="inputHint">
+            {{ inputHint }}
+          </ZButton>
+          <ZButton v-else-if="approvalChecking" class="w-full h-10 sm:h-12" loading disabled aria-label="Checking for Approval">
+            Checking for Approval
+          </ZButton>
+          <ZButton v-else-if="!approved" class="w-full h-10 sm:h-12" :disabled="approving" :loading="approving" :aria-label="`Approve ${assetToken!.symbol}`" @click="onApproval">
+            Approve {{ assetToken!.symbol }}
+          </ZButton>
+          <ZButton v-else class="w-full h-10 sm:h-12" :disabled="launching" :loading="launching" aria-label="Launch" @click="onLaunch">
+            Launch
+          </ZButton>
+        </ActionButton>
+      </div>
+      <RecipientAddress v-model="recipient" class="mt-4" :to="containerId" />
+    </div>
+    <TokenSelector v-model:show="showAssetSelector" :current="assetToken" :on-select="onSelectAsset" />
+    <ApproveModal v-model="approveAction" />
+    <LaunchModal v-model="launchAction" />
+  </div>
+</template>

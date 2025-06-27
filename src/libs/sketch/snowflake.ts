@@ -1,8 +1,8 @@
-import '@/vendors/snowflakes'
+// @ts-expect-error ignore
+import Snowflakes from '@/vendors/snowflakes'
 
-const snowflake = (id: string) => {
-  // @ts-expect-error ignore
-  const _sketch = new window.Snowflakes({
+const snowflake = async (id: string) => {
+  const _sketch = new Snowflakes({
     color: 'white',
     container: document.querySelector(id),
     minSize: 8,

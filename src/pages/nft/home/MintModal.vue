@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import type { MintAction } from '@/types'
+import ActionModal from '@/components/ActionModal/index.vue'
+import NftImage from './NftImage.vue'
+
+const modelValue = defineModel<MintAction>({ required: true })
+
+const data = computed(() => modelValue.value.data)
+</script>
+
 <template>
   <ActionModal v-model="modelValue">
     <div class="flex-center">
@@ -8,13 +18,3 @@
     </div>
   </ActionModal>
 </template>
-
-<script setup lang="ts">
-import type { MintAction } from '@/types'
-import ActionModal from '@/components/ActionModal/index.vue'
-import NftImage from './NftImage.vue'
-
-const modelValue = defineModel<MintAction>({ required: true })
-
-const data = computed(() => modelValue.value.data)
-</script>

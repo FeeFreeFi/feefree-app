@@ -8,15 +8,6 @@ declare global {
   interface WindowEventMap {
     'eip6963:announceProvider': EIP6963AnnounceProviderEvent
   }
-
-  interface ProcessEnv {
-    NODE_ENV: 'development' | 'production'
-    [key: string]: string | undefined
-  }
-
-  const process: {
-    env: ProcessEnv
-  }
 }
 
 export {}

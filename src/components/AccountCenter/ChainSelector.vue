@@ -1,17 +1,3 @@
-<template>
-  <div>
-    <n-popselect class="rounded-lg w-[240px] max-h-[360px]" trigger="click" :value="current?.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
-      <ZActionButton class="relative size-9" aria-label="select chain">
-        <ZChainIcon v-if="!walletChainId || chainSupported" class="size-6" :chain-id="current?.value || 0" />
-        <i-ion-warning v-else class="size-4 text-warning" />
-        <div class="right-[2px] bottom-[2px] absolute">
-          <DownArrow class="!size-3" />
-        </div>
-      </ZActionButton>
-    </n-popselect>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useNotification } from 'naive-ui'
 import { getChainName, getChains, isSupportChain } from '@/hooks/useChains'
@@ -82,3 +68,17 @@ onMounted(() => {
   watch(walletChainId, onChainChange)
 })
 </script>
+
+<template>
+  <div>
+    <n-popselect class="rounded-lg w-[240px] max-h-[360px]" trigger="click" :value="current?.value" :options="options" :render-label="renderLabel" scrollable size="large" placement="bottom-end" :on-update:value="onSelect">
+      <ZActionButton class="relative size-9" aria-label="select chain">
+        <ZChainIcon v-if="!walletChainId || chainSupported" class="size-6" :chain-id="current?.value || 0" />
+        <i-ion-warning v-else class="size-4 text-warning" />
+        <div class="right-[2px] bottom-[2px] absolute">
+          <DownArrow class="!size-3" />
+        </div>
+      </ZActionButton>
+    </n-popselect>
+  </div>
+</template>

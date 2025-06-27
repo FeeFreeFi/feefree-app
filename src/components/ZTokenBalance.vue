@@ -1,12 +1,3 @@
-<template>
-  <n-text class="font-medium truncate" :class="signClass">
-    <span class="flex truncate">
-      <span class="truncate">{{ displaySign }}{{ token ? toBalanceWithUnit(balance || 0n, token.decimals, dp || token.dp) : 0 }}</span>
-      <span v-if="token && showSymbol" class="ml-[2px]">{{ token.symbol }}</span>
-    </span>
-  </n-text>
-</template>
-
 <script setup lang="ts">
 import type { Token } from '@/types'
 import { toBalanceWithUnit } from '@/utils'
@@ -37,3 +28,12 @@ const displaySign = computed(() => {
   return sign !== undefined ? (sign ? '+ ' : '- ') : ''
 })
 </script>
+
+<template>
+  <n-text class="font-medium truncate" :class="signClass">
+    <span class="flex truncate">
+      <span class="truncate">{{ displaySign }}{{ token ? toBalanceWithUnit(balance || 0n, token.decimals, dp || token.dp) : 0 }}</span>
+      <span v-if="token && showSymbol" class="ml-[2px]">{{ token.symbol }}</span>
+    </span>
+  </n-text>
+</template>

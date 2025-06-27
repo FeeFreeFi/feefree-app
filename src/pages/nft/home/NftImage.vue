@@ -1,10 +1,3 @@
-<template>
-  <div class="relative">
-    <img class="aspect-square" :class="imgClass" :src="`/static/nfts/${src}`" loading="lazy" :alt="label">
-    <ZChainIcon class="top-1 right-1 absolute" :class="chainClass" :chain-id="chainId" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import ZChainIcon from '@/components/ZChainIcon.vue'
 
@@ -21,3 +14,10 @@ withDefaults(defineProps<Props>(), {
   chainClass: 'size-4',
 })
 </script>
+
+<template>
+  <div class="relative">
+    <img class="aspect-square" :class="imgClass" :src="`/static/nfts/${src}`" loading="lazy" :alt="label">
+    <ZChainIcon class="top-1 right-1 absolute" :class="chainClass" :chain-id="chainId" />
+  </div>
+</template>

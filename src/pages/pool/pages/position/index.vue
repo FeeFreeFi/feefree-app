@@ -1,38 +1,3 @@
-<template>
-  <div class="flex flex-col flex-1 gap-4 lg:bg-card lg:p-6 lg:rounded-2xl">
-    <!-- Header -->
-    <div v-if="screen.lg" class="hidden lg:flex justify-between items-center">
-      <div class="flex">
-        <n-text class="font-medium text-base">My Position</n-text>
-      </div>
-    </div>
-    <div v-if="hasPosition" class="flex flex-col gap-4">
-      <div class="flex md:flex-row flex-col gap-4">
-        <!-- Total Liquidity -->
-        <ItemBox class="flex-1" label="Total Liquidity">
-          <div class="flex-y-center gap-2">
-            <ZPoolIcon :pool="pool!" />
-            <ZBalance :value="totalLiquidity" />
-          </div>
-        </ItemBox>
-        <!-- Total Value -->
-        <ItemBox class="flex-1" label="Total Value">
-          <div>
-            <n-text>${{ toBalance(positionData!.tvl) }}</n-text>
-          </div>
-        </ItemBox>
-      </div>
-      <!-- Assets in Position -->
-      <AssetsDetail label="Assets in Position" :currency0="pool!.currency0" :currency1="pool!.currency1" :data="positionData!" :holder="account" />
-      <div v-if="lockDatas.length > 0" class="flex flex-col gap-4">
-        <LockedLiquidity v-for="item, index in lockDatas" :key="index" :pool="pool!" :data="item" :unlocking="unlocking" @unlock="onUnlock" />
-      </div>
-    </div>
-    <NoPosition v-else />
-    <UnlockModal v-model="unlockAction" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { DebouncedFunc } from 'lodash-es'
 import type { Callback, LockData, PoolData, PoolMeta, UnlockAction } from '@/types'
@@ -124,3 +89,40 @@ onMounted(async () => {
   }
 })
 </script>
+
+<template>
+  <div class="flex flex-col flex-1 gap-4 lg:bg-card lg:p-6 lg:rounded-2xl">
+    <!-- Header -->
+    <div v-if="screen.lg" class="hidden lg:flex justify-between items-center">
+      <div class="flex">
+        <n-text class="font-medium text-base">
+          My Position
+        </n-text>
+      </div>
+    </div>
+    <div v-if="hasPosition" class="flex flex-col gap-4">
+      <div class="flex md:flex-row flex-col gap-4">
+        <!-- Total Liquidity -->
+        <ItemBox class="flex-1" label="Total Liquidity">
+          <div class="flex-y-center gap-2">
+            <ZPoolIcon :pool="pool!" />
+            <ZBalance :value="totalLiquidity" />
+          </div>
+        </ItemBox>
+        <!-- Total Value -->
+        <ItemBox class="flex-1" label="Total Value">
+          <div>
+            <n-text>${{ toBalance(positionData!.tvl) }}</n-text>
+          </div>
+        </ItemBox>
+      </div>
+      <!-- Assets in Position -->
+      <AssetsDetail label="Assets in Position" :currency0="pool!.currency0" :currency1="pool!.currency1" :data="positionData!" :holder="account" />
+      <div v-if="lockDatas.length > 0" class="flex flex-col gap-4">
+        <LockedLiquidity v-for="item, index in lockDatas" :key="index" :pool="pool!" :data="item" :unlocking="unlocking" @unlock="onUnlock" />
+      </div>
+    </div>
+    <NoPosition v-else />
+    <UnlockModal v-model="unlockAction" />
+  </div>
+</template>

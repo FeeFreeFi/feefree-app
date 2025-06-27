@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import ZContainer from '@/components/ZContainer.vue'
+import PoolNav from '../components/PoolNav.vue'
+</script>
+
 <template>
   <ZContainer class="flex lg:flex-row flex-col gap-4">
     <PoolNav />
@@ -6,8 +11,3 @@
     </div>
   </ZContainer>
 </template>
-
-<script setup lang="ts">
-import ZContainer from '@/components/ZContainer.vue'
-import PoolNav from '../components/PoolNav.vue'
-</script>

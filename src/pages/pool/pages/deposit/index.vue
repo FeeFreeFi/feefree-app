@@ -1,36 +1,3 @@
-<template>
-  <div class="flex flex-col flex-1 gap-4 lg:bg-card lg:p-6 lg:rounded-2xl">
-    <div v-if="screen.lg" class="hidden lg:flex items-center gap-2">
-      <div class="flex">
-        <n-text class="font-medium text-base">Deposit</n-text>
-      </div>
-    </div>
-    <div v-if="pool" class="flex lg:flex-row flex-col flex-1 gap-8 lg:gap-6">
-      <div class="flex flex-col flex-1 gap-10 lg:bg-tab lg:p-6 rounded overflow-hidden">
-        <div class="flex flex-col gap-4">
-          <n-text class="text-xs" depth="1">I want to deposit</n-text>
-          <DepositInput v-model="inputAmount0" :token="pool.currency0" :balance="balance0" @change="onAmount0Change" />
-          <DepositInput v-model="inputAmount1" :token="pool.currency1" :balance="balance1" @change="onAmount1Change" />
-        </div>
-        <div>
-          <ActionButton :chain-id="pool.chainId" :chains="supportedChains">
-            <ZButton v-if="!isInputValid" class="w-full h-10 sm:h-12" :aria-label="inputHint">{{ inputHint }}</ZButton>
-            <ZButton v-else-if="approvalChecking" class="w-full h-10 sm:h-12" loading disabled aria-label="Checking for Approval">Checking for Approval</ZButton>
-            <div v-else-if="!approved" class="flex gap-3 w-full h-10 sm:h-12">
-              <ZButton v-if="!approved0" class="flex-1 h-full" :disabled="approving0 || approving1" :loading="approving0" :aria-label="`Approve ${pool.currency0.symbol}`" @click="() => onApproval(true)">Approve {{ pool.currency0.symbol }}</ZButton>
-              <ZButton v-if="!approved1" class="flex-1 h-full" :disabled="approving0 || approving1" :loading="approving1" :aria-label="`Approve ${pool.currency1.symbol}`" @click="() => onApproval(false)">Approve {{ pool.currency1.symbol }}</ZButton>
-            </div>
-            <ZButton v-else :disabled="depositing" class="w-full h-10 sm:h-12" :loading="depositing" aria-label="Deposit" @click="onDeposit">Deposit</ZButton>
-          </ActionButton>
-        </div>
-      </div>
-      <PoolPosition class="w-full lg:w-56" :balance="liquidity" :total="poolData.liquidity" :currency0="pool.currency0" :currency1="pool.currency1" :price0="poolData.price0" :price1="poolData.price1" />
-    </div>
-    <ApproveModal v-model="approveAction" />
-    <DepositModal v-model="depositAction" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { DebouncedFunc } from 'lodash-es'
 import type { AddLiquidityAction, Callback, PoolData, PoolMeta, QuoteAddLiquidityData } from '@/types'
@@ -246,3 +213,50 @@ onMounted(async () => {
   }
 })
 </script>
+
+<template>
+  <div class="flex flex-col flex-1 gap-4 lg:bg-card lg:p-6 lg:rounded-2xl">
+    <div v-if="screen.lg" class="hidden lg:flex items-center gap-2">
+      <div class="flex">
+        <n-text class="font-medium text-base">
+          Deposit
+        </n-text>
+      </div>
+    </div>
+    <div v-if="pool" class="flex lg:flex-row flex-col flex-1 gap-8 lg:gap-6">
+      <div class="flex flex-col flex-1 gap-10 lg:bg-tab lg:p-6 rounded overflow-hidden">
+        <div class="flex flex-col gap-4">
+          <n-text class="text-xs" depth="1">
+            I want to deposit
+          </n-text>
+          <DepositInput v-model="inputAmount0" :token="pool.currency0" :balance="balance0" @change="onAmount0Change" />
+          <DepositInput v-model="inputAmount1" :token="pool.currency1" :balance="balance1" @change="onAmount1Change" />
+        </div>
+        <div>
+          <ActionButton :chain-id="pool.chainId" :chains="supportedChains">
+            <ZButton v-if="!isInputValid" class="w-full h-10 sm:h-12" :aria-label="inputHint">
+              {{ inputHint }}
+            </ZButton>
+            <ZButton v-else-if="approvalChecking" class="w-full h-10 sm:h-12" loading disabled aria-label="Checking for Approval">
+              Checking for Approval
+            </ZButton>
+            <div v-else-if="!approved" class="flex gap-3 w-full h-10 sm:h-12">
+              <ZButton v-if="!approved0" class="flex-1 h-full" :disabled="approving0 || approving1" :loading="approving0" :aria-label="`Approve ${pool.currency0.symbol}`" @click="() => onApproval(true)">
+                Approve {{ pool.currency0.symbol }}
+              </ZButton>
+              <ZButton v-if="!approved1" class="flex-1 h-full" :disabled="approving0 || approving1" :loading="approving1" :aria-label="`Approve ${pool.currency1.symbol}`" @click="() => onApproval(false)">
+                Approve {{ pool.currency1.symbol }}
+              </ZButton>
+            </div>
+            <ZButton v-else :disabled="depositing" class="w-full h-10 sm:h-12" :loading="depositing" aria-label="Deposit" @click="onDeposit">
+              Deposit
+            </ZButton>
+          </ActionButton>
+        </div>
+      </div>
+      <PoolPosition class="w-full lg:w-56" :balance="liquidity" :total="poolData.liquidity" :currency0="pool.currency0" :currency1="pool.currency1" :price0="poolData.price0" :price1="poolData.price1" />
+    </div>
+    <ApproveModal v-model="approveAction" />
+    <DepositModal v-model="depositAction" />
+  </div>
+</template>

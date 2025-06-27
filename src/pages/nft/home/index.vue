@@ -1,51 +1,3 @@
-<template>
-  <ZContainer class="flex flex-col">
-    <div class="flex mb-4">
-      <div class="flex-center gap-3">
-        <i-ff-nfts class="size-6" />
-        <n-text class="font-semibold text-base">FeeFree NFTs</n-text>
-      </div>
-    </div>
-    <div class="justify-items-center gap-y-4 sm:gap-y-8 sm:gap-x-8 md:gap-x-32 lg:gap-x-14 xl:gap-x-8 2xl:gap-x-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-      <div v-for="item, index in nfts" :key="index" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[400px]">
-        <div class="w-full aspect-square">
-          <NftImage :src="item.image" :label="item.label" :chain-id="item.chainId" />
-        </div>
-        <div class="flex flex-col px-4 sm:px-6 pt-4 pb-6">
-          <!-- NFT name -->
-          <div class="flex">
-            <n-text class="font-medium text-base">{{ item.label }}</n-text>
-          </div>
-          <!-- Minted -->
-          <div class="flex justify-between mt-3 sm:mt-4 text-xs">
-            <n-text depth="1">Minted:</n-text>
-            <div class="flex">
-              <n-text>{{ toBalance(balances[index]) }}/{{ toBalanceWithUnit(item.cap, 0) }}</n-text>
-            </div>
-          </div>
-          <!-- Price -->
-          <div class="flex justify-between mt-2 sm:mt-3 text-xs">
-            <n-text depth="1">Price:</n-text>
-            <div v-if="item.price" class="flex">
-              <ZTokenBalance class="ml-1" :token="feeToken" :balance="BigInt(item.price)" :dp="9" />
-              <n-text>(${{ getFeeValue(item.price) }})</n-text>
-            </div>
-            <div v-else class="flex">
-              <n-text class="text-primary">Free</n-text>
-            </div>
-          </div>
-          <div class="flex mt-4 sm:mt-6">
-            <ActionButton class="w-full" btn-class="!h-10" :chain-id="item.chainId" :chains="supportedChains">
-              <ZButton class="w-full h-10" :disabled="minting" :loading="operatingIndex === index" :aria-label="item.price ? 'Mint' : 'Free Mint'" @click="() => onMint(index, item)">{{ item.price ? "Mint" : "Free Mint" }}</ZButton>
-            </ActionButton>
-          </div>
-        </div>
-      </div>
-    </div>
-    <MintModal v-model="mintAction" />
-  </ZContainer>
-</template>
-
 <script setup lang="ts">
 import type { Callback, MintAction, Nft } from '@/types'
 import type { DebouncedFunc } from 'lodash-es'
@@ -120,3 +72,63 @@ onMounted(async () => {
   onAppChainIdChange()
 })
 </script>
+
+<template>
+  <ZContainer class="flex flex-col">
+    <div class="flex mb-4">
+      <div class="flex-center gap-3">
+        <i-ff-nfts class="size-6" />
+        <n-text class="font-semibold text-base">
+          FeeFree NFTs
+        </n-text>
+      </div>
+    </div>
+    <div class="justify-items-center gap-y-4 sm:gap-y-8 sm:gap-x-8 md:gap-x-32 lg:gap-x-14 xl:gap-x-8 2xl:gap-x-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div v-for="item, index in nfts" :key="index" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[400px]">
+        <div class="w-full aspect-square">
+          <NftImage :src="item.image" :label="item.label" :chain-id="item.chainId" />
+        </div>
+        <div class="flex flex-col px-4 sm:px-6 pt-4 pb-6">
+          <!-- NFT name -->
+          <div class="flex">
+            <n-text class="font-medium text-base">
+              {{ item.label }}
+            </n-text>
+          </div>
+          <!-- Minted -->
+          <div class="flex justify-between mt-3 sm:mt-4 text-xs">
+            <n-text depth="1">
+              Minted:
+            </n-text>
+            <div class="flex">
+              <n-text>{{ toBalance(balances[index]) }}/{{ toBalanceWithUnit(item.cap, 0) }}</n-text>
+            </div>
+          </div>
+          <!-- Price -->
+          <div class="flex justify-between mt-2 sm:mt-3 text-xs">
+            <n-text depth="1">
+              Price:
+            </n-text>
+            <div v-if="item.price" class="flex">
+              <ZTokenBalance class="ml-1" :token="feeToken" :balance="BigInt(item.price)" :dp="9" />
+              <n-text>(${{ getFeeValue(item.price) }})</n-text>
+            </div>
+            <div v-else class="flex">
+              <n-text class="text-primary">
+                Free
+              </n-text>
+            </div>
+          </div>
+          <div class="flex mt-4 sm:mt-6">
+            <ActionButton class="w-full" btn-class="!h-10" :chain-id="item.chainId" :chains="supportedChains">
+              <ZButton class="w-full h-10" :disabled="minting" :loading="operatingIndex === index" :aria-label="item.price ? 'Mint' : 'Free Mint'" @click="() => onMint(index, item)">
+                {{ item.price ? "Mint" : "Free Mint" }}
+              </ZButton>
+            </ActionButton>
+          </div>
+        </div>
+      </div>
+    </div>
+    <MintModal v-model="mintAction" />
+  </ZContainer>
+</template>

@@ -1,18 +1,3 @@
-<template>
-  <div class="flex flex-col gap-4">
-    <div>
-      <n-checkbox v-model:checked="checked" @update:checked="onChecked">Lock Liquidity</n-checkbox>
-    </div>
-    <n-radio-group v-model:value="duration" :class="[checked ? '' : 'hidden']" name="duration">
-      <div class="gap-y-2 grid grid-cols-2 md:grid-cols-4">
-        <n-radio v-for="option in options" :key="option.value" :value="option.value">
-          <n-text class="opacity-80">{{ option.label }}</n-text>
-        </n-radio>
-      </div>
-    </n-radio-group>
-  </div>
-</template>
-
 <script setup lang="ts">
 const duration = defineModel<number>({ required: true })
 
@@ -41,3 +26,22 @@ onMounted(() => {
   })
 })
 </script>
+
+<template>
+  <div class="flex flex-col gap-4">
+    <div>
+      <n-checkbox v-model:checked="checked" @update:checked="onChecked">
+        Lock Liquidity
+      </n-checkbox>
+    </div>
+    <n-radio-group v-model:value="duration" :class="[checked ? '' : 'hidden']" name="duration">
+      <div class="gap-y-2 grid grid-cols-2 md:grid-cols-4">
+        <n-radio v-for="option in options" :key="option.value" :value="option.value">
+          <n-text class="opacity-80">
+            {{ option.label }}
+          </n-text>
+        </n-radio>
+      </div>
+    </n-radio-group>
+  </div>
+</template>

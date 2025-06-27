@@ -1,13 +1,3 @@
-<template>
-  <div class="flex-y-center cursor-pointer" @click="onTogglePrice">
-    <ZTokenIcon :token="inputToken" />
-    <n-text class="ml-1">1 {{ inputToken.symbol }}</n-text>
-    <i-ff-swap class="mx-3 size-5" />
-    <ZTokenIcon :token="outputToken" />
-    <n-text class="ml-1">{{ priceValue }} {{ outputToken.symbol }}</n-text>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { PoolMeta } from '@/types'
 import { formatPrice } from '@/utils'
@@ -33,3 +23,17 @@ const onTogglePrice = () => {
   showPrice0.value = !showPrice0.value
 }
 </script>
+
+<template>
+  <div class="flex-y-center cursor-pointer" @click="onTogglePrice">
+    <ZTokenIcon :token="inputToken" />
+    <n-text class="ml-1">
+      1 {{ inputToken.symbol }}
+    </n-text>
+    <i-ff-swap class="mx-3 size-5" />
+    <ZTokenIcon :token="outputToken" />
+    <n-text class="ml-1">
+      {{ priceValue }} {{ outputToken.symbol }}
+    </n-text>
+  </div>
+</template>

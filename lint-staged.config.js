@@ -2,7 +2,7 @@
  * @type {import('lint-staged').Configuration}
  */
 const config = {
-  '*.{ts,js}': 'eslint --fix',
+  '**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,vue}': 'oxlint',
 }
 
 export default config

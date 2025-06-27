@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import {
+  URL_DISCORD,
+  URL_TWITTER,
+  URL_GITHUB,
+} from '@/config'
+import NavLink2 from './NavLink2.vue'
+</script>
+
 <template>
   <div class="flex flex-col">
     <NavLink2 :href="URL_DISCORD" label="Discord">
@@ -14,12 +23,3 @@
     </NavLink2>
   </div>
 </template>
-
-<script setup lang="ts">
-import {
-  URL_DISCORD,
-  URL_TWITTER,
-  URL_GITHUB,
-} from '@/config'
-import NavLink2 from './NavLink2.vue'
-</script>

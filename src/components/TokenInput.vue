@@ -1,23 +1,3 @@
-<template>
-  <div class="flex flex-col gap-2">
-    <div class="flex justify-between gap-2">
-      <n-text class="text-xs shrink-0" depth="1">{{ label }}</n-text>
-      <div class="flex-y-center gap-1 overflow-hidden text-xs">
-        <n-text depth="1">Balance</n-text>
-        <ZTokenBalance class="!font-normal" :token="token" :balance="balance" :show-symbol="false" />
-      </div>
-    </div>
-    <div class="flex flex-col bg-card p-4 rounded-lg">
-      <div class="flex-y-center gap-2 mb-2 sm:px-2">
-        <n-input-number v-model:value="amount" class="flex-1 token-input-amount" :min="0" :max="maxAmount" placeholder="0.0" :input-props="{ name: 'give' }" :readonly="!isSupported" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
-        <TokenSelectorTrigger :token="token" :disabled="!isSupported" @select="onTriggerSelect" />
-      </div>
-      <n-divider class="!my-0" />
-      <AmountButtonGroup class="mt-3" :balance="balance" @pick="onPickAmount" />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { Token } from '@/types'
 import { parseAmount, toAmount } from '@/utils'
@@ -83,6 +63,30 @@ onMounted(() => {
   })
 })
 </script>
+
+<template>
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-between gap-2">
+      <n-text class="text-xs shrink-0" depth="1">
+        {{ label }}
+      </n-text>
+      <div class="flex-y-center gap-1 overflow-hidden text-xs">
+        <n-text depth="1">
+          Balance
+        </n-text>
+        <ZTokenBalance class="!font-normal" :token="token" :balance="balance" :show-symbol="false" />
+      </div>
+    </div>
+    <div class="flex flex-col bg-card p-4 rounded-lg">
+      <div class="flex-y-center gap-2 mb-2 sm:px-2">
+        <n-input-number v-model:value="amount" class="flex-1 token-input-amount" :min="0" :max="maxAmount" placeholder="0.0" :input-props="{ name: 'give' }" :readonly="!isSupported" :bordered="false" :show-button="false" :on-blur="onInputBlur" />
+        <TokenSelectorTrigger :token="token" :disabled="!isSupported" @select="onTriggerSelect" />
+      </div>
+      <n-divider class="!my-0" />
+      <AmountButtonGroup class="mt-3" :balance="balance" @pick="onPickAmount" />
+    </div>
+  </div>
+</template>
 
 <!-- <style lang="scss">
 .token-input-amount {

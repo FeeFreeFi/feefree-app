@@ -1,10 +1,3 @@
-<template>
-  <n-text @click="onClick">
-    <slot v-if="copied" name="copied" />
-    <slot v-else />
-  </n-text>
-</template>
-
 <script setup lang="ts">
 import type { TimerId } from '@/types'
 import { copyText } from '@/utils'
@@ -51,3 +44,10 @@ const onClick = async () => {
 
 onBeforeUnmount(() => delayReset())
 </script>
+
+<template>
+  <n-text @click="onClick">
+    <slot v-if="copied" name="copied" />
+    <slot v-else />
+  </n-text>
+</template>

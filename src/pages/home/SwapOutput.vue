@@ -1,32 +1,3 @@
-<template>
-  <div class="flex flex-col gap-2">
-    <div class="flex justify-between gap-2">
-      <n-text class="text-xs" depth="1">Receive</n-text>
-      <div class="flex-y-center gap-1 overflow-hidden text-xs">
-        <n-text depth="1">Balance</n-text>
-        <ZTokenBalance class="!font-normal" :token="outputToken" :balance="outputBalance" :show-symbol="false" />
-      </div>
-    </div>
-    <div class="flex flex-col gap-3">
-      <div class="flex-y-center justify-between bg-card px-4 sm:px-6 py-3 rounded-lg">
-        <ZTokenBalance v-if="quote" class="!font-medium text-base" :token="outputToken" :balance="quote.amountOut" :show-symbol="false" />
-        <n-text v-else class="font-medium text-base" depth="1">0.0</n-text>
-        <TokenSelectorTrigger :token="outputToken" :disabled="!isSupported" @select="onTriggerSelect" />
-      </div>
-      <div v-if="isSupported && quote" class="flex sm:flex-row flex-col sm:justify-between gap-3 sm:gap-0 bg-card px-4 sm:px-6 py-3 rounded-lg sm:h-[52px]">
-        <TokenPrice :input-token="inputToken!" :output-token="outputToken!" :price="price" />
-        <n-divider v-if="screen.lt.sm" class="!my-0" />
-        <div class="flex-y-center gap-2">
-          <i-ff-fee class="size-4" />
-          <div class="flex-y-center gap-1">
-            <n-text depth="1">${{ feeValue }}</n-text>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { QuoteSwapData, Token } from '@/types'
 import { byDecimals, fromValue } from '@/utils'
@@ -75,3 +46,40 @@ const onTriggerSelect = () => {
   emit('select')
 }
 </script>
+
+<template>
+  <div class="flex flex-col gap-2">
+    <div class="flex justify-between gap-2">
+      <n-text class="text-xs" depth="1">
+        Receive
+      </n-text>
+      <div class="flex-y-center gap-1 overflow-hidden text-xs">
+        <n-text depth="1">
+          Balance
+        </n-text>
+        <ZTokenBalance class="!font-normal" :token="outputToken" :balance="outputBalance" :show-symbol="false" />
+      </div>
+    </div>
+    <div class="flex flex-col gap-3">
+      <div class="flex-y-center justify-between bg-card px-4 sm:px-6 py-3 rounded-lg">
+        <ZTokenBalance v-if="quote" class="!font-medium text-base" :token="outputToken" :balance="quote.amountOut" :show-symbol="false" />
+        <n-text v-else class="font-medium text-base" depth="1">
+          0.0
+        </n-text>
+        <TokenSelectorTrigger :token="outputToken" :disabled="!isSupported" @select="onTriggerSelect" />
+      </div>
+      <div v-if="isSupported && quote" class="flex sm:flex-row flex-col sm:justify-between gap-3 sm:gap-0 bg-card px-4 sm:px-6 py-3 rounded-lg sm:h-[52px]">
+        <TokenPrice :input-token="inputToken!" :output-token="outputToken!" :price="price" />
+        <n-divider v-if="screen.lt.sm" class="!my-0" />
+        <div class="flex-y-center gap-2">
+          <i-ff-fee class="size-4" />
+          <div class="flex-y-center gap-1">
+            <n-text depth="1">
+              ${{ feeValue }}
+            </n-text>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

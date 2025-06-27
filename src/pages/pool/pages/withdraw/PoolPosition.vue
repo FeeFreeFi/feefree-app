@@ -1,14 +1,3 @@
-<template>
-  <div class="flex flex-col gap-3 bg-card lg:bg-tab p-4 lg:p-6 rounded">
-    <n-text class="text-xs" depth="1">My pool share</n-text>
-    <div class="flex-y-center gap-[6px]">
-      <n-text>{{ currentPercent }}</n-text>
-      <RightArrow v-if="account && amount" />
-      <n-text v-if="account && amount">{{ afterPercent }}</n-text>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { fromValue } from '@/utils'
 import { account } from '@/hooks/useWallet'
@@ -40,3 +29,18 @@ const afterPercent = computed(() => {
   return `${fromValue(balance - amount).times(100).div((total - amount).toString(10)).dp(4).toFormat()}%`
 })
 </script>
+
+<template>
+  <div class="flex flex-col gap-3 bg-card lg:bg-tab p-4 lg:p-6 rounded">
+    <n-text class="text-xs" depth="1">
+      My pool share
+    </n-text>
+    <div class="flex-y-center gap-[6px]">
+      <n-text>{{ currentPercent }}</n-text>
+      <RightArrow v-if="account && amount" />
+      <n-text v-if="account && amount">
+        {{ afterPercent }}
+      </n-text>
+    </div>
+  </div>
+</template>

@@ -4,16 +4,31 @@ An open source repository for FeeFree frontend interfaces.
 
 To build a Robinhood-style DEX in the blockchain industry, enabling participation in DeFi for everyone worldwide!
 
-## Usage
+## Project Setup
 
-```shell
+```sh
+pnpm install
+
 cp .env.example .env
+cp .env.example .env.local
+```
 
-pnpm i
+### Compile and Hot-Reload for Development
 
-pnpm start
+```sh
+pnpm dev
+```
 
+### Type-Check, Compile and Minify for Production
+
+```sh
 pnpm build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+pnpm lint
 ```
 
 ## Socials
@@ -30,4 +45,4 @@ pnpm build
 
 FeeFree App is released under the [MIT License](LICENSE).
 
-Copyright ©2024 [FeeFree](https://github.com/FeeFreeFi)
+Copyright ©2025 [FeeFree](https://github.com/FeeFreeFi)

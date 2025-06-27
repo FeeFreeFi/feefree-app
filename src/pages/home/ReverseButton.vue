@@ -1,16 +1,6 @@
-<template>
-  <div>
-    <n-divider class="!my-0">
-      <span :class="[disabled ? 'cursor-not-allowed' : 'cursor-pointer']" @click="onReverse">
-        <i-ff-reverse class="size-10" />
-      </span>
-    </n-divider>
-  </div>
-</template>
-
 <script setup lang="ts">
 interface Props {
-  disabled: boolean
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -29,3 +19,13 @@ const onReverse = () => {
   emit('reverse')
 }
 </script>
+
+<template>
+  <div>
+    <n-divider class="!my-0">
+      <span :class="[disabled ? 'cursor-not-allowed' : 'cursor-pointer']" @click="onReverse">
+        <i-ff-reverse class="size-10" />
+      </span>
+    </n-divider>
+  </div>
+</template>

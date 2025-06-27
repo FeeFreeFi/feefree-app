@@ -1,20 +1,3 @@
-<template>
-  <div class="relative flex flex-col flex-1 bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
-    <div class="flex flex-col flex-1">
-      <div class="flex justify-between items-center mb-4">
-        <n-text class="font-medium text-lg">Reward</n-text>
-        <ZBack />
-      </div>
-      <div class="flex flex-col flex-1 gap-4 sm:gap-8">
-        <RewardOverview :current="rewards.current" :claimed="rewards.claimed" />
-        <AvailableRewards v-if="rewards.list.length > 0" :claiming="claiming" :list="rewards.list" :on-claim="onClaim" />
-        <ClaimHistory :total="pagination.total" :page="pagination.page" :list="claims" :on-update-page="onUpdatePage" />
-      </div>
-    </div>
-    <ClaimModal v-model="claimAction" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { Claim, ClaimAction, Reward } from '@/types'
 import { useNotification } from 'naive-ui'
@@ -172,3 +155,22 @@ onMounted(() => {
   fetchData()
 })
 </script>
+
+<template>
+  <div class="relative flex flex-col flex-1 bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
+    <div class="flex flex-col flex-1">
+      <div class="flex justify-between items-center mb-4">
+        <n-text class="font-medium text-lg">
+          Reward
+        </n-text>
+        <ZBack />
+      </div>
+      <div class="flex flex-col flex-1 gap-4 sm:gap-8">
+        <RewardOverview :current="rewards.current" :claimed="rewards.claimed" />
+        <AvailableRewards v-if="rewards.list.length > 0" :claiming="claiming" :list="rewards.list" :on-claim="onClaim" />
+        <ClaimHistory :total="pagination.total" :page="pagination.page" :list="claims" :on-update-page="onUpdatePage" />
+      </div>
+    </div>
+    <ClaimModal v-model="claimAction" />
+  </div>
+</template>

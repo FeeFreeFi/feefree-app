@@ -291,11 +291,11 @@ export interface Reward {
   transactionHash: string
 }
 
-type PointsMeta =
-  | { chainId: number, transactionHash: string }
-  | { account: string }
-  | { remark: string }
-  | { chainId: number, transactionHash: string, account: string, reason: string }
+type PointsMeta
+  = | { chainId: number, transactionHash: string }
+    | { account: string }
+    | { remark: string }
+    | { chainId: number, transactionHash: string, account: string, reason: string }
 
 export interface Points {
   value: number

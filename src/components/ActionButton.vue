@@ -1,11 +1,3 @@
-<template>
-  <div>
-    <ZButton v-if="!account" class="h-10 sm:h-12" :class="btnClass" block aria-label="Connect Wallet" @click="openWalletConnector">Connect Wallet</ZButton>
-    <ZButton v-else-if="requireSwitchChain" class="h-10 sm:h-12" :class="btnClass" block :disabled="switching" :loading="switching" aria-label="Switch Network" @click="onSwitchNetwork">Switch Network</ZButton>
-    <slot v-else />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useNotification } from 'naive-ui'
 import { account, walletChainId } from '@/hooks/useWallet'
@@ -36,3 +28,15 @@ const onSwitchNetwork = async () => {
   switching.value = await doSwitchNetwork(notification, defaultChainId.value)
 }
 </script>
+
+<template>
+  <div>
+    <ZButton v-if="!account" class="h-10 sm:h-12" :class="btnClass" block aria-label="Connect Wallet" @click="openWalletConnector">
+      Connect Wallet
+    </ZButton>
+    <ZButton v-else-if="requireSwitchChain" class="h-10 sm:h-12" :class="btnClass" block :disabled="switching" :loading="switching" aria-label="Switch Network" @click="onSwitchNetwork">
+      Switch Network
+    </ZButton>
+    <slot v-else />
+  </div>
+</template>

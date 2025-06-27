@@ -1,15 +1,26 @@
-**/.DS_Store
-node_modules
-
-/src/types/components.d.ts
-/src/types/auto-imports.d.ts
-
-/dist
-/private
-
-.env.local
-.env.*.local
-
+# Logs
+logs
+*.log
 pnpm-debug.log*
-.vscode
 
+node_modules
+**/.DS_Store
+dist
+coverage
+
+.env
+*.local
+
+src/types/auto-imports.d.ts
+src/types/auto-imports.json
+src/types/components.d.ts
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+*.tsbuildinfo
+
+test-results
+playwright-report

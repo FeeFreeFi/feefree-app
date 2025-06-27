@@ -1,9 +1,3 @@
-<template>
-  <div class="flex gap-2 sm:gap-4">
-    <ZGhostButton v-for="item, index in items" :key="index" class="flex-1 !h-7 sm:!h-8 text-xs sm:text-sm" :disabled="!balance" :aria-label="item.label" @click="() => onPick(item.value)">{{ item.label }}</ZGhostButton>
-  </div>
-</template>
-
 <script setup lang="ts">
 import ZGhostButton from '@/components/ZGhostButton.vue'
 
@@ -34,3 +28,11 @@ const onPick = (ratio: bigint) => {
   emit('pick', amount)
 }
 </script>
+
+<template>
+  <div class="flex gap-2 sm:gap-4">
+    <ZGhostButton v-for="item, index in items" :key="index" class="flex-1 !h-7 sm:!h-8 text-xs sm:text-sm" :disabled="!balance" :aria-label="item.label" @click="() => onPick(item.value)">
+      {{ item.label }}
+    </ZGhostButton>
+  </div>
+</template>

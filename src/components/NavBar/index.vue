@@ -1,10 +1,3 @@
-<template>
-  <div class="flex gap-2 w-full sm:w-auto">
-    <NavLink v-for="item, index in links" :key="index" :to="item.to" :label="item.label" :icon="item.icon" :exact="item.exact" />
-    <NavMenu />
-  </div>
-</template>
-
 <script setup lang="ts">
 import {
   PAGE_HOME,
@@ -24,3 +17,10 @@ const links = [
   { to: { name: PAGE_MIGRATE }, label: 'Migrate', icon: 'migrate.svg', exact: false },
 ]
 </script>
+
+<template>
+  <div class="flex gap-2 w-full sm:w-auto">
+    <NavLink v-for="item, index in links" :key="index" :to="item.to" :label="item.label" :icon="item.icon" :exact="item.exact" />
+    <NavMenu />
+  </div>
+</template>

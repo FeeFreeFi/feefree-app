@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { screen } from '@/hooks/useScreen'
+import AppLogo from '@/components/AppLogo.vue'
+import AppBackground from './AppBackground.vue'
+import AppNotice from './AppNotice.vue'
+import AppHeader from './AppHeader.vue'
+import AppMain from './AppMain.vue'
+import AppFooter from './AppFooter.vue'
+</script>
+
 <template>
   <n-layout class="!fixed !bg-transparent app-layout text-sm" content-class="min-h-full flex flex-col" position="absolute" :native-scrollbar="false">
     <AppBackground />
@@ -15,16 +25,6 @@
     <AppFooter v-if="!screen.lg" />
   </n-layout>
 </template>
-
-<script setup lang="ts">
-import { screen } from '@/hooks/useScreen'
-import AppLogo from '@/components/AppLogo.vue'
-import AppBackground from './AppBackground.vue'
-import AppNotice from './AppNotice.vue'
-import AppHeader from './AppHeader.vue'
-import AppMain from './AppMain.vue'
-import AppFooter from './AppFooter.vue'
-</script>
 
 <style lang="scss">
 .app-layout {

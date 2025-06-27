@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { themeOverrides } from '@/hooks/useTheme'
+</script>
+
 <template>
   <n-config-provider :theme-overrides="themeOverrides" abstract preflight-style-disabled inline-theme-disabled>
     <n-message-provider>
@@ -11,7 +15,3 @@
     </n-message-provider>
   </n-config-provider>
 </template>
-
-<script setup lang="ts">
-import { themeOverrides } from '@/hooks/useTheme'
-</script>

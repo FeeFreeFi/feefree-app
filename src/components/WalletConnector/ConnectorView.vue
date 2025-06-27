@@ -1,18 +1,3 @@
-<template>
-  <ZModalView class="h-[480px]" title="Connect Wallet" :on-close="onClose">
-    <div class="relative h-full">
-      <div v-if="wallets.length > 0" class="top-0 left-0 absolute size-full">
-        <n-scrollbar class="p-4">
-          <div class="flex flex-col gap-2">
-            <WalletItem v-for="item, index in wallets" :key="index" :name="item.info.name" :icon="item.info.icon!" :active="isActive(item)" :recent="isRecent(item)" @click="() => onConnect(item)" />
-          </div>
-        </n-scrollbar>
-      </div>
-      <NoWallet v-else />
-    </div>
-  </ZModalView>
-</template>
-
 <script setup lang="ts">
 import type { Wallet } from '@/types'
 import { useNotification } from 'naive-ui'
@@ -58,3 +43,18 @@ const onConnect = async (wallet: Wallet) => {
   }
 }
 </script>
+
+<template>
+  <ZModalView class="h-[480px]" title="Connect Wallet" :on-close="onClose">
+    <div class="relative h-full">
+      <div v-if="wallets.length > 0" class="top-0 left-0 absolute size-full">
+        <n-scrollbar class="p-4">
+          <div class="flex flex-col gap-2">
+            <WalletItem v-for="item, index in wallets" :key="index" :name="item.info.name" :icon="item.info.icon!" :active="isActive(item)" :recent="isRecent(item)" @click="() => onConnect(item)" />
+          </div>
+        </n-scrollbar>
+      </div>
+      <NoWallet v-else />
+    </div>
+  </ZModalView>
+</template>

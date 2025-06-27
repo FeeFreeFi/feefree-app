@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.8.0 (2025-06-27)
+
+### Breaking Changes
+- **Build System**: Migrate from Webpack to Vite ecosystem for improved performance
+
+### Fixes
+- **Build**: Fix viem package bundling duplicate CommonJS code during build process
+
 ## 0.7.6 (2025-03-03)
 
 ### Features

@@ -1,18 +1,3 @@
-<template>
-  <div class="relative flex flex-col flex-1 bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
-    <div class="flex flex-col flex-1">
-      <div class="flex justify-between items-center mb-4">
-        <n-text class="font-medium text-lg">Points</n-text>
-        <ZBack />
-      </div>
-      <div class="flex flex-col flex-1 gap-4 sm:gap-8 mt-4">
-        <PointsOverview />
-        <PointsList :total="pagination.total" :page="pagination.page" :list="pointsList" :on-update-page="onUpdatePage" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { Points } from '@/types'
 import { getPoints } from '@/api'
@@ -75,3 +60,20 @@ onMounted(() => {
   fetchData()
 })
 </script>
+
+<template>
+  <div class="relative flex flex-col flex-1 bg-container mx-auto my-4 sm:my-8 p-4 sm:p-8 rounded-2xl w-full sm:w-[490px] overflow-hidden">
+    <div class="flex flex-col flex-1">
+      <div class="flex justify-between items-center mb-4">
+        <n-text class="font-medium text-lg">
+          Points
+        </n-text>
+        <ZBack />
+      </div>
+      <div class="flex flex-col flex-1 gap-4 sm:gap-8 mt-4">
+        <PointsOverview />
+        <PointsList :total="pagination.total" :page="pagination.page" :list="pointsList" :on-update-page="onUpdatePage" />
+      </div>
+    </div>
+  </div>
+</template>
