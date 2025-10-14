@@ -31,7 +31,7 @@ const amountValue = computed(() => props.token ? parseAmount(amount.value || 0, 
 
 const isSupported = computed(() => isSupportChain(appChainId.value))
 
-const onInputBlur = () => {
+function onInputBlur() {
   if (!isSupported.value) {
     return
   }
@@ -47,11 +47,11 @@ const onInputBlur = () => {
   emit('change')
 }
 
-const onTriggerSelect = () => {
+function onTriggerSelect() {
   emit('select')
 }
 
-const onPickAmount = (value: bigint) => {
+function onPickAmount(value: bigint) {
   const { token } = props
   modelValue.value = toAmount(value, token!.decimals)
   emit('change')

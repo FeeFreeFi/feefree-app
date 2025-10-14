@@ -20,23 +20,23 @@ const isValid = ref(isAddress(input.value))
 
 const isSame = computed(() => !!input.value && input.value === account.value)
 
-const onClear = () => {
+function onClear() {
   input.value = ''
   recipient.value = ''
   checked.value = false
   isValid.value = false
 }
 
-const onInputFocus = () => {
+function onInputFocus() {
   focus.value = true
 }
 
-const onInputBlur = () => {
+function onInputBlur() {
   focus.value = false
   isValid.value = input.value ? isAddress(input.value) : false
 }
 
-const onPaste = async () => {
+async function onPaste() {
   const text = await pasteText()
   if (text) {
     input.value = text
@@ -44,7 +44,7 @@ const onPaste = async () => {
   }
 }
 
-const onOk = () => {
+function onOk() {
   recipient.value = input.value
   props.onClose()
 }

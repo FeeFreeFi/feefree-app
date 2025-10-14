@@ -58,7 +58,7 @@ const ABI_UNLOCK: Abi = [
   },
 ]
 
-export const lock = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, token: string, from: string, tokenId: bigint, amount: bigint, unlockTime: number, owner: string) => {
+export async function lock(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, token: string, from: string, tokenId: bigint, amount: bigint, unlockTime: number, owner: string) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -74,7 +74,7 @@ export const lock = async (client: { publicClient: PublicClient, walletClient: W
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const unlock = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, lockId: string, recipient: string) => {
+export async function unlock(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, lockId: string, recipient: string) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({

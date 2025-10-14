@@ -8,22 +8,22 @@ import { getLiquidityAddress } from './useManager'
 
 const cache = createCache()
 
-const getValue = (id: string) => {
+function getValue(id: string) {
   return cache.getValue(id, 0n) as bigint
 }
 
-const updateValue = async (account: string, chainId: number, id: string) => {
+async function updateValue(account: string, chainId: number, id: string) {
   const publicClient = getPublicClient(chainId)
   const address = getLiquidityAddress(chainId)
   const balance = await balanceOf(publicClient, address, account, BigInt(id)).catch(() => 0n)
   cache.setValue(id, balance)
 }
 
-const reset = () => {
+function reset() {
   cache.reset()
 }
 
-export const createLiquidityState = (account: Ref<string>, pool: Ref<PoolMeta | undefined>, state: Ref<bigint>) => {
+export function createLiquidityState(account: Ref<string>, pool: Ref<PoolMeta | undefined>, state: Ref<bigint>) {
   state.value = 0n
 
   const doUpdate = async () => {
@@ -45,7 +45,8 @@ export const createLiquidityState = (account: Ref<string>, pool: Ref<PoolMeta | 
     debounceUpdate.cancel()
     if (account.value) {
       doUpdate()
-    } else {
+    }
+    else {
       reset()
     }
   })

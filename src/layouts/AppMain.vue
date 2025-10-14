@@ -16,7 +16,7 @@ import { loadSafeWallet } from '@/hooks/useSafeWallet'
 const route = useRoute()
 const notification = useNotification()
 
-const doLogin = async () => {
+async function doLogin() {
   await login().catch(err => {
     notification.error({
       title: `Login`,
@@ -26,19 +26,21 @@ const doLogin = async () => {
   })
 }
 
-const watchAccount = () => {
+function watchAccount() {
   watch([account, visibility], ([newAccount, newVisibility], [oldAccount]) => {
     if (newAccount) {
       if (newAccount !== oldAccount) {
         clearAuth()
       }
 
-      newVisibility && !auth.value && doLogin()
+      if (newVisibility && !auth.value) {
+        doLogin()
+      }
     }
   })
 }
 
-const loadProfile = async () => {
+async function loadProfile() {
   if (isMatchAccount(account.value)) {
     if (!getAccessToken()) {
       await refreshToken()
@@ -54,7 +56,7 @@ const loadProfile = async () => {
   doLogin()
 }
 
-const doAutoConnect = async () => {
+async function doAutoConnect() {
   await wait(100)
 
   const name = recentWallet.value || 'Safe'
@@ -67,7 +69,9 @@ const doAutoConnect = async () => {
   const success = await autoConnect(wallet)
   watchAccount()
 
-  success && loadProfile()
+  if (success) {
+    loadProfile()
+  }
 }
 
 onBeforeMount(() => {
@@ -81,12 +85,19 @@ onMounted(() => {
   doAutoConnect()
 
   const { referral } = route.query
-  referral && saveReferral(referral as string)
+  if (referral) {
+    saveReferral(referral as string)
+  }
 })
 
 onMounted(() => {
   const stopWatch = watch(auth, newAuth => {
-    newAuth ? fetchProfile() : resetProfile()
+    if (newAuth) {
+      fetchProfile()
+    }
+    else {
+      resetProfile()
+    }
   })
 
   onBeforeUnmount(stopWatch)
@@ -94,7 +105,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="relative flex flex-col flex-1 mx-auto px-4 w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+  <main class="relative flex flex-col flex-1 mx-auto px-4 w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg 2xl:max-w-screen-2xl xl:max-w-screen-xl">
     <slot />
   </main>
 </template>

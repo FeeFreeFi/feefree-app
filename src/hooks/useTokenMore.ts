@@ -8,11 +8,11 @@ const stateRef = ref<{ show: boolean, token?: Token }>({
 
 export const state = readonly(stateRef)
 
-export const openTokenMore = (token: Token) => {
+export function openTokenMore(token: Token) {
   stateRef.value.token = token
   stateRef.value.show = true
 }
 
-export const onClose = () => {
+export function onClose() {
   stateRef.value.show = false
 }

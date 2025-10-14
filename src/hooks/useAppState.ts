@@ -6,11 +6,11 @@ const appChainIdRef = ref(DEFAULT_CHAIN_ID)
 
 export const appChainId = readonly(appChainIdRef)
 
-export const setAppChainId = (chainId: number) => {
+export function setAppChainId(chainId: number) {
   appChainIdRef.value = chainId
 }
 
-export const syncRouteChain = () => {
+export function syncRouteChain() {
   const route = useRoute()
   const router = useRouter()
 

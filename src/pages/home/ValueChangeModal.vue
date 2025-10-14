@@ -18,18 +18,18 @@ const modelValue = defineModel<{ show: boolean, data?: ValueChangedData }>({ req
 
 const data = computed(() => modelValue.value.data)
 
-const onClose = () => {
+function onClose() {
   modelValue.value = {
     ...modelValue.value,
     show: false,
   }
 }
 
-const onCancel = () => {
+function onCancel() {
   onClose()
 }
 
-const onContinue = () => {
+function onContinue() {
   const { onConfirm } = props
 
   onClose()

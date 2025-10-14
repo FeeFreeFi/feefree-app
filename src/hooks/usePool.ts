@@ -37,23 +37,25 @@ const POOL_KEY = {
   ],
 }
 
-const getDefaultPoolData = () => ({
-  sqrtPriceX96: 0n,
-  liquidity: 0n,
-  balance0: 0n,
-  balance1: 0n,
-  tvl: 0n,
-  price0: 0,
-  price1: 0,
-  percent0: '0%',
-  percent1: '0%',
-}) as PoolData
+function getDefaultPoolData() {
+  return ({
+    sqrtPriceX96: 0n,
+    liquidity: 0n,
+    balance0: 0n,
+    balance1: 0n,
+    tvl: 0n,
+    price0: 0,
+    price1: 0,
+    percent0: '0%',
+    percent1: '0%',
+  }) as PoolData
+}
 
-export const getPool = (id: string) => config.value[id]
+export const getPool = (id: string) => config.value[id]!
 
 export const getPoolName = (pool: PoolMeta) => `${pool.currency0.symbol}-${pool.currency1.symbol}`
 
-export const getBalances = (sqrtPriceX96: bigint, liquidity: bigint) => {
+export function getBalances(sqrtPriceX96: bigint, liquidity: bigint) {
   if (sqrtPriceX96 === 0n) {
     return { balance0: 0n, balance1: 0n }
   }
@@ -64,7 +66,7 @@ export const getBalances = (sqrtPriceX96: bigint, liquidity: bigint) => {
   return { balance0, balance1 }
 }
 
-const getPoolState = async (chainId: number, id: string) => {
+async function getPoolState(chainId: number, id: string) {
   const quoter = getQuoterAddress(chainId)
   const publicClient = getPublicClient(chainId)
   const { sqrtPriceX96, liquidity } = await _getPoolState(publicClient, quoter, id)
@@ -72,7 +74,7 @@ const getPoolState = async (chainId: number, id: string) => {
   return { id, sqrtPriceX96, liquidity }
 }
 
-export const getPositionData = (id: string, sqrtPriceX96: bigint, liquidity: bigint) => {
+export function getPositionData(id: string, sqrtPriceX96: bigint, liquidity: bigint) {
   const { currency0, currency1 } = getPool(id)
   const { balance0, balance1 } = getBalances(sqrtPriceX96, liquidity)
   const price0 = getPrice(currency0.key || '')
@@ -93,7 +95,7 @@ export const getPositionData = (id: string, sqrtPriceX96: bigint, liquidity: big
   }
 }
 
-const updatePoolData = async (pool: PoolMeta) => {
+async function updatePoolData(pool: PoolMeta) {
   const { chainId, id, currency0, currency1 } = pool
 
   const { sqrtPriceX96, liquidity } = await getPoolState(chainId, id)
@@ -108,32 +110,33 @@ const updatePoolData = async (pool: PoolMeta) => {
   datas.value[id] = { sqrtPriceX96, liquidity, balance0, balance1, tvl, price0, price1, percent0, percent1 }
 }
 
-const findPool = (input: string, output: string, pools: PoolMeta[]) => {
+function findPool(input: string, output: string, pools: PoolMeta[]) {
   const [currency0, currency1] = input.toLowerCase() < output.toLowerCase() ? [input, output] : [output, input]
   return pools.findIndex(it => it.currency0.address === currency0 && it.currency1.address === currency1)
 }
 
-const mapPool = (pool: PoolMeta, currency: string) => {
+function mapPool(pool: PoolMeta, currency: string) {
   if (pool.currency0.address === currency) {
     return pool.currency1
-  } else if (pool.currency1.address === currency) {
+  }
+  else if (pool.currency1.address === currency) {
     return pool.currency0
   }
 }
 
-export const getPools = (chainId: number | undefined = undefined, hot: boolean | undefined = undefined) => {
+export function getPools(chainId: number | undefined = undefined, hot: boolean | undefined = undefined) {
   const list = Object.values(config.value)
   return list.filter(it => (!chainId || it.chainId === chainId) && (hot === undefined || it.hot === hot))
 }
 
-export const addPools = (pools: PoolInfo[]) => {
+export function addPools(pools: PoolInfo[]) {
   const items = Object.fromEntries(pools.map(it => {
     const { id, chainId } = it
     const meta = {
       id,
       chainId,
-      currency0: getToken(chainId, it.currency0),
-      currency1: getToken(chainId, it.currency1),
+      currency0: getToken(chainId, it.currency0)!,
+      currency1: getToken(chainId, it.currency1)!,
       hot: true,
     }
     return [id, meta]
@@ -145,7 +148,7 @@ export const addPools = (pools: PoolInfo[]) => {
   }
 }
 
-export const fetchPoolMeta = async (chainId: number, id: string) => {
+export async function fetchPoolMeta(chainId: number, id: string) {
   let meta = getPool(id)
 
   if (!meta) {
@@ -165,7 +168,7 @@ export const fetchPoolMeta = async (chainId: number, id: string) => {
   return meta
 }
 
-export const loadMyPools = async (chainId: number, account: string) => {
+export async function loadMyPools(chainId: number, account: string) {
   const quoter = getQuoterAddress(chainId)
   if (!quoter || !account) {
     return []
@@ -179,7 +182,7 @@ export const loadMyPools = async (chainId: number, account: string) => {
   return pMap(poolIds, async id => fetchPoolMeta(chainId, id), { concurrency: 3 })
 }
 
-const getPoolKey = (chainId: number, currency0: string, currency1: string) => {
+function getPoolKey(chainId: number, currency0: string, currency1: string) {
   currency0 = currency0.toLowerCase()
   currency1 = currency1.toLowerCase()
   if (currency0 > currency1) {
@@ -196,16 +199,16 @@ const getPoolKey = (chainId: number, currency0: string, currency1: string) => {
   }
 }
 
-export const getPoolId = (chainId: number, currency0: string, currency1: string) => {
+export function getPoolId(chainId: number, currency0: string, currency1: string) {
   return keccak256(encodeAbiParameters([POOL_KEY], [getPoolKey(chainId, currency0, currency1)]))
 }
 
-export const getPoolTokens = (chainId: number) => {
+export function getPoolTokens(chainId: number) {
   const tokens = getPools(chainId).map(pool => [pool.currency0, pool.currency1]).flat()
   return uniqBy(tokens, 'address')
 }
 
-export const findPaths = (inputToken: Token, outputToken: Token) => {
+export function findPaths(inputToken: Token, outputToken: Token) {
   if (!inputToken || !outputToken || inputToken.chainId !== outputToken.chainId) {
     return []
   }
@@ -239,19 +242,19 @@ export const findPaths = (inputToken: Token, outputToken: Token) => {
   return paths.slice(0, MAX_COUNT)
 }
 
-export const updatePoolDatas = async (pools: PoolMeta[]) => {
+export async function updatePoolDatas(pools: PoolMeta[]) {
   await pMap(pools, updatePoolData, { concurrency: 3 })
 }
 
-export const getPoolData = (pool: PoolMeta | undefined = undefined) => {
+export function getPoolData(pool: PoolMeta | undefined = undefined) {
   return pool ? datas.value[pool.id] || getDefaultPoolData() : getDefaultPoolData()
 }
 
-export const getPoolDatas = (pools: PoolMeta[]) => {
+export function getPoolDatas(pools: PoolMeta[]) {
   return Object.fromEntries(pools.map(it => [it.id, getPoolData(it)]))
 }
 
-export const getPoolInitState = async (token0: Token, token1: Token) => {
+export async function getPoolInitState(token0: Token, token1: Token) {
   const { chainId } = token0
   const id = getPoolId(chainId, token0.address, token1.address)
   if (getPool(id)) {

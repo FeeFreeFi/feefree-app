@@ -37,7 +37,7 @@ const displayTokens = computed(() => {
   return tokens.value.filter(it => reg.test(it.name) || reg.test(it.symbol) || addressReg.test(it.address))
 })
 
-const onSearch = async (value: string) => {
+async function onSearch(value: string) {
   const key = search.value
   if (!key || !Patterns.Address.test(value)) {
     return
@@ -49,11 +49,13 @@ const onSearch = async (value: string) => {
   }
 
   const token = await fetchToken(appChainId.value, value)
-  tokens.value.push(token)
-  cacheTokens([token])
+  if (token) {
+    tokens.value.push(token)
+    cacheTokens([token])
+  }
 }
 
-const onTokenClick = (token: Token) => {
+function onTokenClick(token: Token) {
   props.onSelect(token)
   props.onClose()
 }

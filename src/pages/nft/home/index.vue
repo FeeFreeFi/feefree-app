@@ -25,7 +25,7 @@ const balances = ref(nfts.value.map(() => 0n))
 
 const debounceUpdateNfts = ref<DebouncedFunc<Callback>>()
 
-const getFeeValue = (value: bigint | number | string) => {
+function getFeeValue(value: bigint | number | string) {
   return fromValue(getPrice(feeToken.value.symbol)).times(value.toString(10)).div(1e18).dp(4).toNumber()
 }
 
@@ -33,12 +33,12 @@ const mintAction = ref<MintAction>({ show: false, state: kState.initial, title: 
 const minting = ref(false)
 const operatingIndex = ref(-1)
 
-const reset = () => {
+function reset() {
   minting.value = false
   operatingIndex.value = -1
 }
 
-const onMint = async (index: number, nft: Nft) => {
+async function onMint(index: number, nft: Nft) {
   operatingIndex.value = index
 
   mintAction.value.data = { chainId: nft.chainId, nft }
@@ -48,14 +48,14 @@ const onMint = async (index: number, nft: Nft) => {
 
   if (success) {
     updateNativeBalance()
-    debounceUpdateNfts.value && debounceUpdateNfts.value()
+    debounceUpdateNfts.value?.()
   }
 }
 
-const onAppChainIdChange = () => {
+function onAppChainIdChange() {
   nfts.value = getNfts(appChainId.value)
 
-  debounceUpdateNfts.value && debounceUpdateNfts.value()
+  debounceUpdateNfts.value?.()
 }
 
 onMounted(async () => {
@@ -83,7 +83,7 @@ onMounted(async () => {
         </n-text>
       </div>
     </div>
-    <div class="justify-items-center gap-y-4 sm:gap-y-8 sm:gap-x-8 md:gap-x-32 lg:gap-x-14 xl:gap-x-8 2xl:gap-x-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+    <div class="justify-items-center gap-y-4 sm:gap-x-8 sm:gap-y-8 md:gap-x-32 lg:gap-x-14 2xl:gap-x-4 xl:gap-x-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 xl:grid-cols-4">
       <div v-for="item, index in nfts" :key="index" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[400px]">
         <div class="w-full aspect-square">
           <NftImage :src="item.image" :label="item.label" :chain-id="item.chainId" />
@@ -101,7 +101,7 @@ onMounted(async () => {
               Minted:
             </n-text>
             <div class="flex">
-              <n-text>{{ toBalance(balances[index]) }}/{{ toBalanceWithUnit(item.cap, 0) }}</n-text>
+              <n-text>{{ toBalance(balances[index]!) }}/{{ toBalanceWithUnit(item.cap, 0) }}</n-text>
             </div>
           </div>
           <!-- Price -->

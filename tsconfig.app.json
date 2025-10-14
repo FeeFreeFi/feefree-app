@@ -5,11 +5,24 @@
 
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    "types": [
+      "vite/client",
+      "unplugin-icons/types/vue"
+    ],
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    // "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+    // "noUncheckedSideEffectImports": true
   },
   "include": [
-    "env.d.ts",
-    "src/**/*",
+    "src/**/*.ts",
+    "src/**/*.js",
     "src/**/*.vue"
   ],
   "exclude": ["src/**/__tests__/*"]

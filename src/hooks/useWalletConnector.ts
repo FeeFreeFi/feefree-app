@@ -3,10 +3,10 @@ import { readonly, ref } from 'vue'
 const showRef = ref(false)
 export const show = readonly(showRef)
 
-export const open = () => {
+export function open() {
   showRef.value = true
 }
 
-export const close = () => {
+export function close() {
   showRef.value = false
 }

@@ -61,7 +61,7 @@ const CHAIN_EXTRAS: Record<number, ChainExtra> = {
     name: 'Scroll',
     rpcUrls: [
       // "https://scroll.drpc.org",
-      'https://rpc.ankr.com/scroll',
+      // 'https://rpc.ankr.com/scroll',
       'https://scroll-rpc.publicnode.com',
       'https://scroll.blockpi.network/v1/rpc/public',
       'https://scroll-mainnet.public.blastapi.io',
@@ -104,22 +104,22 @@ export const getChains = () => CHAINS
 
 export const DEFAULT_CHAIN_ID = kChain.zora
 
-export const getChain = (chainId: number) => {
+export function getChain(chainId: number) {
   if (!isSupportChain(chainId)) {
     throw new Error(`Unknown chain, chainId: "${chainId}"`)
   }
 
-  return CHAINS_MAP[chainId]
+  return CHAINS_MAP[chainId]!
 }
 
 export const getRpcUrls = (chainId: number) => getChainExtra(chainId)?.rpcUrls || []
 
 export const getChainName = (chainId: number) => getChainExtra(chainId)?.name || ''
 
-export const getNativeCurrency = (chainId: number) => CHAINS_MAP[chainId].nativeCurrency as TokenMetadata
+export const getNativeCurrency = (chainId: number) => CHAINS_MAP[chainId]!.nativeCurrency as TokenMetadata
 
-export const getExplorerUrl = (chainId: number) => {
-  const { blockExplorer } = getChainExtra(chainId)
+export function getExplorerUrl(chainId: number) {
+  const { blockExplorer } = getChainExtra(chainId)!
   return blockExplorer
 }
 
@@ -127,26 +127,26 @@ export const getChainIdByKey = (key: string) => Object.values(CHAIN_EXTRAS).find
 
 export const getChainKey = (chainId: number) => getChainExtra(chainId)?.key || ''
 
-export const getTransactionUrl = (chainId: number, hash: string) => {
+export function getTransactionUrl(chainId: number, hash: string) {
   return `${getExplorerUrl(chainId)}/tx/${hash}`
 }
 
-export const getContractUrl = (chainId: number, contract: string) => {
+export function getContractUrl(chainId: number, contract: string) {
   return `${getExplorerUrl(chainId)}/address/${contract}`
 }
 
-export const getTokenUrl = (chainId: number, token: string) => {
+export function getTokenUrl(chainId: number, token: string) {
   return `${getExplorerUrl(chainId)}/token/${token}`
 }
 
-export const getHolderUrl = (chainId: number, token: string, holder: string) => {
+export function getHolderUrl(chainId: number, token: string, holder: string) {
   return `${getExplorerUrl(chainId)}/token/${token}${holder ? `?a=${holder}` : ''}`
 }
 
-export const getAccountUrl = (chainId: number, account: string) => {
+export function getAccountUrl(chainId: number, account: string) {
   return `${getExplorerUrl(chainId)}/address/${account}`
 }
 
-export const getNftUrl = (chainId: number, address: string, id: bigint) => {
+export function getNftUrl(chainId: number, address: string, id: bigint) {
   return `${getExplorerUrl(chainId)}/token/${address}?a=${id}`
 }

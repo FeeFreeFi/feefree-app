@@ -1,6 +1,6 @@
 import copy from 'copy-to-clipboard'
 
-export const copyText = async (text: string) => {
+export async function copyText(text: string) {
   if (navigator?.clipboard?.writeText) {
     await navigator.clipboard.writeText(text)
     return true
@@ -9,7 +9,7 @@ export const copyText = async (text: string) => {
   return copy(text)
 }
 
-export const pasteText = async () => {
+export async function pasteText() {
   if (navigator?.clipboard?.readText) {
     return navigator.clipboard.readText()
   }

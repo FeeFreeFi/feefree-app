@@ -19,7 +19,7 @@ const outputToken = computed(() => showPrice0.value ? props.pool.currency1 : pro
 const price = computed(() => showPrice0.value ? props.price0 : props.price1)
 const priceValue = computed(() => formatPrice(price.value))
 
-const onTogglePrice = () => {
+function onTogglePrice() {
   showPrice0.value = !showPrice0.value
 }
 </script>

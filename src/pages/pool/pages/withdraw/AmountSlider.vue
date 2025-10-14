@@ -14,7 +14,7 @@ const emit = defineEmits<{
 
 const percent = computed(() => props.balance ? fromValue(props.amount).times(100).div(props.balance.toString(10)).toNumber() : 0)
 
-const onUpdate = (ratio: number) => {
+function onUpdate(ratio: number) {
   const { balance } = props
   if (!balance) {
     return

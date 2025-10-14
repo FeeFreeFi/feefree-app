@@ -3,11 +3,11 @@ import { ref, readonly } from 'vue'
 const visibilityRef = ref(true)
 export const visibility = readonly(visibilityRef)
 
-const onVisibilityChange = () => {
+function onVisibilityChange() {
   visibilityRef.value = !document.hidden
 }
 
-const install = () => {
+function install() {
   window.addEventListener('visibilitychange', onVisibilityChange)
 }
 

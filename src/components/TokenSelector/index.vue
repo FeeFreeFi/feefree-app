@@ -12,7 +12,7 @@ defineProps<Props>()
 
 const show = defineModel<boolean>('show', { default: false })
 
-const onClose = () => {
+function onClose() {
   show.value = false
 }
 </script>

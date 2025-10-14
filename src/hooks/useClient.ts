@@ -4,11 +4,11 @@ import { getChain, getRpcUrls } from './useChains'
 
 const publicClients: Record<number, PublicClient> = {}
 
-const createTransport = (urls: string[]) => {
+function createTransport(urls: string[]) {
   return fallback(urls.map(url => http(url, { batch: true })))
 }
 
-export const getPublicClient = (chainId: number) => {
+export function getPublicClient(chainId: number) {
   if (!publicClients[chainId]) {
     const publicClient = createPublicClient({
       chain: getChain(chainId),
@@ -20,15 +20,15 @@ export const getPublicClient = (chainId: number) => {
   return publicClients[chainId]
 }
 
-export const getBlockNumber = async (chainId: number) => {
+export async function getBlockNumber(chainId: number) {
   return getPublicClient(chainId).getBlockNumber({ cacheTime: 1000 })
 }
 
-export const getTransactionReceipt = async (chainId: number, hash: string) => {
+export async function getTransactionReceipt(chainId: number, hash: string) {
   return getPublicClient(chainId).getTransactionReceipt({ hash: hash as Hash })
 }
 
-export const waitForTransactionReceipt = async (chainId: number, hash: string, confirms = 1) => {
+export async function waitForTransactionReceipt(chainId: number, hash: string, confirms = 1) {
   return new Promise(resolve => {
     const diff = BigInt(confirms - 1)
     const publicClient = getPublicClient(chainId)

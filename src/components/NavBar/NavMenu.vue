@@ -6,7 +6,7 @@ import NavMemuView from './NavMemuView.vue'
 const show = ref(false)
 const maskClosable = ref(true)
 
-const onUpdateShow = (value: boolean) => {
+function onUpdateShow(value: boolean) {
   if (!value) {
     maskClosable.value = false
   }

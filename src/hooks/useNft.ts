@@ -13,7 +13,7 @@ import { getQuoterAddress } from './useManager'
 
 const config = ref<Record<number, Nft[]>>()
 
-export const fetchNfts = async () => {
+export async function fetchNfts() {
   if (config.value) {
     return
   }
@@ -31,17 +31,17 @@ export const getSupportedChains = () => Object.keys(config.value || {}).map(chai
 
 export const getNfts = (chainId: number) => config.value?.[chainId] || []
 
-const totalSupply = async (nft: Nft) => {
+async function totalSupply(nft: Nft) {
   const { chainId, address } = nft
   return _totalSupply(getPublicClient(chainId), address)
 }
 
-const getMinted = async (nfts: Nft[]) => {
+async function getMinted(nfts: Nft[]) {
   if (nfts.length === 0) {
     return []
   }
 
-  const { chainId } = nfts[0]
+  const { chainId } = nfts[0]!
   const quoter = getQuoterAddress(chainId)
   if (quoter) {
     const publicClient = getPublicClient(chainId)
@@ -55,16 +55,16 @@ const getKey = (nft: Nft) => `${nft.chainId}:${nft.address}`
 
 const cache = createCache()
 
-const getValues = (nfts: Nft[]) => {
+function getValues(nfts: Nft[]) {
   return nfts.map(nft => nft ? cache.getValue(getKey(nft), 0n) as bigint : 0n)
 }
 
-const updateValues = async (nfts: Nft[]) => {
+async function updateValues(nfts: Nft[]) {
   const values = await getMinted(nfts)
   cache.setValues(Object.fromEntries(nfts.map((it, index) => [getKey(it), values[index]])))
 }
 
-export const createNftStates = (nfts: Ref<Nft[]>, states: Ref<bigint[]>) => {
+export function createNftStates(nfts: Ref<Nft[]>, states: Ref<bigint[]>) {
   const getDefaults = () => nfts.value.map(() => 0n)
 
   states.value = getDefaults()
@@ -83,7 +83,7 @@ export const createNftStates = (nfts: Ref<Nft[]>, states: Ref<bigint[]>) => {
   return debounceUpdate
 }
 
-export const mint = async (nft: Nft) => {
+export async function mint(nft: Nft) {
   const { address, chainId, price } = nft
 
   const publicClient = getPublicClient(chainId)

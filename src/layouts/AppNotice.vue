@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { notice, startFetchNotice, stopFetchNotice, markAsRead } from '@/hooks/useNotice'
 
-const onClose = () => {
+function onClose() {
   markAsRead()
 }
 

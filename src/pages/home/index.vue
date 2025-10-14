@@ -59,8 +59,8 @@ const currentToken = computed(() => isForInput.value ? inputToken.value : output
 const inputOutputTokens = computed(() => [inputToken.value, outputToken.value])
 
 const balances = ref([0n, 0n])
-const inputBalance = computed(() => balances.value[0])
-const outputBalance = computed(() => balances.value[1])
+const inputBalance = computed(() => balances.value[0]!)
+const outputBalance = computed(() => balances.value[1]!)
 const debounceUpdateBalances = ref<DebouncedFunc<Callback>>()
 
 const amountIn = computed(() => inputToken.value ? parseAmount(inputAmount.value || 0, inputToken.value.decimals) : 0n)
@@ -81,16 +81,16 @@ const isInputValid = computed(() => {
 })
 const debounceUpdateQuote = ref<DebouncedFunc<Callback>>()
 
-const checkAllowance = async () => {
+async function checkAllowance() {
   const allowed = await allowance(inputToken.value!, account.value, getManagerAddress(inputToken.value!.chainId))
   approved.value = allowed >= amountIn.value
 }
-const onCheckApproval = async () => {
+async function onCheckApproval() {
   approvalChecking.value = true
   await checkAllowance()
   approvalChecking.value = false
 }
-const onApproval = async () => {
+async function onApproval() {
   const spender = getManagerAddress(inputToken.value!.chainId)
   const success = await doApproval(approveAction, approving, inputToken.value!, spender, amountIn.value)
   if (success) {
@@ -99,7 +99,7 @@ const onApproval = async () => {
   }
 }
 
-const updateRouteForInputOutput = () => {
+function updateRouteForInputOutput() {
   const { referral } = route.query
 
   const [input, output] = inputOutputTokens.value
@@ -114,7 +114,7 @@ const updateRouteForInputOutput = () => {
   router.push({ replace: true, name: route.name, query })
 }
 
-const handleRoute = async () => {
+async function handleRoute() {
   const { chain, input, output } = route.query
 
   const chainId = getChainIdByKey(chain as string)
@@ -122,10 +122,12 @@ const handleRoute = async () => {
     const tokens = getPoolTokens(appChainId.value)
     inputToken.value = tokens[0]
     outputToken.value = tokens[1]
-  } else if (!isSupportChain(chainId)) {
+  }
+  else if (!isSupportChain(chainId)) {
     inputToken.value = undefined
     outputToken.value = undefined
-  } else {
+  }
+  else {
     const nativeToken = getNativeToken(chainId)
 
     const [tokenIn, tokenOut] = await Promise.all([
@@ -139,11 +141,11 @@ const handleRoute = async () => {
     cacheTokens([tokenIn, tokenOut].filter(it => !!it))
   }
 
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
   updateRouteForInputOutput()
 }
 
-const reset = () => {
+function reset() {
   approved.value = false
   approvalChecking.value = false
   approving.value = false
@@ -156,7 +158,7 @@ const reset = () => {
   isForInput.value = true
 }
 
-const updateQuoteData = async () => {
+async function updateQuoteData() {
   if (paths.value.length === 0 || !amountIn.value) {
     quoteData.value = undefined
     return
@@ -166,7 +168,8 @@ const updateQuoteData = async () => {
 
   try {
     quoteData.value = await quoteSwap(inputToken.value!.chainId, paths.value, amountSpecified)
-  } catch (err) {
+  }
+  catch (err) {
     notification.error({
       title: 'Error',
       content: getErrorMessage(err, 'Error'),
@@ -175,7 +178,7 @@ const updateQuoteData = async () => {
   }
 }
 
-const onAmountChange = () => {
+function onAmountChange() {
   if (!amountIn.value) {
     inputAmount.value = ''
     return
@@ -186,11 +189,11 @@ const onAmountChange = () => {
     return
   }
 
-  debounceUpdateQuote.value && debounceUpdateQuote.value()
+  debounceUpdateQuote.value?.()
   onCheckApproval()
 }
 
-const onReverse = () => {
+function onReverse() {
   const [tokenA, tokenB] = [inputToken.value, outputToken.value]
   inputToken.value = tokenB
   outputToken.value = tokenA
@@ -199,10 +202,10 @@ const onReverse = () => {
   quoteData.value = undefined
 
   updateRouteForInputOutput()
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
 }
 
-const onSelectToken = async (token: Token) => {
+async function onSelectToken(token: Token) {
   const targetToken = isForInput.value ? inputToken : outputToken
   const otherToken = isForInput.value ? outputToken : inputToken
 
@@ -220,20 +223,20 @@ const onSelectToken = async (token: Token) => {
   quoteData.value = undefined
 
   updateRouteForInputOutput()
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
 }
 
-const onSelectInputToken = () => {
+function onSelectInputToken() {
   isForInput.value = true
   showTokenSelector.value = true
 }
 
-const onSelectOutputToken = () => {
+function onSelectOutputToken() {
   isForInput.value = false
   showTokenSelector.value = true
 }
 
-const doSwap = async () => {
+async function doSwap() {
   const { paths, amountSpecified, amountIn, amountOut } = quoteData.value!
   const params = {
     paths,
@@ -255,12 +258,12 @@ const doSwap = async () => {
 
   if (success) {
     reset()
-    debounceUpdateBalances.value && debounceUpdateBalances.value()
+    debounceUpdateBalances.value?.()
     updateNativeBalance()
   }
 }
 
-const onSwap = () => {
+function onSwap() {
   if (!quoteData.value) {
     return
   }
@@ -274,23 +277,23 @@ const onSwap = () => {
   doSwap()
 }
 
-const onAppChainIdChange = () => {
+function onAppChainIdChange() {
   reset()
 
   const allTokens = getPoolTokens(appChainId.value)
-  inputToken.value = allTokens[0] || null
-  outputToken.value = allTokens[1] || null
+  inputToken.value = allTokens[0] || undefined
+  outputToken.value = allTokens[1] || undefined
   fee.value = getSwapFee(appChainId.value)
 
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
   updateRouteForInputOutput()
 }
 
-const loadMyPools = async () => {
+async function loadMyPools() {
   await _loadMyPools(appChainId.value, account.value)
 }
 
-const onTokensChange = async () => {
+async function onTokensChange() {
   if (!inputToken.value || !outputToken.value) {
     paths.value = []
     return

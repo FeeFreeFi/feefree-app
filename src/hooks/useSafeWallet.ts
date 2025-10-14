@@ -4,7 +4,7 @@ import { SAFE_APPS_DOMAINS } from '@/config'
 import { uuid } from '@/utils'
 import { addWallet } from './useWalletDetector'
 
-export const loadSafeWallet = async () => {
+export async function loadSafeWallet() {
   if (!SAFE_APPS_DOMAINS.includes(window.location.host)) {
     return
   }

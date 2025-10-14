@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-export const createCache = () => {
+export function createCache() {
   const data = ref<Record<string, unknown>>({})
 
   const getValue = (key: string, defaultValue: unknown = undefined) => {

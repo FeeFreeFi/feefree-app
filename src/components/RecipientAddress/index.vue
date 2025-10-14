@@ -16,11 +16,11 @@ const modelValue = defineModel<string>({ required: true })
 
 const show = ref(false)
 
-const onClose = () => {
+function onClose() {
   show.value = false
 }
 
-const onOpen = () => {
+function onOpen() {
   if (props.disabled) {
     return
   }

@@ -55,8 +55,8 @@ const poolInitState = ref<{ id: string, initialized: boolean }>()
 const initialized = computed(() => poolInitState.value?.initialized)
 
 const balances = ref([0n, 0n])
-const inputBalance0 = computed(() => balances.value[0])
-const inputBalance1 = computed(() => balances.value[1])
+const inputBalance0 = computed(() => balances.value[0]!)
+const inputBalance1 = computed(() => balances.value[1]!)
 const debounceUpdateBalances = ref<DebouncedFunc<Callback>>()
 
 const approved = computed(() => approved0.value && approved1.value)
@@ -86,7 +86,7 @@ const isInputValid = computed(() => {
   return amountIn0.value && amountIn0.value <= inputBalance0.value && amountIn1.value && amountIn1.value <= inputBalance1.value
 })
 
-const doCheckAllowanceOne = async (isZero: boolean) => {
+async function doCheckAllowanceOne(isZero: boolean) {
   const _approved = isZero ? approved0 : approved1
   const token = isZero ? inputToken0.value : inputToken1.value
   const amount = isZero ? amountIn0.value : amountIn1.value
@@ -95,18 +95,18 @@ const doCheckAllowanceOne = async (isZero: boolean) => {
   const allowed = await allowance(token!, account.value, spender)
   _approved.value = allowed >= amount
 }
-const checkAllowance = async () => {
+async function checkAllowance() {
   await Promise.all([
     doCheckAllowanceOne(true),
     doCheckAllowanceOne(false),
   ])
 }
-const onCheckApproval = async () => {
+async function onCheckApproval() {
   approvalChecking.value = true
   await checkAllowance()
   approvalChecking.value = false
 }
-const onApproval = async (isZero: boolean) => {
+async function onApproval(isZero: boolean) {
   const token = isZero ? inputToken0.value : inputToken1.value
   const amount = isZero ? amountIn0.value : amountIn1.value
   const spender = getManagerAddress(token!.chainId)
@@ -118,7 +118,7 @@ const onApproval = async (isZero: boolean) => {
   }
 }
 
-const updateRouteForInputs = () => {
+function updateRouteForInputs() {
   const { referral } = route.query
 
   const [input0, input1] = inputTokens.value
@@ -133,7 +133,7 @@ const updateRouteForInputs = () => {
   router.push({ replace: true, name: route.name, query })
 }
 
-const handleRoute = async () => {
+async function handleRoute() {
   const { chain, input0, input1 } = route.query
 
   const chainId = getChainIdByKey(chain as string)
@@ -141,10 +141,12 @@ const handleRoute = async () => {
     const nativeToken = getNativeToken(appChainId.value)
     inputToken0.value = nativeToken
     inputToken1.value = undefined
-  } else if (!isSupportChain(chainId)) {
+  }
+  else if (!isSupportChain(chainId)) {
     inputToken0.value = undefined
     inputToken1.value = undefined
-  } else {
+  }
+  else {
     const nativeToken = getNativeToken(chainId)
 
     const [token0, token1] = await Promise.all([
@@ -158,11 +160,11 @@ const handleRoute = async () => {
     cacheTokens([token0, token1].filter(it => !!it))
   }
 
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
   updateRouteForInputs()
 }
 
-const reset = () => {
+function reset() {
   approvalChecking.value = false
   approving0.value = false
   approving1.value = false
@@ -177,7 +179,7 @@ const reset = () => {
   isForZero.value = true
 }
 
-const onAmount0Change = () => {
+function onAmount0Change() {
   if (!amountIn0.value) {
     inputAmount0.value = ''
     return
@@ -186,7 +188,7 @@ const onAmount0Change = () => {
   onCheckApproval()
 }
 
-const onAmount1Change = () => {
+function onAmount1Change() {
   if (!amountIn1.value) {
     inputAmount1.value = ''
     return
@@ -195,7 +197,7 @@ const onAmount1Change = () => {
   onCheckApproval()
 }
 
-const onReverse = () => {
+function onReverse() {
   const [token0, token1] = [inputToken0.value, inputToken1.value]
   inputToken0.value = token1
   inputToken1.value = token0
@@ -205,10 +207,10 @@ const onReverse = () => {
   inputAmount1.value = amount0
 
   updateRouteForInputs()
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
 }
 
-const onSelectToken = async (token: Token) => {
+async function onSelectToken(token: Token) {
   const targetToken = isForZero.value ? inputToken0 : inputToken1
   const otherToken = isForZero.value ? inputToken1 : inputToken0
   const targetAmount = isForZero.value ? inputAmount0 : inputAmount1
@@ -225,20 +227,20 @@ const onSelectToken = async (token: Token) => {
   targetAmount.value = ''
 
   updateRouteForInputs()
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
 }
 
-const onSelectToken0 = () => {
+function onSelectToken0() {
   isForZero.value = true
   showTokenSelector.value = true
 }
 
-const onSelectToken1 = () => {
+function onSelectToken1() {
   isForZero.value = false
   showTokenSelector.value = true
 }
 
-const onCreate = async () => {
+async function onCreate() {
   const params = {
     currency0: inputToken0.value!.address,
     currency1: inputToken1.value!.address,
@@ -261,14 +263,14 @@ const onCreate = async () => {
 
   if (success) {
     reset()
-    debounceUpdateBalances.value && debounceUpdateBalances.value()
+    debounceUpdateBalances.value?.()
     updateNativeBalance()
 
     loadMyPools(appChainId.value, account.value)
   }
 }
 
-const onAppChainIdChange = () => {
+function onAppChainIdChange() {
   reset()
 
   const allTokens = getTokens(appChainId.value)
@@ -276,11 +278,11 @@ const onAppChainIdChange = () => {
   inputToken1.value = allTokens[1] || undefined
   poolInitState.value = undefined
 
-  debounceUpdateBalances.value && debounceUpdateBalances.value()
+  debounceUpdateBalances.value?.()
   updateRouteForInputs()
 }
 
-const onTokensChange = async () => {
+async function onTokensChange() {
   if (!inputToken0.value || !inputToken1.value) {
     poolInitState.value = undefined
     return

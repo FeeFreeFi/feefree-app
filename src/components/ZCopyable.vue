@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const copied = ref(false)
 const timeId = ref<TimerId>()
 
-const delayReset = () => {
+function delayReset() {
   if (timeId.value) {
     clearTimeout(timeId.value)
   }
@@ -25,7 +25,7 @@ const delayReset = () => {
   }, props.delay)
 }
 
-const onClick = async () => {
+async function onClick() {
   if (copied.value) {
     return
   }
@@ -33,13 +33,16 @@ const onClick = async () => {
   let text
   if (typeof props.text === 'function') {
     text = props.text()
-  } else {
+  }
+  else {
     text = props.text
   }
 
   copied.value = await copyText(text)
 
-  copied.value && delayReset()
+  if (copied.value) {
+    delayReset()
+  }
 }
 
 onBeforeUnmount(() => delayReset())

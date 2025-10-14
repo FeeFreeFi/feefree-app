@@ -1,7 +1,3 @@
-# Modern browser baseline
-> 1%
-last 2 versions
-not dead
-
-# Required modern features
-supports es6-module
+baseline-widely-available
+# defaults and fully supports es6-module
+# supports es6-module

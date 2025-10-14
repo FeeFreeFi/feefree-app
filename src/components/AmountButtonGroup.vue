@@ -18,7 +18,7 @@ const items = [
   { label: 'MAX', value: 100n },
 ]
 
-const onPick = (ratio: bigint) => {
+function onPick(ratio: bigint) {
   const { balance } = props
   if (!balance) {
     return

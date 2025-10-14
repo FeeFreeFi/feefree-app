@@ -17,7 +17,7 @@ const walletInfoRef = ref<WalletInfo>()
 let walletClient: WalletClient | undefined
 let cachedProvider: EIP1193Provider | undefined
 
-export const getWalletClient = () => {
+export function getWalletClient() {
   if (!walletClient) {
     throw new Error('Wallet not connected!')
   }
@@ -25,7 +25,7 @@ export const getWalletClient = () => {
   return walletClient
 }
 
-const getCachedProvider = () => {
+function getCachedProvider() {
   if (!cachedProvider) {
     throw new Error('Wallet not connected!')
   }
@@ -33,7 +33,7 @@ const getCachedProvider = () => {
   return cachedProvider
 }
 
-const replaceWalletClient = (provider: EIP1193Provider, chainId: number, account: string) => {
+function replaceWalletClient(provider: EIP1193Provider, chainId: number, account: string) {
   chainId ||= walletChainIdRef.value
   walletClient = createWalletClient({
     chain: getChain(chainId),
@@ -42,16 +42,16 @@ const replaceWalletClient = (provider: EIP1193Provider, chainId: number, account
   })
 }
 
-const getChainId = async (provider: EIP1193Provider) => {
+async function getChainId(provider: EIP1193Provider) {
   const chainId = await provider.request({ method: 'eth_chainId' }) as string
   return Number.parseInt(chainId, 16)
 }
 
-const getAccounts = async (provider: EIP1193Provider) => {
+async function getAccounts(provider: EIP1193Provider) {
   return provider.request({ method: 'eth_accounts' }) as Promise<string[]>
 }
 
-export const updateNativeBalance = async () => {
+export async function updateNativeBalance() {
   if (!walletChainIdRef.value || !accountRef.value) {
     nativeBalanceRef.value = 0n
     return
@@ -60,7 +60,7 @@ export const updateNativeBalance = async () => {
   nativeBalanceRef.value = await balanceOf(getPublicClient(walletChainIdRef.value), ADDRESS_ZERO, accountRef.value)
 }
 
-const reset = () => {
+function reset() {
   accountRef.value = ''
   walletChainIdRef.value = 0
   nativeBalanceRef.value = 0n
@@ -69,7 +69,7 @@ const reset = () => {
   walletClient = undefined
 }
 
-const update = async (chainId: number, account = '') => {
+async function update(chainId: number, account = '') {
   if (!isSupportChain(chainId)) {
     reset()
     console.warn(`chainId "${chainId}" not support`)
@@ -78,7 +78,8 @@ const update = async (chainId: number, account = '') => {
 
   const provider = getCachedProvider()
   if (!account) {
-    [account] = await getAccounts(provider)
+    const accounts = await getAccounts(provider)
+    account = accounts[0]!
   }
   account = getAddress(account)
 
@@ -91,15 +92,15 @@ const update = async (chainId: number, account = '') => {
   updateNativeBalance()
 }
 
-const onConnect = async (connectInfo: ProviderConnectInfo) => {
+async function onConnect(connectInfo: ProviderConnectInfo) {
   await update(Number.parseInt(connectInfo.chainId, 16))
 }
 
-const onChainChanged = async (chainId: string) => {
+async function onChainChanged(chainId: string) {
   await update(Number.parseInt(chainId, 16))
 }
 
-const onAccountsChanged = async (accounts: Address[]) => {
+async function onAccountsChanged(accounts: Address[]) {
   if (!accounts || accounts.length === 0) {
     reset()
     return
@@ -109,11 +110,11 @@ const onAccountsChanged = async (accounts: Address[]) => {
   await update(chainId, accounts[0])
 }
 
-const onDisconnect = () => {
+function onDisconnect() {
   reset()
 }
 
-const clear = () => {
+function clear() {
   const provider = cachedProvider
   if (provider) {
     provider.removeListener('connect', onConnect)
@@ -126,26 +127,28 @@ const clear = () => {
   reset()
 }
 
-const addChain = async (chainId: number) => {
+async function addChain(chainId: number) {
   const chain = getChain(chainId)
   const client = getWalletClient()
   await client.addChain({ chain })
 }
 
-export const switchChain = async (chainId: number) => {
+export async function switchChain(chainId: number) {
   try {
     const client = getWalletClient()
     await client.switchChain({ id: chainId })
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (err instanceof SwitchChainError) {
       await addChain(chainId)
-    } else {
+    }
+    else {
       throw err
     }
   }
 }
 
-const init = async (provider: EIP1193Provider, info: WalletInfo, account: string, chainId: number, targetChainId: number | undefined = undefined) => {
+async function init(provider: EIP1193Provider, info: WalletInfo, account: string, chainId: number, targetChainId: number | undefined = undefined) {
   if (cachedProvider !== provider) {
     provider.on('connect', onConnect)
     provider.on('chainChanged', onChainChanged)
@@ -166,10 +169,10 @@ const init = async (provider: EIP1193Provider, info: WalletInfo, account: string
   await update(chainId, account)
 }
 
-export const connect = async (wallet: Wallet, targetChainId: number | undefined = undefined) => {
+export async function connect(wallet: Wallet, targetChainId: number | undefined = undefined) {
   const { provider, info } = wallet
-  const accounts = info.name === 'Safe' ? await provider.request({ method: 'eth_accounts' }) : await provider.request({ method: 'eth_requestAccounts' })
-  if (!accounts) {
+  const accounts: string[] = info.name === 'Safe' ? await provider.request({ method: 'eth_accounts' }) : await provider.request({ method: 'eth_requestAccounts' })
+  if (!accounts || accounts.length === 0) {
     return false
   }
 
@@ -178,12 +181,12 @@ export const connect = async (wallet: Wallet, targetChainId: number | undefined 
   }
 
   const chainId = await getChainId(provider as EIP1193Provider)
-  await init(provider as EIP1193Provider, info, (accounts as string)[0], chainId, targetChainId)
+  await init(provider as EIP1193Provider, info, accounts[0]!, chainId, targetChainId)
 
   return true
 }
 
-export const autoConnect = async (wallet: Wallet) => {
+export async function autoConnect(wallet: Wallet) {
   const accounts = await getAccounts(wallet.provider as EIP1193Provider)
   if (accounts.length === 0) {
     return false
@@ -192,7 +195,7 @@ export const autoConnect = async (wallet: Wallet) => {
   return connect(wallet)
 }
 
-export const disconnect = () => {
+export function disconnect() {
   clear()
 }
 

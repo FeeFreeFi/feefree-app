@@ -25,18 +25,18 @@ const duration = computed(() => {
 
 const disabled = ref(duration.value > 0)
 
-const renderCountdown = (e: CountdownTimeInfo) => {
+function renderCountdown(e: CountdownTimeInfo) {
   const { hours, minutes, seconds } = e
   const days = (hours - hours % 24) / 24
 
   return `${days > 0 ? `${days}d ` : ''}${String(hours % 24).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
-const onFinish = () => {
+function onFinish() {
   disabled.value = false
 }
 
-const onUnlock = () => {
+function onUnlock() {
   emit('unlock', props.data)
 }
 </script>

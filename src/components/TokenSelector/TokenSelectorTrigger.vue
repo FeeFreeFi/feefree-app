@@ -17,7 +17,7 @@ const emit = defineEmits<{
   (e: 'select'): void
 }>()
 
-const onSelect = () => {
+function onSelect() {
   if (props.disabled) {
     return
   }

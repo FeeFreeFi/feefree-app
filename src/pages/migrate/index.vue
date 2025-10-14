@@ -48,7 +48,7 @@ const ACTION_MIGRATE_LEGACY = 'migrate-legacy'
 const ACTION_WITHDRAW_OLD = 'withdraw-old'
 const ACTION_MIGRATE_OLD = 'migrate-old'
 
-const showError = (err: unknown, title = 'Error') => {
+function showError(err: unknown, title = 'Error') {
   notification.error({
     title,
     content: getErrorMessage(err, 'Error'),
@@ -56,7 +56,7 @@ const showError = (err: unknown, title = 'Error') => {
   })
 }
 
-const showSuccess = (message: string, title = 'Success') => {
+function showSuccess(message: string, title = 'Success') {
   notification.success({
     title,
     content: message,
@@ -64,34 +64,36 @@ const showSuccess = (message: string, title = 'Success') => {
   })
 }
 
-const onApproval = async (token: Token, amount: bigint, spender: string) => {
+async function onApproval(token: Token, amount: bigint, spender: string) {
   try {
     const tx = await approve(token, spender, amount)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     return true
-  } catch (err) {
+  }
+  catch (err) {
     showError(err, 'Approve fail')
     return false
   }
 }
 
-const onApprovalLiquidity = async () => {
+async function onApprovalLiquidity() {
   try {
     const tx = await approveLiquidity(poolOld.value!, config.value.address, liquidityOldBalance.value)
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     return true
-  } catch (err) {
+  }
+  catch (err) {
     showError(err, 'Approve fail')
     return false
   }
 }
 
-const checkAllowance = async (token: Token, amount: bigint, spender: string) => {
+async function checkAllowance(token: Token, amount: bigint, spender: string) {
   const allowed = await allowance(token, account.value, spender)
   return allowed >= amount
 }
 
-const ensureApproved = async (token: Token, amount: bigint, spender: string) => {
+async function ensureApproved(token: Token, amount: bigint, spender: string) {
   let approved = await checkAllowance(token, amount, spender)
   if (!approved) {
     const success = await onApproval(token, amount, spender)
@@ -105,7 +107,7 @@ const ensureApproved = async (token: Token, amount: bigint, spender: string) => 
   return approved
 }
 
-const ensureApprovedLiquidity = async () => {
+async function ensureApprovedLiquidity() {
   let approved = await checkLiquidityAllowance(poolOld.value!, account.value, liquidityOldBalance.value, config.value.address)
   if (!approved) {
     const success = await onApprovalLiquidity()
@@ -119,7 +121,7 @@ const ensureApprovedLiquidity = async () => {
   return approved
 }
 
-const ensureLiquidity = async (legacy = true) => {
+async function ensureLiquidity(legacy = true) {
   loading.value = legacy ? ACTION_WITHDRAW_LEGACY : ACTION_WITHDRAW_OLD
   let approved
   if (legacy) {
@@ -128,7 +130,8 @@ const ensureLiquidity = async (legacy = true) => {
       loading.value = ''
       return false
     }
-  } else {
+  }
+  else {
     approved = await ensureApprovedLiquidity()
     if (!approved) {
       loading.value = ''
@@ -139,7 +142,7 @@ const ensureLiquidity = async (legacy = true) => {
   return true
 }
 
-const onWithdrawLiquidity = async (legacy: boolean) => {
+async function onWithdrawLiquidity(legacy: boolean) {
   const ensured = await ensureLiquidity(legacy)
   if (!ensured) {
     return
@@ -152,16 +155,17 @@ const onWithdrawLiquidity = async (legacy: boolean) => {
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     showSuccess('Withdraw success')
 
-    debounceUpdateBalances.value && debounceUpdateBalances.value()
+    debounceUpdateBalances.value?.()
     updateNativeBalance()
-  } catch (err) {
+  }
+  catch (err) {
     showError(err, 'Withdraw fail')
   }
 
   loading.value = ''
 }
 
-const onMigrateLiquidity = async (legacy: boolean) => {
+async function onMigrateLiquidity(legacy: boolean) {
   const ensured = await ensureLiquidity(legacy)
   if (!ensured) {
     return
@@ -174,18 +178,19 @@ const onMigrateLiquidity = async (legacy: boolean) => {
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     showSuccess('Migrate success')
 
-    debounceUpdateBalances.value && debounceUpdateBalances.value()
+    debounceUpdateBalances.value?.()
     updateNativeBalance()
-  } catch (err) {
+  }
+  catch (err) {
     showError(err, 'Migrate fail')
   }
 
   loading.value = ''
 }
 
-const onWithdrawToken = async (token: Token & { origin: string }) => {
+async function onWithdrawToken(token: Token & { origin: string }) {
   loading.value = token.address
-  const approved = await ensureApproved(token, allBalances.value[token.address], config.value.address)
+  const approved = await ensureApproved(token, allBalances.value[token.address]!, config.value.address)
   if (!approved) {
     loading.value = ''
     return
@@ -197,9 +202,10 @@ const onWithdrawToken = async (token: Token & { origin: string }) => {
     await waitForTransactionReceipt(tx.chainId, tx.hash)
     showSuccess('Withdraw success')
 
-    debounceUpdateBalances.value && debounceUpdateBalances.value()
+    debounceUpdateBalances.value?.()
     updateNativeBalance()
-  } catch (err) {
+  }
+  catch (err) {
     console.log(err)
     showError(err, 'Withdraw fail')
   }
@@ -227,7 +233,7 @@ onMounted(async () => {
         <n-text>Migrate</n-text>
       </div>
     </div>
-    <div v-if="config" class="justify-items-center gap-y-4 sm:gap-y-8 sm:gap-x-8 md:gap-x-32 lg:gap-x-14 xl:gap-x-8 2xl:gap-x-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+    <div v-if="config" class="justify-items-center gap-y-4 sm:gap-x-8 sm:gap-y-8 md:gap-x-32 lg:gap-x-14 2xl:gap-x-4 xl:gap-x-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 xl:grid-cols-4">
       <div v-if="poolOld" class="relative flex flex-col bg-card rounded-lg w-full sm:w-[272px] max-w-[311px]">
         <div class="relative flex justify-center rounded-t-lg w-full h-[78px] overflow-hidden">
           <img class="w-[311px] max-w-max h-[78px] pointer-events-none select-none" :src="poolBg" loading="lazy" alt="Pool background">

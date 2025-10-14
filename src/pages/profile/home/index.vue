@@ -31,9 +31,11 @@ const percentage = computed(() => {
 
 const accountUrl = computed(() => getAccountUrl(appChainId.value, account.value))
 
-const onLogout = () => {
+function onLogout() {
   disconnect()
-  getAccessToken() && logout().finally(clearAuth)
+  if (getAccessToken()) {
+    logout().finally(clearAuth)
+  }
 }
 </script>
 

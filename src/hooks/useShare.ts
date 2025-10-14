@@ -4,7 +4,7 @@ import { copyText, getAccountReferral } from '@/utils'
 import { account } from './useWallet'
 import { profile } from './useUser'
 
-export const createShare = (message: MessageApi) => {
+export function createShare(message: MessageApi) {
   const referral = computed(() => profile.value ? profile.value.referral : getAccountReferral(account.value))
   const shareUrl = computed(() => {
     const url = new URL(window.location.href)

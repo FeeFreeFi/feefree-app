@@ -42,7 +42,7 @@ const price = computed(() => {
   return output.div(input).toNumber()
 })
 
-const onTriggerSelect = () => {
+function onTriggerSelect() {
   emit('select')
 }
 </script>

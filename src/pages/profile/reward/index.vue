@@ -38,12 +38,12 @@ const claiming = ref(false)
 
 const switching = ref(false)
 
-const onSwitchNetwork = async (chainId: number) => {
+async function onSwitchNetwork(chainId: number) {
   switching.value = await doSwitchNetwork(notification, chainId)
   return true
 }
 
-const reset = () => {
+function reset() {
   pagination.value = { page: 1, limit: 10, total: 0 }
   rewards.value = { current: 0n, claimed: 0n, available: 0n, list: [] }
   claims.value = []
@@ -52,7 +52,7 @@ const reset = () => {
   switching.value = false
 }
 
-const checkRewardsValid = async () => {
+async function checkRewardsValid() {
   const { list } = rewards.value
   const valids = await pMap(list, async item => {
     const { chainId, address, amount, nonce, proof } = item
@@ -63,12 +63,12 @@ const checkRewardsValid = async () => {
     ...rewards.value,
     list: list.map((it, index) => ({
       ...it,
-      valid: valids[index],
+      valid: valids[index]!,
     })),
   }
 }
 
-const fetchRewards = async () => {
+async function fetchRewards() {
   const res = await getRewards()
   if (res.code !== 0) {
     console.log(res.message)
@@ -90,7 +90,7 @@ const fetchRewards = async () => {
   checkRewardsValid()
 }
 
-const fetchClaims = async () => {
+async function fetchClaims() {
   const { page, limit } = pagination.value
 
   const res = await getClaims({ page, limit })
@@ -107,7 +107,7 @@ const fetchClaims = async () => {
   }))
 }
 
-const fetchData = async () => {
+async function fetchData() {
   if (!profile.value) {
     reset()
     return
@@ -119,7 +119,7 @@ const fetchData = async () => {
   ])
 }
 
-const onClaim = async (reward: Reward) => {
+async function onClaim(reward: Reward) {
   const { chainId } = reward
   if (chainId !== appChainId.value) {
     const success = await onSwitchNetwork(chainId)
@@ -137,7 +137,7 @@ const onClaim = async (reward: Reward) => {
   }
 }
 
-const onUpdatePage = (page: number) => {
+function onUpdatePage(page: number) {
   pagination.value = {
     ...pagination.value,
     page,

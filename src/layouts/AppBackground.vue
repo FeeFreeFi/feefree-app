@@ -8,7 +8,9 @@ onMounted(async () => {
   let timerId: ReturnType<typeof setTimeout>
 
   onBeforeUnmount(() => {
-    timerId && clearTimeout(timerId)
+    if (timerId) {
+      clearTimeout(timerId)
+    }
   })
 
   const sketch = await import('@/libs/sketch').then(m => m.default)

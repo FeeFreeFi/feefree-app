@@ -29,7 +29,7 @@ const ABI_TOTAL_SUPPLY: Abi = [
   },
 ]
 
-export const totalSupply = async (publicClient: PublicClient, address: string) => {
+export async function totalSupply(publicClient: PublicClient, address: string) {
   return publicClient.readContract({
     address: address as Address,
     abi: ABI_TOTAL_SUPPLY,
@@ -37,7 +37,7 @@ export const totalSupply = async (publicClient: PublicClient, address: string) =
   }) as Promise<bigint>
 }
 
-export const mint = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, options: { value: bigint }) => {
+export async function mint(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, options: { value: bigint }) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({

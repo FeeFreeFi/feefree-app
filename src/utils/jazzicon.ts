@@ -15,7 +15,7 @@ const COLORS = [
 
 const mapChannel = (n: number, m: number) => Math.round((n + m) * 255).toString(16).padStart(2, '0')
 
-const hex2hsl = (hex: string) => {
+function hex2hsl(hex: string) {
   // Convert hex to RGB first
   let r = Number.parseInt(`0x${hex.slice(1, 3)}`, 16)
   let g = Number.parseInt(`0x${hex.slice(3, 5)}`, 16)
@@ -33,11 +33,14 @@ const hex2hsl = (hex: string) => {
 
   if (delta === 0) {
     h = 0
-  } else if (cmax === r) {
+  }
+  else if (cmax === r) {
     h = ((g - b) / delta) % 6
-  } else if (cmax === g) {
+  }
+  else if (cmax === g) {
     h = (b - r) / delta + 2
-  } else {
+  }
+  else {
     h = (r - g) / delta + 4
   }
 
@@ -55,7 +58,7 @@ const hex2hsl = (hex: string) => {
   return { h, s, l }
 }
 
-const hsl2hex = (hsl: { h: number, s: number, l: number }) => {
+function hsl2hex(hsl: { h: number, s: number, l: number }) {
   const { h } = hsl
   let { s, l } = hsl
   s /= 100
@@ -72,23 +75,28 @@ const hsl2hex = (hsl: { h: number, s: number, l: number }) => {
     r = c
     g = x
     b = 0
-  } else if (h >= 60 && h < 120) {
+  }
+  else if (h >= 60 && h < 120) {
     r = x
     g = c
     b = 0
-  } else if (h >= 120 && h < 180) {
+  }
+  else if (h >= 120 && h < 180) {
     r = 0
     g = c
     b = x
-  } else if (h >= 180 && h < 240) {
+  }
+  else if (h >= 180 && h < 240) {
     r = 0
     g = x
     b = c
-  } else if (h >= 240 && h < 300) {
+  }
+  else if (h >= 240 && h < 300) {
     r = x
     g = 0
     b = c
-  } else if (h >= 300 && h < 360) {
+  }
+  else if (h >= 300 && h < 360) {
     r = c
     g = 0
     b = x
@@ -97,7 +105,7 @@ const hsl2hex = (hsl: { h: number, s: number, l: number }) => {
   return `#${mapChannel(r, m)}${mapChannel(g, m)}${mapChannel(b, m)}`
 }
 
-const colorRotate = (hex: string, degrees: number) => {
+function colorRotate(hex: string, degrees: number) {
   const hsl = hex2hsl(hex)
   let hue = hsl.h
   hue = (hue + degrees) % 360
@@ -106,13 +114,13 @@ const colorRotate = (hex: string, degrees: number) => {
   return hsl2hex(hsl)
 }
 
-const genColor = (generator: MersenneTwister, colors: string[]) => {
+function genColor(generator: MersenneTwister, colors: string[]) {
   generator.random()
   const idx = Math.floor(colors.length * generator.random())
   return colors.splice(idx, 1)[0]
 }
 
-const genShape = (generator: MersenneTwister, colors: string[], size: number, i: number, total: number) => {
+function genShape(generator: MersenneTwister, colors: string[], size: number, i: number, total: number) {
   const firstRot = generator.random()
   const angle = Math.PI * 2 * firstRot
   const velocity = (size / total) * generator.random() + (i * size) / total
@@ -129,7 +137,7 @@ const genShape = (generator: MersenneTwister, colors: string[], size: number, i:
   return `<rect width="${size}" height="${size}" fill="${fill}" transform="${transform}" />`
 }
 
-const genSvg = (size: number, seed: number | number[]) => {
+function genSvg(size: number, seed: number | number[]) {
   const generator = new MersenneTwister(seed)
 
   const amount = generator.random() * 30 - 15
@@ -145,7 +153,7 @@ const genSvg = (size: number, seed: number | number[]) => {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}">${rects.join('')}</svg>`
 }
 
-export const jazzicon = (address: string, size = 64) => {
+export function jazzicon(address: string, size = 64) {
   const svg = genSvg(size, Number.parseInt(address.slice(2, 10), 16))
   return `data:image/svg+xml;base64,${btoa(svg)}`
 }

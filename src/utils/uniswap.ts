@@ -12,7 +12,7 @@ export const Q96 = 79228162514264337593543950336n
 // 2n ** 192n
 export const Q192 = 6277101735386680763835789423207666416102355444464034512896n
 
-export const mulDiv = (a: bigint, b: bigint, c: bigint) => {
+export function mulDiv(a: bigint, b: bigint, c: bigint) {
   return BigInt(new BigNumber(a.toString(10)).times(b.toString(10)).div(c.toString(10)).dp(0).toString(10))
 }
 
@@ -28,7 +28,7 @@ export const getAmount1FromAmount0AndLiquidity = (amount0: bigint, liquidity: bi
 
 export const getAmount1FromAmount0AndSqrtPrice = (amount0: bigint, sqrtPriceX96: bigint) => mulDiv(sqrtPriceX96 * sqrtPriceX96, amount0, Q192)
 
-export const getSqrtPriceXFromAmounts = (amount0: bigint, amount1: bigint) => {
+export function getSqrtPriceXFromAmounts(amount0: bigint, amount1: bigint) {
   return BigInt(new BigNumber(amount1.toString(10)).times(Q192.toString(10)).div(amount0.toString(10)).sqrt().dp(0, BigNumber.ROUND_DOWN).toString(10))
 }
 

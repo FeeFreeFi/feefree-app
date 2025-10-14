@@ -2,7 +2,7 @@ import type { WalletClient } from 'viem'
 import { createSiweMessage, generateSiweNonce } from 'viem/siwe'
 import { SIGN_EXPIRE } from '@/config'
 
-export const signIn = async (walletClient: WalletClient, chainId: number, domain: string, origin: string) => {
+export async function signIn(walletClient: WalletClient, chainId: number, domain: string, origin: string) {
   const account = walletClient.account!.address
   const nonce = generateSiweNonce()
   const timestamp = Date.now()

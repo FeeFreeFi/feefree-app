@@ -4,7 +4,7 @@ import { uuid } from '@/utils'
 
 const walletsRef = ref<Record<string, Wallet>>({})
 
-const getProviderMeta = (provider: EIP1193ProviderLegacy) => {
+function getProviderMeta(provider: EIP1193ProviderLegacy) {
   if (provider.isApexWallet) {
     return {
       name: 'Apex Wallet',
@@ -233,7 +233,7 @@ const getProviderMeta = (provider: EIP1193ProviderLegacy) => {
   }
 }
 
-const getInjectedWallet = () => {
+function getInjectedWallet() {
   const provider = window.ethereum
   if (!provider) {
     return
@@ -251,7 +251,7 @@ const getInjectedWallet = () => {
   } as Wallet
 }
 
-export const getWallets = (includeHidden = false) => {
+export function getWallets(includeHidden = false) {
   const items = Object.values(walletsRef.value)
   if (items.length > 0) {
     return includeHidden ? items : items.filter(it => !it.info.hidden)
@@ -261,12 +261,12 @@ export const getWallets = (includeHidden = false) => {
   return injected ? [injected] : []
 }
 
-export const findWallet = (name: string) => {
+export function findWallet(name: string) {
   const wallets = getWallets(true)
   return wallets.find(it => it.info.name === name)
 }
 
-export const addWallet = (info: WalletInfo, provider: EIP1193Provider) => {
+export function addWallet(info: WalletInfo, provider: EIP1193Provider) {
   const { id, origin } = info
   if (!walletsRef.value[id]) {
     walletsRef.value = {
@@ -279,13 +279,13 @@ export const addWallet = (info: WalletInfo, provider: EIP1193Provider) => {
   }
 }
 
-const onAnnounceProvider = (e: EIP6963AnnounceProviderEvent) => {
+function onAnnounceProvider(e: EIP6963AnnounceProviderEvent) {
   const { info, provider } = e.detail
   const { rdns, name, icon } = info
   addWallet({ id: rdns, name, icon, hidden: false }, provider)
 }
 
-const detect = () => {
+function detect() {
   window.addEventListener('eip6963:announceProvider', onAnnounceProvider)
   window.dispatchEvent(new CustomEvent('eip6963:requestProvider'))
 }

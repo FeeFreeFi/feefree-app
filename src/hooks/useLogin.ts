@@ -3,14 +3,14 @@ import { getWalletClient, walletInfo } from './useWallet'
 import { signIn } from './useSignIn'
 import { setAuth, clearAuth, getRefreshToken } from './useAuth'
 
-export const login = async () => {
+export async function login() {
   const origin = walletInfo.value!.origin!
   const { host } = new URL(origin)
 
   const walletClient = getWalletClient()
   const chainId = await walletClient!.getChainId()
   const signData = await signIn(walletClient!, chainId, host, origin).catch(err => {
-    throw new Error('Login fail', { cause: err.shortMessage || err.details || err.message })
+    throw new Error(err.shortMessage || err.details || err.message || 'Login fail')
   })
   if (!signData) {
     return
@@ -18,13 +18,13 @@ export const login = async () => {
 
   const res = await _login(signData)
   if (res.code !== 0) {
-    throw new Error('Login fail', { cause: res.message })
+    throw new Error(res.message || 'Login fail')
   }
 
   setAuth(res.data!)
 }
 
-export const refreshToken = async () => {
+export async function refreshToken() {
   const res = await _refreshToken({ refreshToken: getRefreshToken() })
   if (res.code !== 0) {
     clearAuth()

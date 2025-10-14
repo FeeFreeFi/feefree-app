@@ -34,17 +34,17 @@ const DENOMINATOR = 10000n
 
 const config = ref<Record<number, Manager>>({})
 
-export const getManager = (chainId: number) => config.value[chainId]
+export const getManager = (chainId: number) => config.value[chainId]!
 
-export const getManagerAddress = (chainId: number) => getManager(chainId)?.address
+export const getManagerAddress = (chainId: number) => getManager(chainId).address
 
-export const getQuoterAddress = (chainId: number) => getManager(chainId)?.quoter
+export const getQuoterAddress = (chainId: number) => getManager(chainId).quoter
 
-export const getPoolAddress = (chainId: number) => getManager(chainId)?.pool
+export const getPoolAddress = (chainId: number) => getManager(chainId).pool
 
-export const getLiquidityAddress = (chainId: number) => getManager(chainId)?.liquidity
+export const getLiquidityAddress = (chainId: number) => getManager(chainId).liquidity
 
-export const addManagers = (managers: Manager[]) => {
+export function addManagers(managers: Manager[]) {
   managers.forEach(manager => {
     config.value[manager.chainId] = manager
   })
@@ -54,7 +54,7 @@ export const isSupportChain = (chainId: number) => !!getManager(chainId)
 
 export const getSupportedChains = () => Object.keys(config.value).map(chainId => ({ chainId: Number.parseInt(chainId, 10) }))
 
-export const launch = async (params: LaunchParams) => {
+export async function launch(params: LaunchParams) {
   const chainId = walletChainId.value
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -64,7 +64,7 @@ export const launch = async (params: LaunchParams) => {
   return _launch({ publicClient, walletClient }, getManagerAddress(chainId), encodeLaunchData(params), { value })
 }
 
-export const initialize = async (params: InitializeParams) => {
+export async function initialize(params: InitializeParams) {
   const chainId = walletChainId.value
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -80,14 +80,14 @@ export const initialize = async (params: InitializeParams) => {
   return _initialize({ publicClient, walletClient }, getManagerAddress(chainId), encodeInitializeData(params), { value })
 }
 
-export const quoteAddLiquidity = async (chainId: number, currency0: string, currency1: string, amount0Max: bigint, amount1Max: bigint) => {
+export async function quoteAddLiquidity(chainId: number, currency0: string, currency1: string, amount0Max: bigint, amount1Max: bigint) {
   const publicClient = getPublicClient(chainId)
   const quoter = getQuoterAddress(chainId)
   const { liquidity, amount0Desired, amount1Desired } = await _quoteAddLiquidity(publicClient, quoter, currency0, currency1, amount0Max, amount1Max)
   return { currency0, currency1, liquidity, amount0Max: amount0Desired, amount1Max: amount1Desired } as QuoteAddLiquidityData
 }
 
-export const addLiquidity = async (params: AddLiquidityParams) => {
+export async function addLiquidity(params: AddLiquidityParams) {
   const chainId = walletChainId.value
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -98,14 +98,14 @@ export const addLiquidity = async (params: AddLiquidityParams) => {
   return _addLiquidity({ publicClient, walletClient }, getManagerAddress(chainId), encodeAddLiquidityData(params), deadline, { value })
 }
 
-export const quoteRemoveLiquidity = async (chainId: number, currency0: string, currency1: string, liquidity: bigint) => {
+export async function quoteRemoveLiquidity(chainId: number, currency0: string, currency1: string, liquidity: bigint) {
   const publicClient = getPublicClient(chainId)
   const quoter = getQuoterAddress(chainId)
   const { amount0Min, amount1Min } = await _quoteRemoveLiquidity(publicClient, quoter, currency0, currency1, liquidity)
   return { currency0, currency1, liquidity, amount0Min, amount1Min } as QuoteRemoveLiquidityData
 }
 
-export const removeLiquidity = async (params: RemoveLiquidityParams) => {
+export async function removeLiquidity(params: RemoveLiquidityParams) {
   const chainId = walletChainId.value
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -115,7 +115,7 @@ export const removeLiquidity = async (params: RemoveLiquidityParams) => {
   return _removeLiquidity({ publicClient, walletClient }, getManagerAddress(chainId), encodeRemoveLiquidityData(params), deadline)
 }
 
-export const quoteSwap = async (chainId: number, tokenPaths: Token[][], amountSpecified: bigint) => {
+export async function quoteSwap(chainId: number, tokenPaths: Token[][], amountSpecified: bigint) {
   const publicClient = getPublicClient(chainId)
   const quoter = getQuoterAddress(chainId)
   const isExactIn = amountSpecified < 0n
@@ -134,18 +134,18 @@ export const quoteSwap = async (chainId: number, tokenPaths: Token[][], amountSp
   return (isExactIn ? maxBy(result, 'amountOut') : minBy(result, 'amountIn')) as QuoteSwapData
 }
 
-export const swap = async (params: SwapParams, swapFee: bigint) => {
+export async function swap(params: SwapParams, swapFee: bigint) {
   const chainId = walletChainId.value
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
 
   const deadline = getStamp() + DURATION
-  const value = isNative(params.paths[0]) ? (params.amountSpecified < 0 ? -params.amountSpecified : params.amountDesired) + swapFee : swapFee
+  const value = isNative(params.paths[0]!) ? (params.amountSpecified < 0 ? -params.amountSpecified : params.amountDesired) + swapFee : swapFee
 
   return _swap({ publicClient, walletClient }, getManagerAddress(chainId), encodeSwapData(params), deadline, { value })
 }
 
-export const exchange = async (params: ExchangeParams, exchangeFee: bigint) => {
+export async function exchange(params: ExchangeParams, exchangeFee: bigint) {
   const chainId = walletChainId.value
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -155,7 +155,7 @@ export const exchange = async (params: ExchangeParams, exchangeFee: bigint) => {
   return _exchange({ publicClient, walletClient }, getManagerAddress(chainId), encodeExchangeData(params), { value })
 }
 
-export const checkLiquidityAllowance = async (pool: PoolMeta, account: string, amount: bigint, spender = '') => {
+export async function checkLiquidityAllowance(pool: PoolMeta, account: string, amount: bigint, spender = '') {
   const { chainId, id } = pool
   const publicClient = getPublicClient(chainId)
   const address = getLiquidityAddress(chainId)
@@ -168,7 +168,7 @@ export const checkLiquidityAllowance = async (pool: PoolMeta, account: string, a
   return approved || value >= amount
 }
 
-export const approveLiquidity = async (pool: PoolMeta, spender: string, amount: bigint) => {
+export async function approveLiquidity(pool: PoolMeta, spender: string, amount: bigint) {
   const { chainId, id } = pool
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -177,7 +177,7 @@ export const approveLiquidity = async (pool: PoolMeta, spender: string, amount: 
   return approve({ publicClient, walletClient }, address, spender, BigInt(id), amount)
 }
 
-export const checkValueChange = (inputToken: Token, outputToken: Token, quote: QuoteSwapData) => {
+export function checkValueChange(inputToken: Token, outputToken: Token, quote: QuoteSwapData) {
   const inputValue = byDecimals(quote.amountIn, inputToken.decimals).times(getPrice(inputToken.symbol)).dp(inputToken.dp!).toNumber()
   const outputValue = byDecimals(quote.amountOut, outputToken.decimals).times(getPrice(outputToken.symbol)).dp(outputToken.dp!).toNumber()
 

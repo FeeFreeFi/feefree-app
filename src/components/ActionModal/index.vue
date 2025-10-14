@@ -15,7 +15,7 @@ const state = computed(() => modelValue.value.state)
 const explorerUrl = computed(() => tx.value ? getTransactionUrl(tx.value.chainId, tx.value.hash) : '')
 const txLabel = computed(() => tx.value ? shortString(tx.value.hash) : '')
 
-const onClose = () => {
+function onClose() {
   modelValue.value.show = false
 }
 </script>

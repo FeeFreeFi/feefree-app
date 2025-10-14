@@ -7,15 +7,15 @@ const connectingWalletRef = ref<Wallet>()
 
 const recentRef = ref<{ wallet: string }>(getStorage(CACHE_RECENT))
 
-export const reset = () => {
+export function reset() {
   connectingWalletRef.value = undefined
 }
 
-export const connecting = (wallet: Wallet) => {
+export function connecting(wallet: Wallet) {
   connectingWalletRef.value = wallet
 }
 
-export const setRecent = (wallet: string) => {
+export function setRecent(wallet: string) {
   recentRef.value = { wallet }
   setStorage(CACHE_RECENT, { wallet })
 }

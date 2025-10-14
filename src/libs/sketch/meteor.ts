@@ -2,7 +2,7 @@ import { debounce } from 'lodash-es'
 // @ts-expect-error ignore
 import Q5 from '@/vendors/q5'
 
-const meteor = async (id: string) => {
+async function meteor(id: string) {
   const el = document.querySelector(id)
   const q = new Q5('ff', el)
 

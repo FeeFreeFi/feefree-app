@@ -8,7 +8,7 @@ const profileRef = ref<Profile | undefined>()
 
 const referralRef = ref('')
 
-export const fetchProfile = async () => {
+export async function fetchProfile() {
   const res = await getProfile()
   if (res.code !== 0) {
     console.log(res.message)
@@ -19,16 +19,16 @@ export const fetchProfile = async () => {
   return true
 }
 
-export const resetProfile = () => {
+export function resetProfile() {
   profileRef.value = undefined
 }
 
-export const saveReferral = (value: string) => {
+export function saveReferral(value: string) {
   referralRef.value = value
   setStorage(CACHE_REFERRAL, value)
 }
 
-export const canAcceptInvite = (referral: string) => {
+export function canAcceptInvite(referral: string) {
   if (!profileRef.value) {
     return false
   }

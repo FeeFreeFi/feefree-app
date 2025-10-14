@@ -10,7 +10,7 @@ import ZChainIcon from '@/components/ZChainIcon.vue'
 
 const notification = useNotification()
 
-const renderLabel = (option: { name: string, value: number }) => {
+function renderLabel(option: { name: string, value: number }) {
   return h('div', {
     class: 'flex-y-center gap-2',
   }, [
@@ -34,11 +34,11 @@ const current = computed(() => options.find(it => it.value === appChainId.value)
 
 const switching = ref(false)
 
-const onSwitchNetwork = async (chainId: number) => {
+async function onSwitchNetwork(chainId: number) {
   switching.value = await doSwitchNetwork(notification, chainId)
 }
 
-const onSelect = (chainId: number) => {
+function onSelect(chainId: number) {
   if (appChainId.value !== chainId) {
     setAppChainId(chainId)
   }
@@ -50,14 +50,15 @@ const onSelect = (chainId: number) => {
   onSwitchNetwork(chainId)
 }
 
-const onChainChange = (newChainId: number, oldChainId: number) => {
+function onChainChange(newChainId: number, oldChainId: number) {
   if (!newChainId || !isSupportChain(newChainId)) {
     return
   }
 
   if (!oldChainId && newChainId !== appChainId.value) {
     setAppChainId(newChainId)
-  } else {
+  }
+  else {
     if (appChainId.value !== newChainId) {
       setAppChainId(newChainId)
     }

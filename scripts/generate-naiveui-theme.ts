@@ -6,10 +6,10 @@ import Color from 'colorjs.io'
 
 const toRGBHex = (color: string) => new Color(color).to('srgb').toString({ format: 'hex' })
 
-const colorMix = (baseColor: string, mixColor: string, percentage: number, options: {
+function colorMix(baseColor: string, mixColor: string, percentage: number, options: {
   space?: 'oklch' | 'srgb'
   format?: 'oklch' | 'srgb' | 'hex'
-} = {}) => {
+} = {}) {
   const { space = 'oklch', format = 'oklch' } = options
 
   try {
@@ -24,13 +24,14 @@ const colorMix = (baseColor: string, mixColor: string, percentage: number, optio
     }
 
     return mixed.to(format).toString()
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Color mixing error:', error)
     return baseColor
   }
 }
 
-const generateNaiveUIColors = (baseColor: string, name: string) => {
+function generateNaiveUIColors(baseColor: string, name: string) {
   return {
     [`${name}Color`]: toRGBHex(baseColor),
     [`${name}ColorHover`]: colorMix(baseColor, 'white', 10, { format: 'hex' }),
@@ -49,7 +50,7 @@ const generateNaiveUIColors = (baseColor: string, name: string) => {
  * ./scripts/generate-naiveui-theme.ts
  * ```
  */
-const main = async () => {
+async function main() {
   const baseColors = {
     primary: 'oklch(0.87 0.15 174.76)',
     success: 'oklch(0.85 0.2 147.21)',

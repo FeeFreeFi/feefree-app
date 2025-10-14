@@ -16,7 +16,7 @@ const modelValue = defineModel<string>({ required: true })
 
 const debounceSearch = debounce(() => props.onSearch(modelValue.value), props.delay)
 
-const onInput = () => {
+function onInput() {
   debounceSearch()
 }
 

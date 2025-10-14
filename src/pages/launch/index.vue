@@ -72,16 +72,16 @@ const isInputValid = computed(() => {
   return amountAsset.value && amountAsset.value <= assetBalance.value && name.value && symbol.value
 })
 
-const checkAllowance = async () => {
+async function checkAllowance() {
   const allowed = await allowance(assetToken.value!, account.value, getManagerAddress(assetToken.value!.chainId))
   approved.value = allowed >= amountAsset.value
 }
-const onCheckApproval = async () => {
+async function onCheckApproval() {
   approvalChecking.value = true
   await checkAllowance()
   approvalChecking.value = false
 }
-const onApproval = async () => {
+async function onApproval() {
   const success = await doApproval(approveAction, approving, assetToken.value!, getManagerAddress(assetToken.value!.chainId), amountAsset.value)
   if (success) {
     checkAllowance()
@@ -89,7 +89,7 @@ const onApproval = async () => {
   }
 }
 
-const updateRouteForAsset = () => {
+function updateRouteForAsset() {
   const { referral } = route.query
 
   const chain = getChainKey(appChainId.value)
@@ -103,26 +103,28 @@ const updateRouteForAsset = () => {
   router.push({ replace: true, name: route.name, query })
 }
 
-const handleRoute = async () => {
+async function handleRoute() {
   const { chain, asset } = route.query
 
   const chainId = getChainIdByKey(chain as string)
   if (!chainId) {
     assetToken.value = getNativeToken(appChainId.value)
-  } else if (!isSupportChain(chainId)) {
+  }
+  else if (!isSupportChain(chainId)) {
     assetToken.value = undefined
-  } else {
+  }
+  else {
     const nativeToken = getNativeToken(chainId)
     assetToken.value = (!asset || asset === nativeToken!.symbol) ? nativeToken : await fetchToken(chainId, asset as string)
 
     cacheTokens([assetToken.value!])
   }
 
-  debounceUpdateBalance.value && debounceUpdateBalance.value()
+  debounceUpdateBalance.value?.()
   updateRouteForAsset()
 }
 
-const reset = () => {
+function reset() {
   approved.value = false
   approvalChecking.value = false
   approving.value = false
@@ -135,7 +137,7 @@ const reset = () => {
   showAssetSelector.value = false
 }
 
-const onAmountChange = () => {
+function onAmountChange() {
   if (!amountAsset.value) {
     assetAmount.value = ''
     return
@@ -144,7 +146,7 @@ const onAmountChange = () => {
   onCheckApproval()
 }
 
-const onSelectAsset = async (token: Token) => {
+async function onSelectAsset(token: Token) {
   if (isSame(token, assetToken.value!)) {
     return
   }
@@ -152,15 +154,15 @@ const onSelectAsset = async (token: Token) => {
   assetToken.value = token
 
   assetAmount.value = ''
-  debounceUpdateBalance.value && debounceUpdateBalance.value()
+  debounceUpdateBalance.value?.()
   updateRouteForAsset()
 }
 
-const onShowAssetSelector = () => {
+function onShowAssetSelector() {
   showAssetSelector.value = true
 }
 
-const onLaunch = async () => {
+async function onLaunch() {
   const params = {
     name: name.value,
     symbol: symbol.value,
@@ -185,19 +187,19 @@ const onLaunch = async () => {
   const success = await doSend(launchAction, launching, 'Launch', () => launch(params))
   if (success) {
     reset()
-    debounceUpdateBalance.value && debounceUpdateBalance.value()
+    debounceUpdateBalance.value?.()
     updateNativeBalance()
 
     loadMyPools(appChainId.value, account.value)
   }
 }
 
-const onAppChainIdChange = () => {
+function onAppChainIdChange() {
   reset()
 
   assetToken.value = getNativeToken(appChainId.value)
 
-  debounceUpdateBalance.value && debounceUpdateBalance.value()
+  debounceUpdateBalance.value?.()
   updateRouteForAsset()
 }
 

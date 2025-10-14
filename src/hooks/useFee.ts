@@ -5,7 +5,7 @@ import { getQuoterAddress, getSupportedChains } from './useManager'
 
 const config = ref<Record<number, { swapFee: bigint, exchangeFee: bigint, lpFee: bigint }>>({})
 
-export const fetchFees = async () => {
+export async function fetchFees() {
   const chains = getSupportedChains()
   await Promise.all(chains.map(async ({ chainId }) => {
     const publicClient = getPublicClient(chainId)
@@ -17,17 +17,17 @@ export const fetchFees = async () => {
 
 const getFee = (chainId: number) => config.value[chainId]
 
-export const getSwapFee = (chainId: number) => {
+export function getSwapFee(chainId: number) {
   const fee = getFee(chainId)
   return fee?.swapFee || 0n
 }
 
-export const getExchangeFee = (chainId: number) => {
+export function getExchangeFee(chainId: number) {
   const fee = getFee(chainId)
   return fee?.exchangeFee || 0n
 }
 
-export const getLpFee = (chainId: number) => {
+export function getLpFee(chainId: number) {
   const fee = getFee(chainId)
   return fee?.lpFee || 0n
 }

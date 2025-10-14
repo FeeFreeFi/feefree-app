@@ -15,7 +15,7 @@ interface AuthJwt {
   id?: string
 }
 
-const parseJwt = (token: string) => {
+function parseJwt(token: string) {
   try {
     const payload = decodeJwt(token)
 
@@ -24,7 +24,8 @@ const parseJwt = (token: string) => {
       exp: payload.exp,
       id: payload.id as string,
     } as AuthJwt
-  } catch {
+  }
+  catch {
     return { valid: false } as AuthJwt
   }
 }
@@ -32,7 +33,7 @@ const parseJwt = (token: string) => {
 const authRef = ref<Auth>()
 export const auth = readonly(authRef)
 
-export const getAccessToken = () => {
+export function getAccessToken() {
   if (!authRef.value) {
     return ''
   }
@@ -41,7 +42,7 @@ export const getAccessToken = () => {
   return !accessToken || isExpired(accessToken.exp) ? '' : accessToken.value
 }
 
-export const getRefreshToken = () => {
+export function getRefreshToken() {
   if (!authRef.value) {
     return ''
   }
@@ -50,7 +51,7 @@ export const getRefreshToken = () => {
   return !refreshToken || isExpired(refreshToken.exp) ? '' : refreshToken.value
 }
 
-const parseAuth = (authMeta: AuthMeta) => {
+function parseAuth(authMeta: AuthMeta) {
   const { accessToken, refreshToken } = authMeta
   const res1 = parseJwt(accessToken)
   const res2 = parseJwt(refreshToken)
@@ -73,7 +74,7 @@ const parseAuth = (authMeta: AuthMeta) => {
   } as Auth
 }
 
-const doLoadAuth = () => {
+function doLoadAuth() {
   const cache = getStorage(CACHE_AUTH)
   if (!cache) {
     return
@@ -88,11 +89,11 @@ const doLoadAuth = () => {
   return result
 }
 
-export const loadAuth = () => {
+export function loadAuth() {
   authRef.value = doLoadAuth()
 }
 
-export const setAuth = (authMeta: AuthMeta) => {
+export function setAuth(authMeta: AuthMeta) {
   const result = parseAuth(authMeta)
   if (result) {
     authRef.value = result
@@ -101,11 +102,11 @@ export const setAuth = (authMeta: AuthMeta) => {
   }
 }
 
-export const clearAuth = () => {
+export function clearAuth() {
   authRef.value = undefined
   removeStorage(CACHE_AUTH)
 }
 
-export const isMatchAccount = (account: string) => {
+export function isMatchAccount(account: string) {
   return authRef.value ? isSelfAccount(account, authRef.value.id) : false
 }

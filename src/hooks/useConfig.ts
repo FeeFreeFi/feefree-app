@@ -6,7 +6,7 @@ import { fetchFees } from './useFee'
 
 let fetchConfigPromise: Promise<void>
 
-const fetchManagers = async () => {
+async function fetchManagers() {
   const res = await getManagers()
   if (!res || res.code !== 0) {
     console.log(res.message)
@@ -16,7 +16,7 @@ const fetchManagers = async () => {
   addManagers(res.data)
 }
 
-const fetchTokens = async () => {
+async function fetchTokens() {
   const res = await getTokens()
   if (!res || res.code !== 0) {
     console.log(res.message)
@@ -26,7 +26,7 @@ const fetchTokens = async () => {
   addTokens(res.data.map(it => ({ ...it, hot: true })))
 }
 
-const fetchPools = async () => {
+async function fetchPools() {
   const res = await getPools()
   if (!res || res.code !== 0) {
     console.log(res.message)
@@ -36,7 +36,7 @@ const fetchPools = async () => {
   addPools(res.data)
 }
 
-export const fetchConfig = () => {
+export function fetchConfig() {
   if (!fetchConfigPromise) {
     fetchConfigPromise = Promise.all([
       fetchManagers().then(fetchFees),
@@ -47,6 +47,6 @@ export const fetchConfig = () => {
   return fetchConfigPromise
 }
 
-export const configReady = async () => {
+export async function configReady() {
   await fetchConfigPromise
 }

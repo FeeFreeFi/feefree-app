@@ -14,12 +14,12 @@ const pagination = ref({
 
 const fansList = ref<Fans[]>([])
 
-const reset = () => {
+function reset() {
   pagination.value = { page: 1, limit: 10, total: 0 }
   fansList.value = []
 }
 
-const fetchFans = async () => {
+async function fetchFans() {
   const { page, limit } = pagination.value
 
   const res = await getFans({ page, limit })
@@ -33,7 +33,7 @@ const fetchFans = async () => {
   fansList.value = list
 }
 
-const fetchData = async () => {
+async function fetchData() {
   if (!profile.value) {
     reset()
     return
@@ -42,7 +42,7 @@ const fetchData = async () => {
   await fetchFans()
 }
 
-const onUpdatePage = (page: number) => {
+function onUpdatePage(page: number) {
   pagination.value = {
     ...pagination.value,
     page,

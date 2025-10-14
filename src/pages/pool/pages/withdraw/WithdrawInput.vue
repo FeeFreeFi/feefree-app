@@ -24,7 +24,7 @@ const amount = ref<number | null>(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, 0) : undefined)
 const amountValue = computed(() => parseAmount(amount.value || 0, 0))
 
-const onInputBlur = () => {
+function onInputBlur() {
   if (!amountValue.value) {
     amount.value = 0
     return
@@ -34,12 +34,12 @@ const onInputBlur = () => {
   emit('change')
 }
 
-const onSliderChange = (value: bigint) => {
+function onSliderChange(value: bigint) {
   modelValue.value = toAmount(value, 0)
   emit('change')
 }
 
-const onPickAmount = (value: bigint) => {
+function onPickAmount(value: bigint) {
   modelValue.value = toAmount(value, 0)
   emit('change')
 }

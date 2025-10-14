@@ -192,31 +192,31 @@ const EXCHANGE_PARAMS: readonly AbiParameter[] = [{
   ],
 }]
 
-export const encodeLaunchData = (params: LaunchParams) => {
+export function encodeLaunchData(params: LaunchParams) {
   return encodeAbiParameters(ACTION_PARAMS, [Actions.LAUNCH, encodeAbiParameters(LAUNCH_PARAMS, [params])])
 }
 
-export const encodeInitializeData = (params: InitializeParams) => {
+export function encodeInitializeData(params: InitializeParams) {
   return encodeAbiParameters(ACTION_PARAMS, [Actions.INITIALIZE, encodeAbiParameters(INITIALIZE_PARAMS, [params])])
 }
 
-export const encodeAddLiquidityData = (params: AddLiquidityParams) => {
+export function encodeAddLiquidityData(params: AddLiquidityParams) {
   return encodeAbiParameters(ACTION_PARAMS, [Actions.ADD_LIQUIDITY, encodeAbiParameters(ADD_LIQUIDITY_PARAMS, [params])])
 }
 
-export const encodeRemoveLiquidityData = (params: RemoveLiquidityParams) => {
+export function encodeRemoveLiquidityData(params: RemoveLiquidityParams) {
   return encodeAbiParameters(ACTION_PARAMS, [Actions.REMOVE_LIQUIDITY, encodeAbiParameters(REMOVE_LIQUIDITY_PARAMS, [params])])
 }
 
-export const encodeSwapData = (params: SwapParams) => {
+export function encodeSwapData(params: SwapParams) {
   return encodeAbiParameters(ACTION_PARAMS, [Actions.SWAP, encodeAbiParameters(SWAP_PARAMS, [params])])
 }
 
-export const encodeExchangeData = (params: ExchangeParams) => {
+export function encodeExchangeData(params: ExchangeParams) {
   return encodeAbiParameters(ACTION_PARAMS, [Actions.EXCHANGE, encodeAbiParameters(EXCHANGE_PARAMS, [params])])
 }
 
-export const launch = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, { value = 0n }) => {
+export async function launch(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, { value = 0n }) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -233,7 +233,7 @@ export const launch = async (client: { publicClient: PublicClient, walletClient:
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const initialize = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, { value = 0n }) => {
+export async function initialize(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, { value = 0n }) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -250,7 +250,7 @@ export const initialize = async (client: { publicClient: PublicClient, walletCli
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const addLiquidity = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, deadline: number, { value = 0n }) => {
+export async function addLiquidity(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, deadline: number, { value = 0n }) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -267,7 +267,7 @@ export const addLiquidity = async (client: { publicClient: PublicClient, walletC
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const removeLiquidity = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, deadline: number) => {
+export async function removeLiquidity(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, deadline: number) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -283,7 +283,7 @@ export const removeLiquidity = async (client: { publicClient: PublicClient, wall
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const swap = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, deadline: number, { value = 0n }) => {
+export async function swap(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, deadline: number, { value = 0n }) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -300,7 +300,7 @@ export const swap = async (client: { publicClient: PublicClient, walletClient: W
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const exchange = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, { value = 0n }) => {
+export async function exchange(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, data: string, { value = 0n }) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({

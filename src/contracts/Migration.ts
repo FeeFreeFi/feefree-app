@@ -90,7 +90,7 @@ const ABI_UNEXCHANGE: Abi = [
   },
 ]
 
-export const unexchange = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, currency: string, options: { value: bigint }) => {
+export async function unexchange(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, currency: string, options: { value: bigint }) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -107,7 +107,7 @@ export const unexchange = async (client: { publicClient: PublicClient, walletCli
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const removeLiquidity = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, key: PoolKey) => {
+export async function removeLiquidity(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, key: PoolKey) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -123,7 +123,7 @@ export const removeLiquidity = async (client: { publicClient: PublicClient, wall
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const migrateLiquidity = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, key: PoolKey) => {
+export async function migrateLiquidity(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, key: PoolKey) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({

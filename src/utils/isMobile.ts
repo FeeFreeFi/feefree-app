@@ -1,4 +1,4 @@
-export const isMobile = () => {
+export function isMobile() {
   if (navigator.maxTouchPoints !== undefined) {
     return navigator.maxTouchPoints > 0
   }

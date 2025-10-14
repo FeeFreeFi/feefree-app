@@ -17,11 +17,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 const maskClosable = ref(true)
 
-const onAfterEnter = () => {
+function onAfterEnter() {
   maskClosable.value = true
 }
 
-const onUpdateShow = (value: boolean) => {
+function onUpdateShow(value: boolean) {
   if (!value) {
     maskClosable.value = false
     props.onClose()

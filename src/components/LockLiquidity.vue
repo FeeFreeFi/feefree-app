@@ -10,10 +10,11 @@ const options = [
 
 const checked = ref(false)
 
-const onChecked = () => {
+function onChecked() {
   if (checked.value) {
-    duration.value = duration.value || options[0].value
-  } else {
+    duration.value = duration.value || options[0]!.value
+  }
+  else {
     duration.value = 0
   }
 }

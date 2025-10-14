@@ -153,7 +153,7 @@ const ABI_TRANSFER: Abi = [
   },
 ]
 
-export const balanceOf = async (publicClient: PublicClient, address: string, owner: string, id: bigint) => {
+export async function balanceOf(publicClient: PublicClient, address: string, owner: string, id: bigint) {
   return publicClient.readContract({
     address: address as Address,
     abi: ABI_BALANCE_OF,
@@ -162,7 +162,7 @@ export const balanceOf = async (publicClient: PublicClient, address: string, own
   }) as Promise<bigint>
 }
 
-export const allowance = async (publicClient: PublicClient, address: string, owner: string, spender: string, id: bigint) => {
+export async function allowance(publicClient: PublicClient, address: string, owner: string, spender: string, id: bigint) {
   return publicClient.readContract({
     address: address as Address,
     abi: ABI_ALLOWANCE,
@@ -171,7 +171,7 @@ export const allowance = async (publicClient: PublicClient, address: string, own
   }).catch(() => 0n) as Promise<bigint>
 }
 
-export const isOperator = async (publicClient: PublicClient, address: string, owner: string, spender: string) => {
+export async function isOperator(publicClient: PublicClient, address: string, owner: string, spender: string) {
   return publicClient.readContract({
     address: address as Address,
     abi: ABI_IS_OPERATOR,
@@ -180,7 +180,7 @@ export const isOperator = async (publicClient: PublicClient, address: string, ow
   }) as Promise<boolean>
 }
 
-export const approve = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, spender: string, id: bigint, amount: bigint) => {
+export async function approve(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, spender: string, id: bigint, amount: bigint) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -195,7 +195,7 @@ export const approve = async (client: { publicClient: PublicClient, walletClient
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const setOperator = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, operator: string, approved: boolean) => {
+export async function setOperator(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, operator: string, approved: boolean) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({
@@ -210,7 +210,7 @@ export const setOperator = async (client: { publicClient: PublicClient, walletCl
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const transfer = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, receiver: string, id: bigint, amount: bigint) => {
+export async function transfer(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, receiver: string, id: bigint, amount: bigint) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   const { request } = await publicClient.simulateContract({

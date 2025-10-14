@@ -22,13 +22,13 @@ const amount = ref<number | null>(fromValue(modelValue.value || 0).toNumber())
 const maxAmount = computed(() => account.value ? toAmount(props.balance, props.token.decimals) : undefined)
 const amountValue = computed(() => parseAmount(amount.value || 0, props.token.decimals))
 
-const onMax = () => {
+function onMax() {
   const { balance, token } = props
   modelValue.value = toAmount(balance, token.decimals)
   emit('change')
 }
 
-const onInputBlur = () => {
+function onInputBlur() {
   if (!amountValue.value) {
     amount.value = 0
     return

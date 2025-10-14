@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<Props>(), {
   total: 1,
 })
 
-const onSkipPrevious = () => {
+function onSkipPrevious() {
   const { page, onUpdatePage } = props
   if (page <= 1) {
     return
@@ -19,7 +19,7 @@ const onSkipPrevious = () => {
   onUpdatePage(1)
 }
 
-const onPrevious = () => {
+function onPrevious() {
   const { page, onUpdatePage } = props
   if (page <= 1) {
     return
@@ -28,7 +28,7 @@ const onPrevious = () => {
   onUpdatePage(page - 1)
 }
 
-const onNext = () => {
+function onNext() {
   const { page, total, onUpdatePage } = props
   if (page >= total) {
     return
@@ -37,7 +37,7 @@ const onNext = () => {
   onUpdatePage(page + 1)
 }
 
-const onSkipNext = () => {
+function onSkipNext() {
   const { page, total, onUpdatePage } = props
   if (page >= total) {
     return

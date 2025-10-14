@@ -8,11 +8,12 @@ import { approve } from './useToken'
 import { waitForTransactionReceipt } from './useClient'
 import { getErrorMessage } from '@/utils'
 
-export const doSwitchNetwork = async (notification: NotificationProviderInst, chainId: number) => {
+export async function doSwitchNetwork(notification: NotificationProviderInst, chainId: number) {
   try {
     await switchChain(chainId)
     return true
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     notification.error({
       title: `Switch to ${getChainName(chainId)} fail`,
       content: getErrorMessage(err, 'Switch chain error'),
@@ -23,7 +24,7 @@ export const doSwitchNetwork = async (notification: NotificationProviderInst, ch
   }
 }
 
-export const doSend = async <T>(action: Ref<ModalAction<T>>, loading: Ref<boolean>, title: string, sendTx: () => Promise<Tx>) => {
+export async function doSend<T>(action: Ref<ModalAction<T>>, loading: Ref<boolean>, title: string, sendTx: () => Promise<Tx>) {
   try {
     loading.value = true
 
@@ -40,7 +41,8 @@ export const doSend = async <T>(action: Ref<ModalAction<T>>, loading: Ref<boolea
     action.value.state = kState.success
 
     return true
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     loading.value = false
     action.value.state = kState.fail
     action.value.error = getErrorMessage(err, 'Internal error')
@@ -49,7 +51,7 @@ export const doSend = async <T>(action: Ref<ModalAction<T>>, loading: Ref<boolea
   }
 }
 
-export const doApproval = async (action: Ref<ApprovalAction>, loading: Ref<boolean>, token: Token, spender: string, amount: bigint) => {
+export async function doApproval(action: Ref<ApprovalAction>, loading: Ref<boolean>, token: Token, spender: string, amount: bigint) {
   action.value.data = { chainId: token.chainId, token, amount, spender }
 
   return doSend(action, loading, 'Approve', () => approve(token, spender, amount))

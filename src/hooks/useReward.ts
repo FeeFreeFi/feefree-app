@@ -62,7 +62,7 @@ const ABI_CLAIM: Abi = [
   },
 ]
 
-export const isValidReward = async (chainId: number, address: string, account: string, amount: bigint, nonce: string, proof: string[]) => {
+export async function isValidReward(chainId: number, address: string, account: string, amount: bigint, nonce: string, proof: string[]) {
   const publicClient = getPublicClient(chainId)
 
   return publicClient.readContract({
@@ -73,7 +73,7 @@ export const isValidReward = async (chainId: number, address: string, account: s
   }) as Promise<boolean>
 }
 
-export const claim = async (reward: Reward) => {
+export async function claim(reward: Reward) {
   const { chainId, address, amount, nonce, proof } = reward
 
   const publicClient = getPublicClient(chainId)

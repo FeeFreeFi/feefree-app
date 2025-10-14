@@ -147,7 +147,7 @@ const ABI_TRANSFER: Abi = [
 
 const MAX_BALANCE = 115792089237316195423570985008687907853269984665640564039457584007913129639935n
 
-export const name = async (publicClient: PublicClient, address: string) => {
+export async function name(publicClient: PublicClient, address: string) {
   if (isNative(address)) {
     return publicClient.chain!.nativeCurrency.name
   }
@@ -159,7 +159,7 @@ export const name = async (publicClient: PublicClient, address: string) => {
   }) as Promise<string>
 }
 
-export const symbol = async (publicClient: PublicClient, address: string) => {
+export async function symbol(publicClient: PublicClient, address: string) {
   if (isNative(address)) {
     return publicClient.chain!.nativeCurrency.symbol
   }
@@ -171,7 +171,7 @@ export const symbol = async (publicClient: PublicClient, address: string) => {
   }) as Promise<string>
 }
 
-export const decimals = async (publicClient: PublicClient, address: string) => {
+export async function decimals(publicClient: PublicClient, address: string) {
   if (isNative(address)) {
     return publicClient.chain!.nativeCurrency.decimals
   }
@@ -185,7 +185,7 @@ export const decimals = async (publicClient: PublicClient, address: string) => {
   return Number(result as bigint)
 }
 
-export const metadata = async (publicClient: PublicClient, address: string) => {
+export async function metadata(publicClient: PublicClient, address: string) {
   if (isNative(address)) {
     return publicClient.chain!.nativeCurrency as { name: string, symbol: string, decimals: number }
   }
@@ -199,7 +199,7 @@ export const metadata = async (publicClient: PublicClient, address: string) => {
   return { name: _name, symbol: _symbol, decimals: _decimals }
 }
 
-export const totalSupply = async (publicClient: PublicClient, address: string) => {
+export async function totalSupply(publicClient: PublicClient, address: string) {
   if (isNative(address)) {
     throw new Error('native currency does not support totalSupply')
   }
@@ -211,7 +211,7 @@ export const totalSupply = async (publicClient: PublicClient, address: string) =
   }) as Promise<bigint>
 }
 
-export const balanceOf = async (publicClient: PublicClient, address: string, account: string) => {
+export async function balanceOf(publicClient: PublicClient, address: string, account: string) {
   if (isNative(address)) {
     return publicClient.getBalance({ address: account as Address })
   }
@@ -224,7 +224,7 @@ export const balanceOf = async (publicClient: PublicClient, address: string, acc
   }) as Promise<bigint>
 }
 
-export const allowance = async (publicClient: PublicClient, address: string, owner: string, spender: string) => {
+export async function allowance(publicClient: PublicClient, address: string, owner: string, spender: string) {
   if (isNative(address)) {
     return MAX_BALANCE
   }
@@ -237,7 +237,7 @@ export const allowance = async (publicClient: PublicClient, address: string, own
   }).catch(() => 0n) as Promise<bigint>
 }
 
-export const approve = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, spender: string, amount: bigint) => {
+export async function approve(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, spender: string, amount: bigint) {
   if (isNative(address)) {
     throw new Error('native currency does not require approval')
   }
@@ -256,7 +256,7 @@ export const approve = async (client: { publicClient: PublicClient, walletClient
   return { chainId: publicClient.chain!.id, hash }
 }
 
-export const transfer = async (client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, to: string, amount: bigint) => {
+export async function transfer(client: { publicClient: PublicClient, walletClient: WalletClient }, address: string, to: string, amount: bigint) {
   const { publicClient, walletClient } = client
   const account = walletClient.account!.address
   let hash
@@ -267,7 +267,8 @@ export const transfer = async (client: { publicClient: PublicClient, walletClien
       to: to as Address,
       value: amount,
     } as SendTransactionParameters)
-  } else {
+  }
+  else {
     const { request } = await publicClient.simulateContract({
       account,
       address: address as Address,

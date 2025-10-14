@@ -10,6 +10,7 @@ coverage
 
 .env
 *.local
+.node-version
 
 src/types/auto-imports.d.ts
 src/types/auto-imports.json

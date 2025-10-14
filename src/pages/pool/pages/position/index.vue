@@ -40,7 +40,7 @@ const unlockAction = ref<UnlockAction>({ show: false })
 
 const debounceUpdateLiquidity = ref<DebouncedFunc<Callback>>()
 
-const fetchLockDatas = async (force = false) => {
+async function fetchLockDatas(force = false) {
   if (!pool.value || !account.value) {
     lockDatas.value = []
     return
@@ -49,7 +49,7 @@ const fetchLockDatas = async (force = false) => {
   lockDatas.value = await getLockDatas(pool.value, account.value, force)
 }
 
-const onUnlock = async (lockData: LockData) => {
+async function onUnlock(lockData: LockData) {
   unlockAction.value.data = {
     chainId: pool.value!.chainId,
     pool: pool.value!,
@@ -61,7 +61,7 @@ const onUnlock = async (lockData: LockData) => {
   if (success) {
     updateNativeBalance()
 
-    debounceUpdateLiquidity.value && debounceUpdateLiquidity.value()
+    debounceUpdateLiquidity.value?.()
     fetchLockDatas(true)
   }
 }
@@ -84,7 +84,8 @@ onMounted(async () => {
     }
 
     pool.value = await fetchPoolMeta(chainId!, poolId!)
-  } catch {
+  }
+  catch {
     router.replace({ name: PAGE_NOT_FOUND })
   }
 })

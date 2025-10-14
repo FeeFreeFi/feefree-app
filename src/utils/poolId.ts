@@ -1,7 +1,7 @@
 import { Patterns } from '@/config'
 import { base58, bytesToString, stringToBytes } from '@scure/base'
 
-export const encodePoolId = (chainId: number, poolId: string) => {
+export function encodePoolId(chainId: number, poolId: string) {
   let chainIdHex = chainId.toString(16)
   chainIdHex = chainIdHex.length % 2 === 0 ? chainIdHex : `0${chainIdHex}`
 
@@ -9,7 +9,7 @@ export const encodePoolId = (chainId: number, poolId: string) => {
   return base58.encode(stringToBytes('hex', hex))
 }
 
-export const decodePoolId = (id: string) => {
+export function decodePoolId(id: string) {
   if (!Patterns.POOL_ID.test(id)) {
     return { valid: false }
   }

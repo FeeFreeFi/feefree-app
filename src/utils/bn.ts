@@ -24,20 +24,20 @@ export const toAmount = (value: Value, decimals: number, dp: number | undefined 
 
 export const toBalance = (value: Value, dp = 0) => fromValue(value).dp(dp).toFormat()
 
-export const toBalanceWithUnit = (value: Value, decimals: number, dp = 6) => {
+export function toBalanceWithUnit(value: Value, decimals: number, dp = 6) {
   const amount = byDecimals(value, decimals)
   const unit = UNITS.find(it => amount.gte(it.value))
   return unit ? `${toBalance(amount.div(unit.value), dp)}${unit.name}` : toBalance(amount, dp)
 }
 
-export const sumValues = (values: BigNumber[]) => {
+export function sumValues(values: BigNumber[]) {
   return values.length === 0 ? new BigNumber(0) : BigNumber.sum(...values)
 }
 
-export const maxValue = (values: BigNumber[]) => {
+export function maxValue(values: BigNumber[]) {
   return values.length === 0 ? new BigNumber(0) : BigNumber.maximum(...values)
 }
 
-export const minValue = (values: BigNumber[]) => {
+export function minValue(values: BigNumber[]) {
   return values.length === 0 ? new BigNumber(0) : BigNumber.minimum(...values)
 }

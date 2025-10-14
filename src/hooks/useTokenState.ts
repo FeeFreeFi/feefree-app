@@ -9,24 +9,24 @@ const cache = createCache()
 
 const getKey = (token: Token) => `${token.chainId}:${token.address}`
 
-const getValue = (token: Token) => {
+function getValue(token: Token) {
   return cache.getValue(getKey(token), 0n) as bigint
 }
 
-const getValues = (tokens: (Token | undefined)[]) => {
+function getValues(tokens: (Token | undefined)[]) {
   return tokens.map(token => token ? getValue(token) : 0n)
 }
 
-const getMappedValues = (tokens: Token[]) => {
+function getMappedValues(tokens: Token[]) {
   return Object.fromEntries(tokens.map(token => [token.address, token ? getValue(token) : 0n]))
 }
 
-const updateValue = async (account: string, token: Token) => {
+async function updateValue(account: string, token: Token) {
   const balance = await balanceOf(token, account)
   cache.setValue(getKey(token), balance)
 }
 
-const updateValues = async (account: string, tokens: (Token | undefined)[]) => {
+async function updateValues(account: string, tokens: (Token | undefined)[]) {
   const values: Record<string, bigint> = {}
   await pMap(tokens.filter(it => !!it), async token => {
     const balance = await balanceOf(token, account)
@@ -36,11 +36,11 @@ const updateValues = async (account: string, tokens: (Token | undefined)[]) => {
   cache.setValues(values)
 }
 
-const reset = () => {
+function reset() {
   cache.reset()
 }
 
-export const createTokenState = (account: Ref<string>, token: Ref<Token | undefined>, state: Ref<bigint>) => {
+export function createTokenState(account: Ref<string>, token: Ref<Token | undefined>, state: Ref<bigint>) {
   state.value = 0n
 
   const doUpdate = async () => {
@@ -63,7 +63,8 @@ export const createTokenState = (account: Ref<string>, token: Ref<Token | undefi
     debounceUpdate.cancel()
     if (account.value) {
       doUpdate()
-    } else {
+    }
+    else {
       reset()
     }
   })
@@ -73,7 +74,7 @@ export const createTokenState = (account: Ref<string>, token: Ref<Token | undefi
   return debounceUpdate
 }
 
-export const createTokenStates = (account: Ref<string>, tokens: Ref<(Token | undefined)[]>, states: Ref<bigint[]>) => {
+export function createTokenStates(account: Ref<string>, tokens: Ref<(Token | undefined)[]>, states: Ref<bigint[]>) {
   const getDefaults = () => tokens.value.map(() => 0n)
 
   states.value = getDefaults()
@@ -98,7 +99,8 @@ export const createTokenStates = (account: Ref<string>, tokens: Ref<(Token | und
     debounceUpdate.cancel()
     if (account.value) {
       doUpdate()
-    } else {
+    }
+    else {
       reset()
     }
   })
@@ -108,7 +110,7 @@ export const createTokenStates = (account: Ref<string>, tokens: Ref<(Token | und
   return debounceUpdate
 }
 
-export const createTokenStatesForMap = (account: Ref<string>, tokens: Ref<Token[]>, states: Ref<Record<string, bigint>>) => {
+export function createTokenStatesForMap(account: Ref<string>, tokens: Ref<Token[]>, states: Ref<Record<string, bigint>>) {
   const getDefaults = () => Object.fromEntries(Object.keys(tokens.value).map(address => [address, 0n]))
 
   states.value = getDefaults()
@@ -133,7 +135,8 @@ export const createTokenStatesForMap = (account: Ref<string>, tokens: Ref<Token[
     debounceUpdate.cancel()
     if (account.value) {
       doUpdate()
-    } else {
+    }
+    else {
       reset()
     }
   })

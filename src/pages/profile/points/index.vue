@@ -14,12 +14,12 @@ const pagination = ref({
 
 const pointsList = ref<Points[]>([])
 
-const reset = () => {
+function reset() {
   pagination.value = { page: 1, limit: 10, total: 0 }
   pointsList.value = []
 }
 
-const fetchPoints = async () => {
+async function fetchPoints() {
   const { page, limit } = pagination.value
 
   const res = await getPoints({ page, limit })
@@ -33,7 +33,7 @@ const fetchPoints = async () => {
   pointsList.value = list
 }
 
-const fetchData = async () => {
+async function fetchData() {
   if (!profile.value) {
     reset()
     return
@@ -42,7 +42,7 @@ const fetchData = async () => {
   await fetchPoints()
 }
 
-const onUpdatePage = (page: number) => {
+function onUpdatePage(page: number) {
   pagination.value = {
     ...pagination.value,
     page,

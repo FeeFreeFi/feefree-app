@@ -37,7 +37,7 @@ const getViewUrl = computed(() => {
   }
 })
 
-const onAddToWallet = async () => {
+async function onAddToWallet() {
   if (!account.value) {
     openWalletConnector()
     return
@@ -59,7 +59,7 @@ const onAddToWallet = async () => {
   })
 }
 
-const updateBalance = async () => {
+async function updateBalance() {
   balance.value = account.value ? await balanceOf(props.token, account.value) : 0n
 }
 

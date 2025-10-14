@@ -368,20 +368,20 @@ const ABI_GET_MINTED: Abi = [
   },
 ]
 
-export const getPoolState = async (publicClient: PublicClient, address: string, id: string) => {
+export async function getPoolState(publicClient: PublicClient, address: string, id: string) {
   const result = await publicClient.readContract({
     address: address as Address,
     abi: ABI_GET_POOL_STATE,
     functionName: 'getPoolState',
     args: [id],
-  }) as bigint[]
+  }) as [bigint, bigint]
 
   const [sqrtPriceX96, liquidity] = result
 
   return { sqrtPriceX96, liquidity }
 }
 
-export const getPoolMeta = async (publicClient: PublicClient, address: string, id: string) => {
+export async function getPoolMeta(publicClient: PublicClient, address: string, id: string) {
   const chainId = publicClient.chain!.id
   const result = await publicClient.readContract({
     address: address as Address,
@@ -400,7 +400,7 @@ export const getPoolMeta = async (publicClient: PublicClient, address: string, i
   }
 }
 
-export const getPoolIds = async (publicClient: PublicClient, address: string, account: string) => {
+export async function getPoolIds(publicClient: PublicClient, address: string, account: string) {
   return publicClient.readContract({
     address: address as Address,
     abi: ABI_GET_POOL_IDS,
@@ -409,7 +409,7 @@ export const getPoolIds = async (publicClient: PublicClient, address: string, ac
   }) as Promise<string[]>
 }
 
-export const getLockDatas = async (publicClient: PublicClient, address: string, account: string, id: string) => {
+export async function getLockDatas(publicClient: PublicClient, address: string, account: string, id: string) {
   const result = await publicClient.readContract({
     address: address as Address,
     abi: ABI_GET_LOCK_DATAS,
@@ -424,7 +424,7 @@ export const getLockDatas = async (publicClient: PublicClient, address: string, 
   }))
 }
 
-export const getTokenMeta = async (publicClient: PublicClient, address: string, token: string) => {
+export async function getTokenMeta(publicClient: PublicClient, address: string, token: string) {
   if (isNative(token)) {
     const { name, symbol, decimals } = publicClient.chain!.nativeCurrency
     return { name, symbol, decimals }
@@ -446,19 +446,19 @@ export const getTokenMeta = async (publicClient: PublicClient, address: string, 
   return { name, symbol, decimals: Number(decimals) }
 }
 
-export const getFees = async (publicClient: PublicClient, address: string) => {
+export async function getFees(publicClient: PublicClient, address: string) {
   const result = await publicClient.readContract({
     address: address as Address,
     abi: ABI_GET_FEES,
     functionName: 'getFees',
   })
 
-  const [swapFee, exchangeFee, lpFee] = result as bigint[]
+  const [swapFee, exchangeFee, lpFee] = result as [bigint, bigint, bigint]
 
   return { swapFee, exchangeFee, lpFee }
 }
 
-export const getMinted = async (publicClient: PublicClient, address: string, nfts: string[]) => {
+export async function getMinted(publicClient: PublicClient, address: string, nfts: string[]) {
   return publicClient.readContract({
     address: address as Address,
     abi: ABI_GET_MINTED,
@@ -467,7 +467,7 @@ export const getMinted = async (publicClient: PublicClient, address: string, nft
   }) as Promise<bigint[]>
 }
 
-export const addLiquidity = async (publicClient: PublicClient, address: string, currency0: string, currency1: string, amount0Max: bigint, amount1Max: bigint) => {
+export async function addLiquidity(publicClient: PublicClient, address: string, currency0: string, currency1: string, amount0Max: bigint, amount1Max: bigint) {
   const result = await publicClient.readContract({
     address: address as Address,
     abi: ABI_ADD_LIQUIDITY,
@@ -475,7 +475,7 @@ export const addLiquidity = async (publicClient: PublicClient, address: string, 
     args: [{ currency0, currency1, amount0Max, amount1Max }],
   })
 
-  const [amount0Desired, amount1Desired, liquidity] = result as bigint[]
+  const [amount0Desired, amount1Desired, liquidity] = result as [bigint, bigint, bigint]
 
   return {
     amount0Desired,
@@ -484,7 +484,7 @@ export const addLiquidity = async (publicClient: PublicClient, address: string, 
   }
 }
 
-export const removeLiquidity = async (publicClient: PublicClient, address: string, currency0: string, currency1: string, liquidity: bigint) => {
+export async function removeLiquidity(publicClient: PublicClient, address: string, currency0: string, currency1: string, liquidity: bigint) {
   const result = await publicClient.readContract({
     address: address as Address,
     abi: ABI_REMOVE_LIQUIDITY,
@@ -492,7 +492,7 @@ export const removeLiquidity = async (publicClient: PublicClient, address: strin
     args: [{ currency0, currency1, liquidity }],
   })
 
-  const [amount0Min, amount1Min] = result as bigint[]
+  const [amount0Min, amount1Min] = result as [bigint, bigint]
 
   return {
     amount0Min,
@@ -500,7 +500,7 @@ export const removeLiquidity = async (publicClient: PublicClient, address: strin
   }
 }
 
-export const swap = async (publicClient: PublicClient, address: string, paths: string[], amountSpecified: bigint) => {
+export async function swap(publicClient: PublicClient, address: string, paths: string[], amountSpecified: bigint) {
   const { result } = await publicClient.simulateContract({
     address: address as Address,
     abi: ABI_SWAP,
@@ -508,7 +508,7 @@ export const swap = async (publicClient: PublicClient, address: string, paths: s
     args: [{ paths, amountSpecified }],
   })
 
-  const [amountIn, amountOut] = result as bigint[]
+  const [amountIn, amountOut] = result as [bigint, bigint]
 
   return {
     amountIn,

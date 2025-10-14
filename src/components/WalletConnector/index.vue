@@ -7,7 +7,7 @@ import { referral, profile, canAcceptInvite, fetchProfile } from '@/hooks/useUse
 import ZModalWrapper from '@/components/ZModalWrapper.vue'
 import ConnectorView from './ConnectorView.vue'
 
-const handleInvite = async () => {
+async function handleInvite() {
   if (!account.value || !referral.value || !profile.value || !canAcceptInvite(referral.value)) {
     return
   }

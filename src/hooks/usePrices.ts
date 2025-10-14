@@ -6,7 +6,7 @@ import { getPrices } from '@/api'
 const pricesRef = ref<Record<string, number>>({})
 const nonces = ref(0)
 
-const doUpdate = async () => {
+async function doUpdate() {
   if (!navigator.onLine) {
     return
   }
@@ -23,14 +23,14 @@ const doUpdate = async () => {
   nonces.value += 1
 }
 
-export const getPrice = (key: string) => {
+export function getPrice(key: string) {
   return key ? pricesRef.value[key] || 0 : 0
 }
 
-export const createPriceState = () => {
+export function createPriceState() {
   createDebounceUpdate(doUpdate, 30000, 120000, { immediately: true, leading: true, trailing: false })
 }
 
-export const onPriceChanged = (fn: Callback) => {
+export function onPriceChanged(fn: Callback) {
   watch(nonces, fn)
 }

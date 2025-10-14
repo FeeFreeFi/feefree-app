@@ -33,7 +33,8 @@ onMounted(async () => {
     }
 
     pool.value = await fetchPoolMeta(chainId!, poolId!)
-  } catch (err) {
+  }
+  catch (err) {
     console.log(err)
     router.replace({ name: PAGE_NOT_FOUND })
   }

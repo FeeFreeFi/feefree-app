@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const onBack = () => {
+function onBack() {
   router.back()
 }
 </script>

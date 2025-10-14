@@ -11,11 +11,11 @@ const cache = createCache()
 
 const getKey = (chainId: number, poolId: string) => `${chainId}:${poolId}`
 
-const getValues = (chainId: number, poolId: string) => {
+function getValues(chainId: number, poolId: string) {
   return cache.getValue(getKey(chainId, poolId)) as LockData[]
 }
 
-export const getLockDatas = async (pool: PoolMeta, account: string, force = false) => {
+export async function getLockDatas(pool: PoolMeta, account: string, force = false) {
   const { chainId, id } = pool
   let result = force ? null : getValues(chainId, id)
 
@@ -30,7 +30,7 @@ export const getLockDatas = async (pool: PoolMeta, account: string, force = fals
   return result
 }
 
-export const checkAllowance = async (pool: PoolMeta, account: string, amount: bigint) => {
+export async function checkAllowance(pool: PoolMeta, account: string, amount: bigint) {
   const { chainId, id } = pool
   const publicClient = getPublicClient(chainId)
   const { timelock, liquidity } = getManager(chainId)
@@ -42,7 +42,7 @@ export const checkAllowance = async (pool: PoolMeta, account: string, amount: bi
   return approved || value >= amount
 }
 
-export const approve = async (pool: PoolMeta, amount: bigint) => {
+export async function approve(pool: PoolMeta, amount: bigint) {
   const { chainId, id } = pool
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -51,7 +51,7 @@ export const approve = async (pool: PoolMeta, amount: bigint) => {
   return _approve({ publicClient, walletClient }, liquidity, timelock, BigInt(id), amount)
 }
 
-export const lock = async (pool: PoolMeta, amount: bigint, unlockTime: number, recipient: string) => {
+export async function lock(pool: PoolMeta, amount: bigint, unlockTime: number, recipient: string) {
   const { chainId, id } = pool
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -61,7 +61,7 @@ export const lock = async (pool: PoolMeta, amount: bigint, unlockTime: number, r
   return _lock({ publicClient, walletClient }, timelock, liquidity, account, BigInt(id), amount, unlockTime, recipient)
 }
 
-export const unlock = async (lockId: string, recipient: string) => {
+export async function unlock(lockId: string, recipient: string) {
   const chainId = walletChainId.value
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()

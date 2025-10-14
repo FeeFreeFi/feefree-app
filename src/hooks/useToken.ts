@@ -14,16 +14,16 @@ const cachedTokens = ref<Token[]>([])
 
 export const getToken = (chainId: number, address: string) => config.value[chainId]?.[address]
 
-export const getTokens = (chainId: number, hot: boolean | undefined = undefined) => {
+export function getTokens(chainId: number, hot: boolean | undefined = undefined) {
   const tokens = Object.values(config.value[chainId] || {})
   return hot === undefined ? tokens : tokens.filter(it => it.hot === hot)
 }
 
-export const getCachedTokens = (chainId: number) => {
+export function getCachedTokens(chainId: number) {
   return cachedTokens.value.filter(it => it.chainId === chainId)
 }
 
-export const cacheTokens = (tokens: Token[]) => {
+export function cacheTokens(tokens: Token[]) {
   tokens.forEach(it => {
     if (it && !it.hot && !cachedTokens.value.find(t => isSame(t, it))) {
       cachedTokens.value.push(it)
@@ -33,20 +33,20 @@ export const cacheTokens = (tokens: Token[]) => {
   setStorage(CACHE_TOKENS, cachedTokens.value)
 }
 
-export const getNativeToken = (chainId: number) => {
+export function getNativeToken(chainId: number) {
   const tokens = Object.values(config.value[chainId] || {})
   return tokens.find(it => it.address === ADDRESS_ZERO)
 }
 
-export const addTokens = (tokens: Token[]) => {
+export function addTokens(tokens: Token[]) {
   tokens.forEach(token => {
     config.value[token.chainId] ||= {}
-    const group = config.value[token.chainId]
+    const group = config.value[token.chainId]!
     group[token.address] = token
   })
 }
 
-export const loadCachedTokens = () => {
+export function loadCachedTokens() {
   const tokens = getStorage(CACHE_TOKENS)
   if (!tokens) {
     return
@@ -56,7 +56,7 @@ export const loadCachedTokens = () => {
   addTokens(cachedTokens.value)
 }
 
-export const fetchToken = async (chainId: number, address: string) => {
+export async function fetchToken(chainId: number, address: string) {
   address ||= ADDRESS_ZERO
 
   let token = getToken(chainId, address)
@@ -73,7 +73,7 @@ export const fetchToken = async (chainId: number, address: string) => {
   return token
 }
 
-export const populateToken = (tokenRaw: TokenRaw, cached = true) => {
+export function populateToken(tokenRaw: TokenRaw, cached = true) {
   const { chainId, address, name, symbol, decimals } = tokenRaw
   let token = getToken(chainId, address)
   if (!token) {
@@ -87,7 +87,7 @@ export const populateToken = (tokenRaw: TokenRaw, cached = true) => {
   return token
 }
 
-export const approve = async (token: Token, spender: string, amount: bigint) => {
+export async function approve(token: Token, spender: string, amount: bigint) {
   const { address, chainId } = token
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -95,19 +95,19 @@ export const approve = async (token: Token, spender: string, amount: bigint) => 
   return _approve({ publicClient, walletClient }, address, spender, amount)
 }
 
-export const allowance = async (token: Token, owner: string, spender: string) => {
+export async function allowance(token: Token, owner: string, spender: string) {
   const { address, chainId } = token
 
   return _allowance(getPublicClient(chainId), address, owner, spender).catch(() => 0n)
 }
 
-export const balanceOf = async (token: Token, account: string) => {
+export async function balanceOf(token: Token, account: string) {
   const { address, chainId } = token
 
   return _balanceOf(getPublicClient(chainId), address, account).catch(() => 0n)
 }
 
-export const totalSupply = async (token: Token) => {
+export async function totalSupply(token: Token) {
   const { address, chainId } = token
 
   return _totalSupply(getPublicClient(chainId), address).catch(() => 0n)

@@ -42,7 +42,7 @@ const screenRef = ref({
 })
 export const screen = readonly(screenRef)
 
-const update = () => {
+function update() {
   const matches = matchesRef.value
 
   let items = Object.keys(matches).filter(name => matches[name as MediaSize]).map(name => ({ name, size: breakpoints[name as MediaSize] }))
@@ -52,14 +52,14 @@ const update = () => {
 
   screenRef.value = {
     ...screenRef.value,
-    name: items[0].name,
+    name: items[0]!.name,
     ...matches,
     lt,
     isMobile: isMobile(),
   }
 }
 
-const resize = () => {
+function resize() {
   screenRef.value = {
     ...screenRef.value,
     isMobile: isMobile(),
@@ -69,7 +69,7 @@ const resize = () => {
 const debounceUpdate = debounce(update, 50, { leading: false, trailing: true })
 const debounceResize = debounce(resize, 50, { leading: false, trailing: true })
 
-const onMediaChange = (name: string, matches: boolean) => {
+function onMediaChange(name: string, matches: boolean) {
   matchesRef.value = {
     ...matchesRef.value,
     [name]: matches,
@@ -77,11 +77,11 @@ const onMediaChange = (name: string, matches: boolean) => {
   debounceUpdate()
 }
 
-const onWindowResize = () => {
+function onWindowResize() {
   debounceResize()
 }
 
-const install = () => {
+function install() {
   Object.entries(breakpoints).forEach(([name, size]) => {
     const media = window.matchMedia(`(min-width: ${size}px)`)
     media.addEventListener('change', e => onMediaChange(name, e.matches))

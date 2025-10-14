@@ -67,9 +67,9 @@ const CONFIGS: Record<number, Config> = {
   },
 }
 
-export const getMigration = (chainId: number) => CONFIGS[chainId]
+export const getMigration = (chainId: number) => CONFIGS[chainId]!
 
-export const unexchange = async (token: Pick<Token, 'chainId' | 'address'>) => {
+export async function unexchange(token: Pick<Token, 'chainId' | 'address'>) {
   const { chainId } = token
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
@@ -78,7 +78,7 @@ export const unexchange = async (token: Pick<Token, 'chainId' | 'address'>) => {
   return _unexchange({ publicClient, walletClient }, migration, token.address, { value: fee })
 }
 
-export const removeLiquidity = async (chainId: number, key: PoolKey) => {
+export async function removeLiquidity(chainId: number, key: PoolKey) {
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
   const { address: migration } = getMigration(chainId)
@@ -86,7 +86,7 @@ export const removeLiquidity = async (chainId: number, key: PoolKey) => {
   return _removeLiquidity({ publicClient, walletClient }, migration, key)
 }
 
-export const migrateLiquidity = async (chainId: number, key: PoolKey) => {
+export async function migrateLiquidity(chainId: number, key: PoolKey) {
   const publicClient = getPublicClient(chainId)
   const walletClient = getWalletClient()
   const { address: migration } = getMigration(chainId)

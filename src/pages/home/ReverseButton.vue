@@ -11,7 +11,7 @@ const emit = defineEmits<{
   (e: 'reverse'): void
 }>()
 
-const onReverse = () => {
+function onReverse() {
   if (props.disabled) {
     return
   }

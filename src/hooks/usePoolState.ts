@@ -3,7 +3,7 @@ import type { PoolData, PoolMeta } from '@/types'
 import { createDebounceUpdate } from './useTimer'
 import { getPoolData, getPoolDatas, updatePoolDatas } from './usePool'
 
-export const createPoolState = (pool: Ref<PoolMeta | undefined>, state: Ref<PoolData>) => {
+export function createPoolState(pool: Ref<PoolMeta | undefined>, state: Ref<PoolData>) {
   state.value = getPoolData(pool.value)
 
   const doUpdate = async () => {
@@ -24,7 +24,7 @@ export const createPoolState = (pool: Ref<PoolMeta | undefined>, state: Ref<Pool
   return debounceUpdate
 }
 
-export const createPoolStates = (pools: Ref<PoolMeta[]>, states: Ref<Record<string, PoolData>>) => {
+export function createPoolStates(pools: Ref<PoolMeta[]>, states: Ref<Record<string, PoolData>>) {
   states.value = getPoolDatas(pools.value)
 
   const doUpdate = async () => {

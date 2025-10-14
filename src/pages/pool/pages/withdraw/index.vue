@@ -53,11 +53,11 @@ const approveAction = ref<ApprovalLiquidtyAction>({ show: false })
 const withdrawing = ref(false)
 const withdrawAction = ref<RemoveLiquidityAction>({ show: false })
 
-const checkAllowance = async () => {
+async function checkAllowance() {
   approved.value = pool.value ? await checkLiquidityAllowance(pool.value, account.value, amount.value) : false
 }
 
-const onApproval = async () => {
+async function onApproval() {
   const { chainId } = pool.value!
   const spender = getManagerAddress(chainId)
 
@@ -76,7 +76,7 @@ const onApproval = async () => {
   }
 }
 
-const updateQuoteData = async () => {
+async function updateQuoteData() {
   if (!amount.value || amount.value > liquidity.value) {
     quoteData.value = undefined
     return
@@ -84,7 +84,8 @@ const updateQuoteData = async () => {
 
   try {
     quoteData.value = await quoteRemoveLiquidity(pool.value!.chainId, pool.value!.currency0.address, pool.value!.currency1.address, amount.value)
-  } catch (err) {
+  }
+  catch (err) {
     notification.error({
       title: 'Error',
       content: getErrorMessage(err, 'Error'),
@@ -93,22 +94,22 @@ const updateQuoteData = async () => {
   }
 }
 
-const reset = () => {
+function reset() {
   withdrawing.value = false
   quoteData.value = undefined
 }
 
-const onAmountChange = () => {
+function onAmountChange() {
   if (!amount.value || amount.value > liquidity.value) {
     quoteData.value = undefined
     return
   }
 
-  debounceUpdateQuote.value && debounceUpdateQuote.value()
-  debounceCheckApproval.value && debounceCheckApproval.value()
+  debounceUpdateQuote.value?.()
+  debounceCheckApproval.value?.()
 }
 
-const onWithdraw = async () => {
+async function onWithdraw() {
   const { currency0, currency1, liquidity, amount0Min, amount1Min } = quoteData.value!
   const params = { currency0, currency1, liquidity, amount0Min, amount1Min, recipient: account.value }
 
@@ -124,7 +125,7 @@ const onWithdraw = async () => {
   if (success) {
     inputAmount.value = ''
     reset()
-    debounceUpdateLiquidity.value && debounceUpdateLiquidity.value()
+    debounceUpdateLiquidity.value?.()
     updateNativeBalance()
   }
 }
@@ -154,7 +155,8 @@ onMounted(async () => {
     }
 
     pool.value = await fetchPoolMeta(chainId!, poolId!)
-  } catch {
+  }
+  catch {
     router.replace({ name: PAGE_NOT_FOUND })
   }
 })

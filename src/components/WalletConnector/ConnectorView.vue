@@ -23,7 +23,7 @@ const wallets = getWallets()
 const isActive = computed(() => (wallet: Wallet) => connectingWallet.value?.info.name === wallet.info.name)
 const isRecent = computed(() => (wallet: Wallet) => recentWallet.value === wallet.info.name)
 
-const onConnect = async (wallet: Wallet) => {
+async function onConnect(wallet: Wallet) {
   try {
     connecting(wallet)
     await wait(300)
@@ -32,7 +32,8 @@ const onConnect = async (wallet: Wallet) => {
       setRecent(wallet.info.name)
       props.onClose()
     }
-  } catch (err) {
+  }
+  catch (err) {
     reset()
 
     notification.error({

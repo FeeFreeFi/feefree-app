@@ -30,15 +30,15 @@ const poolDatas = ref<Record<string, PoolData>>({})
 
 const totalTVL = computed(() => Object.values(poolDatas.value).map(p => p.tvl).reduce((sum, item) => sum + item, 0n))
 
-const loadHotPools = () => {
+function loadHotPools() {
   hotPools.value = getPools(appChainId.value, true)
 }
 
-const loadMyPools = async () => {
+async function loadMyPools() {
   myPools.value = await _loadMyPools(appChainId.value, account.value)
 }
 
-const onSwitchPoolTab = (active: string) => {
+function onSwitchPoolTab(active: string) {
   tab.value = active
 }
 

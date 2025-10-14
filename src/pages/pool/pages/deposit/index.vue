@@ -41,8 +41,8 @@ const liquidity = ref(0n)
 
 const tokens = computed(() => pool.value ? [pool.value.currency0, pool.value.currency1] : [undefined, undefined])
 const balances = ref([0n, 0n])
-const balance0 = computed(() => balances.value[0])
-const balance1 = computed(() => balances.value[1])
+const balance0 = computed(() => balances.value[0]!)
+const balance1 = computed(() => balances.value[1]!)
 const debounceUpdateBalances = ref<DebouncedFunc<Callback>>()
 
 const inputAmount0 = ref('')
@@ -79,7 +79,7 @@ const isInputValid = computed(() => {
 
 const approved = computed(() => approved0.value && approved1.value)
 
-const doCheckAllowanceOne = async (isZero: boolean) => {
+async function doCheckAllowanceOne(isZero: boolean) {
   const _approved = isZero ? approved0 : approved1
   const token = isZero ? pool.value!.currency0 : pool.value!.currency1
   const spender = getManagerAddress(token.chainId)
@@ -88,18 +88,18 @@ const doCheckAllowanceOne = async (isZero: boolean) => {
   const allowed = await allowance(token, account.value, spender)
   _approved.value = allowed >= amount
 }
-const checkAllowance = async () => {
+async function checkAllowance() {
   await Promise.all([
     doCheckAllowanceOne(true),
     doCheckAllowanceOne(false),
   ])
 }
-const onCheckApproval = async () => {
+async function onCheckApproval() {
   approvalChecking.value = true
   await checkAllowance()
   approvalChecking.value = false
 }
-const onApproval = async (isZero: boolean) => {
+async function onApproval(isZero: boolean) {
   const token = isZero ? pool.value!.currency0 : pool.value!.currency1
   const amount = isZero ? amount0.value : amount1.value
   const approving = isZero ? approving0 : approving1
@@ -111,7 +111,7 @@ const onApproval = async (isZero: boolean) => {
   }
 }
 
-const reset = () => {
+function reset() {
   approved0.value = false
   approved1.value = false
   approvalChecking.value = false
@@ -120,7 +120,7 @@ const reset = () => {
   depositing.value = false
 }
 
-const updateQuoteData = async () => {
+async function updateQuoteData() {
   if (!amount0.value || !amount1.value) {
     quoteData.value = undefined
     return
@@ -128,7 +128,8 @@ const updateQuoteData = async () => {
 
   try {
     quoteData.value = await quoteAddLiquidity(pool.value!.chainId, pool.value!.currency0.address, pool.value!.currency1.address, amount0.value, amount1.value)
-  } catch (err) {
+  }
+  catch (err) {
     notification.error({
       title: 'Error',
       content: getErrorMessage(err, 'Error'),
@@ -137,31 +138,31 @@ const updateQuoteData = async () => {
   }
 }
 
-const onAmount0Change = () => {
+function onAmount0Change() {
   if (!amount0.value) {
     return
   }
 
   const _amount1 = getAmount1FromAmount0AndSqrtPrice(amount0.value, poolData.value.sqrtPriceX96)
   inputAmount1.value = toAmount(_amount1, pool.value!.currency1.decimals, pool.value!.currency1.decimals)
-  debounceUpdateQuote.value && debounceUpdateQuote.value()
+  debounceUpdateQuote.value?.()
 
   onCheckApproval()
 }
 
-const onAmount1Change = () => {
+function onAmount1Change() {
   if (!amount1.value) {
     return
   }
 
   const _amount0 = getAmount0FromAmount1AndSqrtPrice(amount1.value, poolData.value.sqrtPriceX96)
   inputAmount0.value = toAmount(_amount0, pool.value!.currency0.decimals, pool.value!.currency0.decimals)
-  debounceUpdateQuote.value && debounceUpdateQuote.value()
+  debounceUpdateQuote.value?.()
 
   onCheckApproval()
 }
 
-const onDeposit = async () => {
+async function onDeposit() {
   const { currency0, currency1, liquidity, amount0Max, amount1Max } = quoteData.value!
   const params = { currency0, currency1, liquidity, amount0Max, amount1Max, recipient: account.value }
 
@@ -180,7 +181,7 @@ const onDeposit = async () => {
     inputAmount0.value = ''
     inputAmount1.value = ''
     reset()
-    debounceUpdateBalances.value && debounceUpdateBalances.value()
+    debounceUpdateBalances.value?.()
     updateNativeBalance()
   }
 }
@@ -208,7 +209,8 @@ onMounted(async () => {
     }
 
     pool.value = await fetchPoolMeta(chainId!, poolId!)
-  } catch {
+  }
+  catch {
     router.replace({ name: PAGE_NOT_FOUND })
   }
 })
